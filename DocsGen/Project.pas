@@ -207,6 +207,7 @@ type
     property TargetFN: String;
     property TargetURL: String;
     property Toc: TocEntry;
+    property IncludeFile: Boolean;
     property Title: String read Properties['title'];
     property Properties: MyNameValueCollection := new MyNameValueCollection; readonly;
     property reviewstatus: String read coalesce(Properties['status']:Split([':',',',' '], 2).FirstOrDefault().Trim.ToLowerInvariant, '');
@@ -364,14 +365,14 @@ method Project.FindFiles(aRoot, aStart: String);
 begin
   for each entry in Directory.GetFiles(aStart) do begin
     var sn := Path.GetFileName(entry);
-    if entry.Contains(Path.DirectorySeparatorChar+'_') or entry.Contains(Path.DirectorySeparatorChar+'.') then continue;
+    if entry.Contains(Path.DirectorySeparatorChar+'.') then continue;
       if sn.EndsWith('.md', StringComparison.InvariantCultureIgnoreCase) then begin
         var lVal := entry.Substring(aRoot.Length).Replace('\', '/');
         var pp: ProjectFile;
         if fFiles.TryGetValue(lVal, out pp) then 
           pp.Touched := true
         else
-          Files.Add(lVal, new ProjectFile(FullFN := entry, Touched := true, Format := FileFormat.Markdown, RelativeFN := entry.Substring(aRoot.Length)));
+          Files.Add(lVal, new ProjectFile(FullFN := entry, IncludeFile := sn.StartsWith('_'), Touched := true, Format := FileFormat.Markdown, RelativeFN := entry.Substring(aRoot.Length)));
     end else begin
       OtherFiles.Add(entry.Substring(aRoot.Length));
       OtherFilesDict.Add(entry.Substring(aRoot.Length).Replace('\','/'));
@@ -494,6 +495,7 @@ end;
 
 method Project.GenerateFile(aFile: ProjectFile);
 begin
+  if aFile.IncludeFile then exit;
   if edit then
     fUnknownTargets.Remove(aFile.RelativeFN);
   fContext.CurrentFile := aFile;
@@ -735,8 +737,9 @@ begin
     result := File.ReadAllText(lRealPath);
     if result.StartsWith('---') then begin
       var n := result.IndexOf('---', 5);
-      if n <> -1 then
+      if n <> -1 then begin
         result := result.Substring(n+3).TrimStart;
+      end;
     end;
     fTemplateFiles[s] := (fd, result);
     exit;
@@ -824,11 +827,12 @@ begin
     sb.Append(lKey);
     sb.AppendLine('</h2>');
     for each entry in el do begin
+      if (lKey = 'missing') and (entry.Value.IncludeFile) then continue;
       if edit then
       sb.Append('<a href="/__edit/editor.html?path='+ entry.Value.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
       sb.Append('<a href="');
       sb.Append(entry.Value.TargetURL);
-      sb.Append('">'+(if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title)' else  StripHtml(entry.Value.Title)) +'</a> '+StripHtml(entry.Value.reviewparameter));
+      sb.Append('">'+(if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title '+entry.Value.RelativeFN+')' else  StripHtml(entry.Value.Title)) +'</a> '+StripHtml(entry.Value.reviewparameter));
       sb.Append('<br/>');
     end;
     sb.AppendLine;
@@ -839,7 +843,7 @@ begin
     sb.Append('<a href="/__edit/editor.html?path='+ entry.Value.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
     sbrel.Append('<a href="');
     sbrel.Append(entry.Value.TargetURL);
-    sbrel.Append('">'+(if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title)' else  StripHtml(entry.Value.Title)) +'</a> '+StripHtml(entry.Value.reviewparameter)+'<br/>');
+    sbrel.Append('">'+(if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title '+entry.Value.RelativeFN+')' else  StripHtml(entry.Value.Title)) +'</a> '+StripHtml(entry.Value.reviewparameter)+'<br/>');
   end;
   sbrel.AppendLine;
   var cp := new DotLiquid.RenderParameters;

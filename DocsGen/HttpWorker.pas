@@ -119,7 +119,7 @@ begin
             ServeFile(aContext, lPath);
             exit;
           end;
-          if fProject.Files.TryGetValue(s.Substring(0, s.Length-1) + '.md', out lPath) then begin
+          if fProject.Files.TryGetValue(s.Substring(0, s.Length-1) + '.md', out lPath) and not lPath.IncludeFile then begin
             ServeFile(aContext, lPath);
             exit;
           end;
