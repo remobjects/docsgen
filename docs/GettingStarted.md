@@ -52,5 +52,19 @@ Writing the secondd document is pretty much the same as the first, generate a ne
 ## Generating the output
 To build use the docsgen.exe with the parameter **build** from within the directory containing your file.
 
+## Docset
+
 # Server mode
 DocsGen also has a "server" mode. Instead of build, **serve** should be passed (--port can optionally be useed to override the default port, 4000). In this mode, any changes to the files will automatically update what can be seen in the browser after a refresh.
+
+## Edit mode
+
+When in serve mode --edit can be used to allow "online editing", which enables an Edit button on each page that lets you change the page. Edit mode does live updates of all (open) pages when changes are applied to the file. 
+
+Inside edit mode 4 new virtual pages show up in the tree:
+
+* **review status**: Shows the value of the "reviewstatus" property of each page, grouped by status.
+* **flags**: Splits any comma seperated "flags" property in a file and groups then by flag.
+* **keywords**: Splits any comma seperated "keywords" property in a file and groups then by flag.
+* **missing**: Shows missing files and the documents that reference them.
+
