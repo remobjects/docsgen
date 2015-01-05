@@ -45,6 +45,10 @@ Other file specific properties are:
 * **title_suffix**: suffix for title in toc
 * **status**; set the review status; Possible values: ignore, new, reviewed: byx, needs-review: reason, wip
 * **parentindex**; make a "fake" parent; when this is used that item will show "open"/active in the tree
+* **absolute**: Makes all links absolute; this is useful for a 404 page.
+* **flags**: Used for the "edit mode" flags page
+* **review-status**: Used for the "edit mode" status page
+* **keywords**: Used for the "edit mode" keywords page
 
 ## Second document
 Writing the secondd document is pretty much the same as the first, generate a new file, add a header with a title and a content.

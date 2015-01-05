@@ -136,7 +136,8 @@ type
       if not String.IsNullOrEmpty(CurrentFile.Properties['page_title']) then CurrentFile.Properties['page_title'] else 
       CurrentFile.Title;
 
-    property base_url: String read MakeRelative('/');
+    property base_url: String read 
+      if CurrentFile.Absolute then '' else MakeRelative('/');
     property homepage_url: String read MakeRelative(if _Project.fullfilename then '/index.html' else '/');
     property content: String;
     property local_url: String read 'file://'+CurrentFile.FullFN.Replace('\', '/');
@@ -208,6 +209,7 @@ type
     property Toc: TocEntry;
     property IncludeFile: Boolean;
     property Title: String read Properties['title'];
+    property Absolute: Boolean read Properties['absolute'] in ['1', 'true'];
     property Properties: MyNameValueCollection := new MyNameValueCollection; readonly;
     property reviewstatus: String read coalesce(Properties['status']:Split([':',',',' '], 2).FirstOrDefault().Trim.ToLowerInvariant, '');
     property reviewparameter: String read coalesce(Properties['status']:Split([':',',',' '], 2).Skip(1).FirstOrDefault():Trim:ToLowerInvariant, '');
@@ -1173,6 +1175,7 @@ end;
 
 method Context.MakeRelative(s: String): String;
 begin
+  if CurrentFile.Absolute then exit s;
   if s.StartsWith('/') then begin
     s := s.Substring(1);
     if not SingleFile then
