@@ -72,6 +72,15 @@ begin
     'GET', 'HEAD': begin
       while s.StartsWith('/') do s := s.Substring(1);
       locking fProject do begin
+        if s = '__missing.html'then begin
+          try
+            SendHtml(aContext, fProject.Missing);
+          except
+            on e: Exception do
+              SendError(aContext, 500, 'Internal Error', e.Message);
+          end;
+          exit;
+        end else 
         if s = '__keywords.html'then begin
           try
             SendHtml(aContext, fProject.Keywords);
@@ -200,15 +209,7 @@ method HttpWorker.ServeFile(aContext: HttpListenerContext; aFile: ProjectFile);
 begin
   try
     fProject.Logger.Debug('Serving file: '+aFile.FullFN+'; Last build date: '+aFile.BuildDate);
-    var date := System.IO.File.GetLastWriteTimeUtc(aFile.FullFN);
-    fProject.Logger.Debug('Date: '+date);
-    if aFile.BuildDate < date then begin
-      if aFile.LoadDate < date then begin
-        fProject.Logger.Info('Forcing refresh because of potential mono bug');
-        fProject.Refresh;
-      end;
-      fProject.GenerateFile(aFile);
-    end;
+    fProject.BuildIfNeeded(aFile);
             
     SendFile(aContext, System.IO.Path.Combine(fProject.ProjectPath, fProject.Output, aFile.TargetFN));
     exit;
@@ -320,6 +321,11 @@ end;
 
 method HttpWorker.FileUpdated(s: String);
 begin
+  locking fProject do begin
+    var pf: ProjectFile;
+    if fProject.Files.TryGetValue(s, out pf) then
+      fProject.BackgroundGenerate(pf);
+  end;
   var lWork: LinkedList<WaitingRequest>;
   locking fWaitingRequests do begin
     if not fWaitingRequests.TryGetValue(s, out lWork) then exit;

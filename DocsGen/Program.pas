@@ -73,6 +73,7 @@ end;
 
 class method ConsoleApp.ServeProject(aPath: String);
 begin
+  fLogger.ShowInfo := true;
   var lProject := new Project(fLogger, aPath, fOverrideOptions);
   var lWatcher := new System.IO.FileSystemWatcher(aPath);
   lWatcher.IncludeSubdirectories := true;
@@ -87,6 +88,7 @@ begin
   lProject.BuildNavRoot;
   lHttp.BeginGetContext(@new HttpWorker(lProject, lHttp).Callback, nil);
   Console.WriteLine('Serving on http://localhost:'+fPort);
+  lProject.BackgroundGenerate;
   if fLoop then begin
     loop System.Threading.Thread.Sleep(1000);
   end else begin

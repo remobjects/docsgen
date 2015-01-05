@@ -25,6 +25,7 @@ type
   end;
   Project = public class(DotLiquid.FileSystems.IFileSystem)
   private
+    method get_Missing: String;
     method get_Keywords: String;
     method AppendSingleFileContent(aToc: TocEntry; sb: StringBuilder);
     method get_Review: String;
@@ -44,8 +45,11 @@ type
     fIndexer: Indexer;
     fNavGuard: Hashset<String> := new HashSet<String>;
     fBeforeRefresh: Integer;
+    fBackgroundWait: System.Threading.AutoResetEvent;
+    fBackgroundList: Queue<ProjectFile>;
     fReview, fReviewRelease: String;
     fTemplateFiles: Dictionary<String, Tuple<DateTime, String>> := new Dictionary<String, Tuple<DateTime, String>>;
+    fUnknownTargets: Dictionary<String, Hashset<String>> := new Dictionary<String,HashSet<String>>;
     method GetCachedTemplateFile(s: String): String;
     method ReadTemplateFile(acontext: DotLiquid.Context; templateName: String): String;
   protected
@@ -95,8 +99,12 @@ type
     property ReviewOld: Boolean := true;
     property Review: String read get_Review;
     property ReviewRelease: String read get_ReviewRelease;
+    property Missing: String read get_Missing;
 
     method BeginRefresh;
+    method BackgroundGenerate; 
+    method BackgroundGenerate(pf: ProjectFile); 
+    method BuildIfNeeded(aFile: ProjectFile);
     method GenerateFile(aFile: ProjectFile);
     method BuildNavigation(aParent: TocEntry; aFile: ProjectFile);
     method FindFiles(aRoot, aStart: String);
@@ -237,6 +245,9 @@ type
   extension method Dictionary<TKey,TValue>.Get(s: TKey): TValue;
   extension method String.IfNullOrEmpty(NewVal: String): String;
 implementation
+
+uses 
+  System.Threading.Tasks;
 
 extension method String.IfNullOrEmpty(NewVal: String): String;
 begin
@@ -483,6 +494,8 @@ end;
 
 method Project.GenerateFile(aFile: ProjectFile);
 begin
+  if edit then
+    fUnknownTargets.Remove(aFile.RelativeFN);
   fContext.CurrentFile := aFile;
   aFile.BuildDate := System.IO.File.GetLastWriteTimeUtc(aFile.FullFN);
   case aFile.Format of 
@@ -591,8 +604,8 @@ begin
     if not s.EndsWith('/') then
       s := s +'/';
     if not fFiles.Any(ar-> ar.Value.TargetURL = s) then begin
-      if not edit then 
-        AppendUnknownTarget(s, fContext.CurrentFile.RelativeFN);
+      //if not edit then 
+      AppendUnknownTarget(s, fContext.CurrentFile.RelativeFN);
       fLogger.Warn(fContext.CurrentFile.RelativeFN+': refers to unknown target: '+s);
       exit '';
     end;
@@ -853,7 +866,12 @@ end;
 
 method Project.AppendUnknownTarget(aTarget: String; aFrom: String);
 begin
-
+  var lVal: HashSet<String>;
+  if not fUnknownTargets.TryGetValue(aFrom, out lVal) then begin
+    lVal := new HashSet<String>;
+    fUnknownTargets.Add(aFrom, lVal);
+  end;
+  lVal.Add(aTarget);
 end;
 
 method Project.BuildSingleFile(aOut: String);
@@ -983,6 +1001,103 @@ begin
     sb.AppendLine('</li>');
   end;
   sb.AppendLine('</ul>');
+  fContext.CurrentFile := Files['index.md'];
+  var cp := new DotLiquid.RenderParameters;
+  cp.Registers := new DotLiquid.Hash;
+  cp.Registers.Add('__project', self);
+      
+  cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
+  cp.Registers["file_system"] := self;
+  cp.LocalVariables['content'] := sb.ToString;
+  cp.LocalVariables['showedit'] := false;
+      
+  var lKeywords := BaseTemplate.Render(cp);
+  exit lKeywords;
+
+end;
+
+method Project.BackgroundGenerate;
+begin
+  fBackgroundWait := new System.Threading.AutoResetEvent(false);
+  fBackgroundList := new Queue<ProjectFile>();
+  var tp := new System.Threading.Thread( -> 
+    begin
+      loop begin
+        var lItem: ProjectFile;
+        locking fBackgroundList do begin
+          if fBackgroundList.Count = 0 then
+            lItem := nil
+          else begin
+            lItem := fBackgroundList.Dequeue;
+          end;
+        end;
+        if lItem <> nil then begin
+          try
+            locking self do 
+              BuildIfNeeded(lItem);
+          except
+          end;
+          System.Threading.Thread.Sleep(10);
+        end else 
+          fBackgroundWait.WaitOne;
+      end;
+    end);  
+  tp.Name := 'Background Builder';
+  tp.Priority := System.Threading.ThreadPriority.Lowest;
+  tp.IsBackground := true;
+  tp.Start;
+  for each el in fFiles.Select(a->a.Value) do
+    BackgroundGenerate(el);
+end;
+
+method Project.BackgroundGenerate(pf: ProjectFile); 
+begin
+  Logger.Debug('Starting background generate for '+pf.RelativeFN);
+  
+  
+  locking fBackgroundList do
+    fBackgroundList.Enqueue(pf);
+  fBackgroundWait.Set;
+end;
+    
+
+method Project.BuildIfNeeded(aFile: ProjectFile);
+begin
+  var date := System.IO.File.GetLastWriteTimeUtc(aFile.FullFN);
+  Logger.Debug('Date: '+date);
+  if aFile.BuildDate < date then begin
+    if aFile.LoadDate < date then begin
+      Logger.Info('Forcing refresh because of potential mono bug');
+      Refresh;
+    end;
+    GenerateFile(aFile);
+  end;
+end;
+
+method Project.get_Missing: String;
+begin
+  var sb := new StringBuilder;
+  for each d in fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key) do begin
+    sb.Append('<b>');
+    sb.Append(d.Key);
+    sb.Append('</b></br>');
+    sb.AppendLine('<ul>');
+    for each el in d do begin
+      var pf: ProjectFile;
+      fFiles.TryGetValue(el.Replace('\', '/'), out pf);
+      if pf = nil then begin
+        sb.Append('<li>');
+        sb.Append(el);
+        sb.Append('</li>');
+        continue;
+      end;
+      sb.Append('<li>');
+      if edit then
+        sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
+      sb.AppendLine('<a href="'+pf.TargetURL+'">'+pf.Title+'</a> </li>');
+    end;
+    sb.AppendLine('</ul>');
+  end;
   fContext.CurrentFile := Files['index.md'];
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
