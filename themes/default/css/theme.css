@@ -1,4 +1,4 @@
-/* @override 
+/* @override
 	http://docs.elementscompiler.com/css/theme.css
 	http://docs.elementscompiler.com//css/theme.css
 	http://localhost:4001//css/theme.css
@@ -457,8 +457,8 @@ footer p {
 
 
 .maincontentsection {
-    /*margin-left: 300px;*/
-    min-height: 100%	
+    margin-left: 300px;
+    min-height: 100%
 }
 
 
