@@ -706,6 +706,7 @@ end;
 method Project.GetCachedTemplateFile(s: String): String;
 begin
   var x: Tuple<DateTime, String>;
+  if s.StartsWith('/') then s := s.Substring(1);
   var lRealPath := Path.Combine(fPath, s.Replace('/', Path.DirectorySeparatorChar));
   var fd := if File.Exists(lRealPath) then File.GetLastWriteTimeUtc(lRealPath) else DateTime.MinValue;
   if fTemplateFiles.TryGetValue(s, out x) then begin
