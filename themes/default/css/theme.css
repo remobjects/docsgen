@@ -226,12 +226,12 @@ input[type="text"]:focus {
     outline: thin dotted \9;
     border-color: #2980b9;
 }
-@media screen and (max-width: 768px) {
+/*@media screen and (max-width: 768px) {
     .maincontent {
 		margin-top:  65px;
     }
 
-}
+}*/
 
 .float-right {
     float: right;
@@ -418,7 +418,7 @@ h1 {
 .maincontentouter {
     padding: 1.618em 3.236em;
     height: 100%;
-    max-width: 800px;
+    /*max-width: 800px;*/
     margin: auto;
     margin: 0;
     background: #fcfcfc;
@@ -457,9 +457,9 @@ footer p {
 
 
 .maincontentsection {
-    margin-left: 300px;
+    /*margin-left: 300px;*/
     min-height: 100%	
-	}
+}
 
 
 @media screen and (max-width: 768px) {
@@ -571,6 +571,7 @@ padding: 0.4045em 1.118em;
 
 li.toctree-l2>a {
     padding: 0.4045em 2.427em;
+    padding-right: 5px !important;
 	color: #808080;
 }
 
@@ -596,16 +597,19 @@ li.toctree-l7  {
 li.toctree-l3>a {
     display: block;
     padding: 0.4045em 3.627em !important;
+    padding-right: 5px !important;
     color:  #505050 !important;
 }
 li.toctree-l4>a {
     display: block;
     padding: 0.4045em 4.627em !important;
+    padding-right: 5px !important;
     color:  #303030 !important;
 }
 li.toctree-l5>a {
     display: block;
     padding: 0.4045em 5.627em !important;
+    padding-right: 5px !important;
     color:  #303030 !important;
 }
 
