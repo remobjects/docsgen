@@ -968,7 +968,7 @@ begin
   var sb := new StringBuilder;
   var m := Files.SelectMany(a -> coalesce(a.Value.Properties.Get('keywords'):Split([';', ','], StringSplitOptions.RemoveEmptyEntries), new String[0]), (a,v) -> new class (a := a.Value, v)).Where(a -> a.v  <> '');
   sb.AppendLine('<h4>Keywords</h4><ul>');
-  for each d in m.GroupBy(a -> a.v).OrderBy(a->a.Key) do begin
+  for each d in m.GroupBy(a -> a.v).OrderBy(a->a.Key.ToLowerInvariant) do begin
     sb.AppendLine('<li>');
     
     sb.Append(d.Key);
