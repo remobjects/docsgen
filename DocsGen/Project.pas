@@ -982,7 +982,7 @@ begin
         sb.Append('<a href="/__edit/editor.html?path='+ el.a.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
       sb.AppendLine('<a href="'+el.a.TargetURL);
       
-      sb.Append('">'+el.a.RelativeFN+' '+(if String.IsNullOrEmpty(el.a.Title:Trim) then '' else  StripHtml(el.a.Title)) +'</a> ');
+      sb.Append('">/'+el.a.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(el.a.Title:Trim) then '' else  StripHtml(el.a.Title)) +'</a> ');
     end;
     sb.AppendLine('</li>');
   end;
@@ -1080,7 +1080,7 @@ begin
       sb.Append('<li>');
       if edit then
         sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
-      sb.AppendLine('<a href="'+pf.TargetURL+'">'+pf.RelativeFN+'</a> </li>');
+      sb.AppendLine('<a href="'+pf.TargetURL+'">/'+pf.RelativeFN.Replace('\','/')+'</a> </li>');
     end;
     sb.AppendLine('</ul>');
   end;
@@ -1124,7 +1124,7 @@ var sb := new StringBuilder;
       sb.Append('<a href="/__edit/editor.html?path='+ entry.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
       sb.Append('<a href="');
       sb.Append(entry.TargetURL);
-      sb.Append('">'+entry.RelativeFN+' '+(if String.IsNullOrEmpty(entry.Title:Trim) then '' else  StripHtml(entry.Title)) +'</a> ');
+      sb.Append('">/'+entry.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(entry.Title:Trim) then '' else  StripHtml(entry.Title)) +'</a> ');
       sb.Append('<br/>');
     end;
     sb.AppendLine;
