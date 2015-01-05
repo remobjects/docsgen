@@ -433,6 +433,7 @@ begin
       if (aParent <> nil) and (aParent.children.Count > 0) then begin
         aParent.children.Last.seperatorafter := true;
       end;
+      continue;
     end;
     var lTitle: String := nil;
     var lAnch: String := nil;
