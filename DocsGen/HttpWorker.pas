@@ -98,9 +98,9 @@ begin
               SendError(aContext, 500, 'Internal Error', e.Message);
           end;
           exit;
-        end else if s = '__status_release.html' then begin
+        end else if s = '__flags.html' then begin
           try
-            SendHtml(aContext, fProject.ReviewRelease);
+            SendHtml(aContext, fProject.Flags);
           except
             on e: Exception do
               SendError(aContext, 500, 'Internal Error', e.Message);

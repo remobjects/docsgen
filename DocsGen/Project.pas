@@ -26,10 +26,10 @@ type
   Project = public class(DotLiquid.FileSystems.IFileSystem)
   private
     method get_Missing: String;
+    method get_Flags: String;
     method get_Keywords: String;
     method AppendSingleFileContent(aToc: TocEntry; sb: StringBuilder);
     method get_Review: String;
-    method get_ReviewRelease: String;
     method WriteToc(sb: StringBuilder; atoc: FileTocNode);
     method AddToToc(aHeadingLevel: Integer; var aIndex: Integer; aTarget: FileTocNode; aMax: Integer);
     method GenerateToc: String;
@@ -47,7 +47,7 @@ type
     fBeforeRefresh: Integer;
     fBackgroundWait: System.Threading.AutoResetEvent;
     fBackgroundList: Queue<ProjectFile>;
-    fReview, fReviewRelease: String;
+    fReview: String;
     fTemplateFiles: Dictionary<String, Tuple<DateTime, String>> := new Dictionary<String, Tuple<DateTime, String>>;
     fUnknownTargets: Dictionary<String, Hashset<String>> := new Dictionary<String,HashSet<String>>;
     method GetCachedTemplateFile(s: String): String;
@@ -96,9 +96,8 @@ type
     method Build;
     method BuildSingleFile(aOut: String);
     method BuildNavRoot;
-    property ReviewOld: Boolean := true;
     property Review: String read get_Review;
-    property ReviewRelease: String read get_ReviewRelease;
+    property &Flags: String read get_Flags;
     property Missing: String read get_Missing;
 
     method BeginRefresh;
@@ -752,7 +751,6 @@ end;
 method Project.Refresh;
 begin
   locking self do begin
-    ReviewOld := true;
     var lSettings := Path.Combine(fPath, '_config');
     if not File.Exists(lSettings) then 
       lSettings := Path.Combine(fPath, '_config.json');
@@ -808,9 +806,8 @@ end;
 
 method Project.get_Review: String;
 begin
-  if not ReviewOld then exit fReview;
   var sb := new StringBuilder;
-  var sbrel := new StringBuilder;
+  //var sbrel := new StringBuilder;
   var lGroupings := Files.GroupBy(a -> a.Value.reviewstatus.Trim.ToLowerInvariant).Where(a -> a.Key <> 'ignore').OrderBy(a -> a.Key).ToArray;
   sb.AppendLine('<h4>TOC</h4><ul>');
   for each el in lGroupings do begin
@@ -837,15 +834,6 @@ begin
     end;
     sb.AppendLine;
   end;
-  sbrel.Append('<h3>Items with review: update-for-release</h3>');
-  var lKey := lGroupings.FirstOrDefault(a -> a.Key:Trim= 'update-for-release');
-  for each entry in lKey do begin
-    sb.Append('<a href="/__edit/editor.html?path='+ entry.Value.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
-    sbrel.Append('<a href="');
-    sbrel.Append(entry.Value.TargetURL);
-    sbrel.Append('">'+(if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title '+entry.Value.RelativeFN+')' else  StripHtml(entry.Value.Title)) +'</a> '+StripHtml(entry.Value.reviewparameter)+'<br/>');
-  end;
-  sbrel.AppendLine;
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
   cp.Registers.Add('__project', self);
@@ -856,17 +844,9 @@ begin
   cp.LocalVariables['showedit'] := false;
       
   fReview := BaseTemplate.Render(cp);
-  cp.LocalVariables['content'] := sbrel.ToString;
-  fReviewRelease := BaseTemplate.Render(cp);
-  ReviewOld := false;
   exit fReview;
 end;
 
-method Project.get_ReviewRelease: String;
-begin
-  get_Review();
-  exit fReviewRelease;
-end;
 
 method Project.AppendUnknownTarget(aTarget: String; aFrom: String);
 begin
@@ -1115,6 +1095,49 @@ begin
   var lKeywords := BaseTemplate.Render(cp);
   exit lKeywords;
 
+end;
+
+method Project.get_Flags: String;
+begin
+var sb := new StringBuilder;
+  //var sbrel := new StringBuilder;
+  var m := Files.SelectMany(a -> coalesce(a.Value.Properties.Get('flags'):Split([';', ','], StringSplitOptions.RemoveEmptyEntries), new String[0]), (a,v) -> new class (a := a.Value, v)).Where(a -> a.v  <> '').GroupBy(a -> a.v, a -> a.a);
+  sb.AppendLine('<h4>TOC</h4><ul>');
+  
+  for each el in m do begin
+    var lKey := el.Key;
+    sb.AppendLine('<li><a href="#'+lKey+'">'+lKey+'</a></li>');
+  end;
+  sb.AppendLine('</ul>');
+  fContext.CurrentFile := Files['index.md'];
+  for each el in m do begin
+    var lKey := el.Key;
+    if String.IsNullOrEmpty(lKey) then lKey := 'missing';
+    sb.Append('<h2 id="'+lKey+'">');
+    sb.Append(lKey);
+    sb.AppendLine('</h2>');
+    for each entry in el do begin
+      if (lKey = 'missing') and (entry.IncludeFile) then continue;
+      if edit then
+      sb.Append('<a href="/__edit/editor.html?path='+ entry.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
+      sb.Append('<a href="');
+      sb.Append(entry.TargetURL);
+      sb.Append('">'+(if String.IsNullOrEmpty(entry.Title:Trim) then '(no title '+entry.RelativeFN+')' else  StripHtml(entry.Title)) +'</a> ');
+      sb.Append('<br/>');
+    end;
+    sb.AppendLine;
+  end;
+  var cp := new DotLiquid.RenderParameters;
+  cp.Registers := new DotLiquid.Hash;
+  cp.Registers.Add('__project', self);
+      
+  cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
+  cp.Registers["file_system"] := self;
+  cp.LocalVariables['content'] := sb.ToString;
+  cp.LocalVariables['showedit'] := false;
+      
+  fReview := BaseTemplate.Render(cp);
+  exit fReview;
 end;
 
 
