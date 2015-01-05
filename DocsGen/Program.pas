@@ -51,6 +51,7 @@ begin
       Console.WriteLine('DocsGen [command] [path]');
       Console.WriteLine('  - Build: Generate it');
       Console.WriteLine('  - Serve: Run an http server that serves the files');
+      Console.WriteLine('  - DocSet: Generate a Dash docset');
       lOptionSet.WriteOptionDescriptions(Console.Out);
       exit 1;
     end;
