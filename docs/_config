@@ -1,0 +1,4 @@
+output: "../documentation",
+theme: "{builtin}/default",
+title: "RemObjects Docs Generator",
+fullfilename: true

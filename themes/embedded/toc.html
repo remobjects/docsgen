@@ -1,0 +1,55 @@
+<ul class="current">
+    {% for t1 in nav %}
+        {% if t1.children %}
+        <span class="toctree-l0"><a href="{{t1.url}}">{%if t1.title_prefix %}<span class="title-prefix">{{t1.title_prefix}}</span>{%endif%}{{ t1.title}}{%if t1.title_suffix %}<span class="title-suffix">{{t1.title_suffix}}</span>{%endif%}</a></span>
+            {% for t2 in t1.children %}
+                <li class="toctree toctree-l1 {% if t2.visible%}current{%endif%}">
+                    <a class="{% if t2.active%}current{%endif%}{% if t2.tocclasses %} {{t2.tocclasses}}{%endif%}{% if t2.seperatorafter %} seperator{%endif%}" href="{{ t2.url }}">{%if t2.title_prefix %}<span class="title-prefix">{{t2.title_prefix}}</span>{%endif%}{{ t2.title }}{%if t2.title_suffix %}<span class="title-suffix">{{t2.title_suffix}}</span>{%endif%}</a>
+                    {% if t2.visible %}
+                        <ul>
+                        {% for t3 in t2.children %}
+                            <li class="toctree toctree-l2 {% if t3.visible%}current{%endif%}"><a class="{% if t3.active%}current{%endif%}{% if t3.tocclasses %} {{t3.tocclasses}}{%endif%}{% if t3.seperatorafter %} seperator{%endif%}" href="{{ t3.url }}">{%if t3.title_prefix %}<span class="title-prefix">{{t3.title_prefix}}</span>{%endif%}{{ t3.title }}{%if t3.title_suffix %}<span class="title-suffix">{{t3.title_suffix}}</span>{%endif%}</a>
+							{% if t3.visible %} 
+							<ul>
+                            {% for t4 in t3.children %}
+                            <li class="toctree toctree-l3 {% if t4.visible%}current{%endif%}"><a class="{% if t4.active%}current{%endif%}{% if t4.tocclasses %} {{t4.tocclasses}}{%endif%}{% if t4.seperatorafter %} seperator{%endif%}" href="{{ t4.url }}">{%if t4.title_prefix %}<span class="title-prefix">{{t4.title_prefix}}</span>{%endif%}{{ t4.title }}{%if t4.title_suffix %}<span class="title-suffix">{{t4.title_suffix}}</span>{%endif%}</a>
+							{% if t4.visible %} 
+							<ul>
+                            {% for t5 in t4.children %}
+                                <li class="toctree toctree-l4 {% if t5.visible%}current{%endif%}"><a class="{% if t5.active%}current{%endif%}{% if t5.tocclasses %} {{t5.tocclasses}}{%endif%}{% if t5.seperatorafter %} seperator{%endif%}" href="{{ t5.url }}">{%if t5.title_prefix %}<span class="title-prefix">{{t5.title_prefix}}</span>{%endif%}{{ t5.title }}{%if t5.title_suffix %}<span class="title-suffix">{{t5.title_suffix}}</span>{%endif%}</a>
+                                    {% if t5.visible %}
+                                    <ul>
+                                        {% for t6 in t5.children %}
+                                        <li class="toctree toctree-l5 {% if t6.visible%}current{%endif%}"><a class="{% if t6.active%}current{%endif%}{% if t6.tocclasses %} {{t6.tocclasses}}{%endif%}{% if t6.seperatorafter %} seperator{%endif%}" href="{{ t6.url }}">{%if t6.title_prefix %}<span class="title-prefix">{{t6.title_prefix}}</span>{%endif%}{{ t6.title }}{%if t6.title_suffix %}<span class="title-suffix">{{t6.title_suffix}}</span>{%endif%}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+							</ul>
+							{% endif %}
+							</li>
+                        {% endfor %}
+							</ul>
+							{% endif %}
+							</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+			{% if edit %}
+			<li class="toctree toctree-l1">
+			<a href="/__review.html">Review Status</a>
+                <a href="/__review_release.html">Review Status (Release)</a>
+			</li>
+			{% endif %}
+        {% else %}
+            <li class="toctree toctree-l1 {% if nav_item.active%}current{%endif%}">
+                <a class="{% if nav_item.active%}current{%endif%}" href="{{ nav_item.url }}">{{ nav_item.title }}</a>
+            </li>
+        {% endif %}
+
+    {% endfor %}
+</ul>
+

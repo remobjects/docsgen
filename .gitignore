@@ -1,0 +1,7 @@
+*.suo
+*.user
+obj
+*.mdb
+Documentation
+Bin/
+*.fire.cache

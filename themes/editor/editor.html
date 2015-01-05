@@ -1,0 +1,144 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>Editor</title>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+
+<style>
+html, body {
+    height: 100%;
+	overflow-y: hidden;
+}
+
+.fill { 
+	position: absolute;
+	bottom: 0;
+	top: 4em;
+	left: 0;
+	width: 100%
+}
+.blue {
+  color: blue  !important;
+}
+.red {
+  color: red  !important;
+}
+.green {
+  color: green !important;
+}
+
+textarea {
+    resize: none;
+}
+</style>
+<script language="javascript">
+function wrap(openTag, closeTag) {
+	var textArea = $('#data');
+    var len = textArea.val().length;
+    var start = textArea[0].selectionStart;
+    var end = textArea[0].selectionEnd;
+    var selectedText = textArea.val().substring(start, end);
+	if (start == end) 
+	  selectedText = "text";
+    var replacement = openTag + selectedText + closeTag;
+    textArea.val(textArea.val().substring(0, start) + replacement + textArea.val().substring(end, len));
+	textArea[0].selectionStart = start + openTag.length;
+	textArea[0].selectionEnd = textArea[0].selectionStart+ selectedText.length;
+	textArea.focus();
+}
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function setConfirmUnload(on)
+{
+	window.onbeforeunload = on ? unloadMessage : null;
+}
+function UnspecifiedErrorHandler()
+{
+	return true;
+}
+function unloadMessage()
+{
+	return ('You have entered new data on this page. ' +
+			'If you navigate away from this page without ' +
+			'first saving your data, the changes will be lost.');
+}
+
+
+function save() {
+	$(".savebutton").addClass("blue");
+	
+	 $.ajax({
+        type: "POST",
+        dataType: "text",
+        url: "/__edit/__save?path="+getParameterByName("path"),
+        data: $('#data').val(),
+        success: function(response) {
+			$(".savebutton").removeClass("blue");
+			$(".savebutton").addClass("green");
+			setConfirmUnload(false);
+			if (window.opener)
+			  window.opener.location.reload();
+ 	    },
+		error: function(response) {
+			$(".savebutton").removeClass("blue");
+			$(".savebutton").addClass("red");
+			alert("Could not save!");
+		}});
+	
+}
+	// savebutton
+$( document ).ready( function() {
+
+var path = getParameterByName("path");
+$(".filename").text(path);
+  document.title = 'Editor - ' + path;
+  $.get( "/__edit/__load?path=" + path,
+	function(data) {
+	 $("#data").val(data);
+	 $("#data").removeAttr('disabled');
+	 $('#data').on('change keyup paste', function() { setConfirmUnload(true); });
+	 
+     window.onerror = UnspecifiedErrorHandler;
+            
+	}).fail(function() {
+	  $(".savebutton").addClass("red");
+	  alert("Could not load!");
+	});
+});
+
+</script>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+        <div class="navbar-header">
+          <span class="navbar-brand">Editor</a>
+        </div>
+		<div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#" onclick="javascript:wrap('**', '**')"><span class="glyphicon glyphicon-bold"></span></a></li>
+            <li><a href="#" onclick="javascript:wrap('*', '*')"><span class="glyphicon glyphicon-italic"></span></a></li>
+			<li><a href="#" class="filename"></a></li>
+		  </ul>
+		  <ul class="nav navbar-nav navbar-right">
+            <li class="pull-right"><a class="savebutton" href="#" onclick="javascript:save()"><span class="glyphicon glyphicon-saved"></span> Save</a></li>
+		  </ul>
+		</div>
+		
+	</nav>
+
+ <div class="fluid-container fill">  
+   <div style="padding: 10px">
+   <textarea id="data" disabled style="width: 100%; height: 100%"></textarea>
+   </div>
+ </div>
+</body>
+</html>
