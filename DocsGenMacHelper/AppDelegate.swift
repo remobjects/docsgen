@@ -22,4 +22,9 @@
 		NSLog("%@", url);
 	}
 	
+	@IBAction func restart(sender: Any?) {
+		mainWindowController?.restartElements()
+		mainWindowController?.restartDataAbstract()
+	}
+	
 }

@@ -54,12 +54,19 @@ typealias Int = Int32
 		}
 	}
 	
+	@IBAction func browseURL(url: String) {
+		if reviewMode { 
+			url += "__status.html"
+		}
+		NSWorkspace.sharedWorkspace.openURL(NSURL.URLWithString(url))
+	}
+
 	@IBAction func browseElements(sender: Any?) {
-		NSWorkspace.sharedWorkspace.openURL(NSURL.URLWithString("http://localhost:4001/__review.html"))
+		browseURL("http://localhost:4001/")
 	}
 	
 	@IBAction func browseDa(sender: Any?) {
-		NSWorkspace.sharedWorkspace.openURL(NSURL.URLWithString("http://localhost:4002/__review.html"))
+		browseURL("http://localhost:4002/")
 	}
 
 	@IBAction func pullDA(sender: Any?) {

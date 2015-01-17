@@ -48,7 +48,6 @@
         <None Include="Resources\Entitlements.entitlements"/>
     </ItemGroup>
     <ItemGroup>
-        <Folder Include="Properties\"/>
         <Folder Include="Resources"/>
     </ItemGroup>
     <ItemGroup>
@@ -61,5 +60,5 @@
         <AppResource Include="..\Bin"/>
         <AppResource Include="..\themes"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Oxygene\RemObjects.Oxygene.Nougat.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
 </Project>
