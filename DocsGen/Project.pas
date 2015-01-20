@@ -829,10 +829,16 @@ begin
       if (lKey = 'missing') and (entry.Value.IncludeFile) then continue;
       if edit then
       sb.Append('<a href="/__edit/editor.html?path='+ entry.Value.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
-      sb.Append('<a href="');
-      sb.Append(entry.Value.TargetURL);
-      sb.Append('">'+(if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title '+entry.Value.RelativeFN+')' else  StripHtml(entry.Value.Title)) +'</a> '+StripHtml(entry.Value.reviewparameter));
-      sb.Append('<br/>');
+      sb.Append('<a href="docsgen://action=edit&url=file://'+ entry.Value.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+      if entry.Value.IncludeFile then begin
+        sb.Append((if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title '+entry.Value.RelativeFN+')' else  StripHtml(entry.Value.Title)) +' '+StripHtml(entry.Value.reviewparameter));
+        sb.Append('<br/>');
+      end else begin
+        sb.Append('<a href="');
+        sb.Append(entry.Value.TargetURL);
+        sb.Append('">'+(if String.IsNullOrEmpty(entry.Value.Title:Trim) then '(no title '+entry.Value.RelativeFN+')' else  StripHtml(entry.Value.Title)) +'</a> '+StripHtml(entry.Value.reviewparameter));
+        sb.Append('<br/>');
+      end;
     end;
     sb.AppendLine;
   end;
@@ -982,9 +988,14 @@ begin
     for each el in d do begin
       if edit then
         sb.Append('<a href="/__edit/editor.html?path='+ el.a.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
+      sb.Append('<a href="docsgen://action=edit&url=file://'+ el.a.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+      if el.a.IncludeFile then begin
+        sb.Append('/'+el.a.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(el.a.Title:Trim) then '' else  StripHtml(el.a.Title)));
+      end else begin
       sb.AppendLine('<a href="'+el.a.TargetURL);
       
       sb.Append('">/'+el.a.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(el.a.Title:Trim) then '' else  StripHtml(el.a.Title)) +'</a> ');
+      end;
     end;
     sb.AppendLine('</li>');
   end;
@@ -1080,9 +1091,14 @@ begin
         continue;
       end;
       sb.Append('<li>');
-      if edit then
+      if edit then begin
         sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
-      sb.AppendLine('<a href="'+pf.TargetURL+'">/'+pf.RelativeFN.Replace('\','/')+'</a> </li>');
+        sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+      end;
+      if pf.IncludeFile then 
+        sb.AppendLine('/'+pf.RelativeFN.Replace('\','/')+' </li>')
+      else 
+        sb.AppendLine('<a href="'+pf.TargetURL+'">/'+pf.RelativeFN.Replace('\','/')+'</a> </li>');
     end;
     sb.AppendLine('</ul>');
   end;
@@ -1124,10 +1140,15 @@ var sb := new StringBuilder;
       if (lKey = 'missing') and (entry.IncludeFile) then continue;
       if edit then
       sb.Append('<a href="/__edit/editor.html?path='+ entry.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
-      sb.Append('<a href="');
-      sb.Append(entry.TargetURL);
-      sb.Append('">/'+entry.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(entry.Title:Trim) then '' else  StripHtml(entry.Title)) +'</a> ');
-      sb.Append('<br/>');
+      sb.Append('<a href="docsgen://action=edit&url=file://'+ entry.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+      if entry.IncludeFile then begin
+        sb.Append(entry.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(entry.Title:Trim) then '' else  StripHtml(entry.Title)) +'<br/>');
+      end else begin
+        sb.Append('<a href="');
+        sb.Append(entry.TargetURL);
+        sb.Append('">/'+entry.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(entry.Title:Trim) then '' else  StripHtml(entry.Title)) +'</a> ');
+        sb.Append('<br/>');
+      end;
     end;
     sb.AppendLine;
   end;
