@@ -1,7 +1,6 @@
+
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# RemObjects Fire
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "DocsGen", "DocsGen\DocsGen.oxygene", "{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}"
 EndProject
 Global
@@ -10,10 +9,10 @@ Global
 		Release|AnyCPU = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Debug|AnyCPU.ActiveCfg = Debug
-		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Debug|AnyCPU.Build.0 = Debug
-		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Release|AnyCPU.ActiveCfg = Release
-		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Release|AnyCPU.Build.0 = Release
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Release|AnyCPU.Build.0 = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

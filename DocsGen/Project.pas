@@ -265,12 +265,15 @@ constructor Project(aLogger: ILogger; aPath: String; aOverrides: Dictionary<Stri
 begin
   fLogger := aLogger;
   fOverrides := aOverrides;
-  if not Directory.Exists(aPath) then raise new ArgumentException('Invalid path: '+aPath);
+  if not Directory.Exists(aPath) then 
+    raise new ArgumentException('Invalid path: '+aPath);
   fPath := aPath;
   var lSettings := 
     Path.Combine(aPath, '_config');
   if not File.Exists(lSettings) then 
-    lSettings := Path.Combine(aPath, '_config.json');
+    lSettings := Path.Combine(aPath, '_config.yml');
+  if not File.Exists(lSettings) then 
+    raise new ArgumentException('config file missing');
   ReadSettings(lSettings, aOverrides);
   var td := theme;
   if td.StartsWith('{builtin}') then
@@ -797,8 +800,10 @@ method Project.BuildNavRoot;
 begin
   fContext.nav.Clear;
   fNavGuard.Clear;
+
+  if not fFiles.ContainsKey('index.md') then
+    raise new ArgumentException('index.md file missing');
     
- 
   var lVal := fFiles['index.md'];
   var lEntry := new TocEntry(nil, fContext, lVal);
   lVal.Toc := lEntry;
@@ -1324,17 +1329,17 @@ method Lightbox.Initialize(tagName: String; markup: String; tokens: List<String>
 begin
   var parts := markup.Split(['|'], 3);
   if parts.Length = 1 then begin
-		fTarget := parts[0].Trim;
-		fImg := fTarget;
-		fTitle := "";
-	end else begin
-		fTarget := parts[0].Trim;
-		fTitle := parts[1].Trim;
-		if parts.Length = 3 then
-		  fImg := parts[2].Trim
-		else
-		  fImg := fTarget
-	end;
+    fTarget := parts[0].Trim;
+    fImg := fTarget;
+    fTitle := "";
+  end else begin
+    fTarget := parts[0].Trim;
+    fTitle := parts[1].Trim;
+    if parts.Length = 3 then
+      fImg := parts[2].Trim
+    else
+      fImg := fTarget
+  end;
 end;
 
 method Lightbox.Render(context: DotLiquid.Context; &result: TextWriter);

@@ -1,7 +1,12 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Fire
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "DocsGen", "..\DocsGen\DocsGen.oxygene", "{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}"
+EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "DocsGenMacHelper", "DocsGenMacHelper.elements", "{1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB} = {154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,6 +14,10 @@ Global
 		Release|AnyCPU = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{154230AF-41A6-4FA9-AD5F-8E33AC95D7DB}.Release|AnyCPU.Build.0 = Release|AnyCPU
 		{1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
 		{1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
