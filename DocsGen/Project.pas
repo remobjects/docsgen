@@ -208,6 +208,7 @@ type
     property TargetURL: String;
     property Toc: TocEntry;
     property IncludeFile: Boolean;
+    property Hidden: Boolean read Properties['hidden'] in ['1', 'true'];
     property Title: String read Properties['title'];
     property Absolute: Boolean read Properties['absolute'] in ['1', 'true'];
     property Properties: MyNameValueCollection := new MyNameValueCollection; readonly;
@@ -287,7 +288,7 @@ begin
   var lPath := fPath;
   if not lPath.EndsWith(Path.DirectorySeparatorChar) then lPath := lPath + Path.DirectorySeparatorChar;
   FindFiles(lPath, lPath);
-  for each el in fFiles do
+  for each el in fFiles.ToArray do
     LoadFileHeader(el.Value);
   fContext := new Context(_Project := self);
 end;
@@ -375,8 +376,10 @@ begin
         var pp: ProjectFile;
         if fFiles.TryGetValue(lVal, out pp) then 
           pp.Touched := true
-        else
-          Files.Add(lVal, new ProjectFile(FullFN := entry, IncludeFile := sn.StartsWith('_'), Touched := true, Format := FileFormat.Markdown, RelativeFN := entry.Substring(aRoot.Length)));
+        else begin
+          var lFile := new ProjectFile(FullFN := entry, IncludeFile := sn.StartsWith('_'), Touched := true, Format := FileFormat.Markdown, RelativeFN := entry.Substring(aRoot.Length));
+          Files.Add(lVal, lFile);
+        end;
     end else begin
       OtherFiles.Add(entry.Substring(aRoot.Length));
       OtherFilesDict.Add(entry.Substring(aRoot.Length).Replace('\','/'));
@@ -421,6 +424,9 @@ begin
       end;
     end;
       aFile.Content := sr.ReadToEnd;
+  end;
+  if aFile.Hidden and not edit then begin
+    Files.Remove(aFile.RelativeFN.Replace('\', '/'));
   end;
 end;
 
