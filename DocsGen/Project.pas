@@ -1197,7 +1197,7 @@ begin
     'hidden': exit '<span class="reviewstatus" style="color: fuchsia">[HID]</span> ';
     'new': exit '<span class="reviewstatus" style="color: red">[NEW]</span> ';
     'reviewed': exit '<span class="reviewstatus" style="color: green">[OKE]</span> ';
-    'needs-review': exit '<span class="reviewstatus" style="color: maroon">[REV]</span> ';
+    'needs-review': exit '<span class="reviewstatus" style="color: DeepPink">[REV]</span> ';
     'wip': exit '<span class="reviewstatus" style="color: purple">[WIP]</span> ';
     'auto': exit '<span class="reviewstatus" style="color: yellow">[AUT]</span> ';
   else
