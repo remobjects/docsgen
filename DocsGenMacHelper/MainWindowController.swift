@@ -234,7 +234,7 @@ typealias Int = Int32
 	
 	func runTask(exe: String, folder: String, arguments: Object[], callback: (Bool)->() ) {
 		let task = NSTask()
-		task.arguments = NSArray.arrayWithObjects((&arguments[0]) as UnsafePointer<id>, count: length(arguments)) // workaround
+		task.arguments = NSArray.arrayWithObjects((&arguments[0]) as! UnsafePointer<id>, count: length(arguments)) // workaround
 		NSLog("%@", task.arguments)
 		task.launchPath = exe
 		task.currentDirectoryPath = folder

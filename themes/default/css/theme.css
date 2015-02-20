@@ -664,8 +664,10 @@ border-spacing: 0px;
 
 .brokenlink
 {
-	color: #e00000;
+	color: #808080;
+	text-decoration: line-through;
 }
+
 .brokenlink:after {
 	content: "\1F6AB";
     color: #c04040;
