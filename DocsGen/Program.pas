@@ -15,6 +15,7 @@ type
     class var fLogger: ILogger := new ConsoleLogger;
     class var fOverrideOptions: System.Collections.Generic.Dictionary<String, String> := new System.Collections.Generic.Dictionary<String, String>;
     class method Main(args: array of String): Integer;
+    class method BuildElementsHelpProject(aPath, aTargetURL: String);
     class method BuildProject(aPath: String);
     class method BuildDocSetProject(aPath: String);
     class method ServeProject(aPath: String);
@@ -47,11 +48,13 @@ begin
       'build': BuildProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
       'serve': ServeProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
       'docset':BuildDocSetProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
+      'helpdb':BuildElementsHelpProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory, if args.Length > 2 then args[2] else 'http://localhost/');
     else
       Console.WriteLine('DocsGen [command] [path]');
       Console.WriteLine('  - Build: Generate it');
       Console.WriteLine('  - Serve: Run an http server that serves the files');
       Console.WriteLine('  - DocSet: Generate a Dash docset');
+      Console.WriteLine('  - HelpDB: Generate an Elements HelpdB');
       lOptionSet.WriteOptionDescriptions(Console.Out);
       exit 1;
     end;
@@ -126,6 +129,20 @@ begin
 '</plist>'#13#10);
 
   lProject.CreateDashIndex(Path.Combine(lDS, 'Contents', 'Resources', 'docSet.dsidx'));
+  fLogger.Info('Took: '+lTime.Elapsed);
+end;
+
+class method ConsoleApp.BuildElementsHelpProject(aPath, aTargetURL: String);
+begin
+  if aTargetURL.EndsWith('/') then
+    aTargetURL :=  aTargetURL.Substring(0, aTargetURL.Length-1);
+  var lProject := new Project(fLogger, aPath, fOverrideOptions);
+  var lShortName := coalesce(lProject.Settings['shortname'], lProject.Settings.Get('title'):Replace(' ', ''));
+  var lDS := Path.Combine(aPath, lProject.Settings.Get('output'), lShortName+'.db');
+  lProject.fullfilename := false;
+  var lTime := new System.Diagnostics.Stopwatch;
+  lTime.Start;
+  lProject.BuildHelpDB(lDS, aTargetURL);
   fLogger.Info('Took: '+lTime.Elapsed);
 end;
 

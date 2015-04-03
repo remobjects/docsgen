@@ -25,6 +25,8 @@ type
   end;
   Project = public class(DotLiquid.FileSystems.IFileSystem)
   private
+    method GetRegularDB(s: String): IDbConnection;
+    method GetMonoDB(s: String): IDbConnection;
     method get_Missing: String;
     method get_Flags: String;
     method get_Keywords: String;
@@ -71,6 +73,8 @@ type
 
     method GetDB(s: String): IDbConnection;
     method CreateDashIndex(aFN: String);
+    method BuildHelpDB(aFN, aTargetURL: String);
+    method ExecuteSQLCommand(aConn: IDbConnection; aTrans: IDbTransaction; aCMD: String; aNames: array of String := nil; aValues: array of Object := nil; aLastInsertId: Boolean := false): Int64;
     property Context: Context read fContext;
     property Output: String read Settings.Get('output').IfNullOrEmpty('_site');
     property theme: String read Settings.Get('theme').IfNullOrEmpty('{builtin}/default');
@@ -920,17 +924,27 @@ begin
   fContext.SingleFile := false;
 end;
 
+method Project.GetRegularDB(s: String): IDbConnection;
+begin
+  var db := new System.Data.SQLite.SQLiteConnection('Data Source='+s+';Version=3;');
+  db.Open;
+  exit db;
+end;
+
+method Project.GetMonoDB(s: String): IDbConnection;
+begin
+  var db := new Mono.Data.Sqlite.SqliteConnection('Data Source='+s+';Version=3;');
+  db.Open;
+  exit db;
+end;
+
 method Project.GetDB(s: String): IDbConnection;
 begin
   if File.Exists(s) then File.Delete(s);
   if &Type.GetType('System.MonoType') = nil then begin
-    var db := new System.Data.SQLite.SQLiteConnection('Data Source='+s+';Version=3;');
-    db.Open;
-    exit db;
+    exit GetRegularDB(s);
   end;
-  var db := new Mono.Data.Sqlite.SqliteConnection('Data Source='+s+';Version=3;');
-  db.Open;
-  exit db;
+  exit GetMonoDB(s)
 end;
 
 method Project.CreateDashIndex(aFN: String);
@@ -1174,6 +1188,89 @@ var sb := new StringBuilder;
       
   fReview := BaseTemplate.Render(cp);
   exit fReview;
+end;
+
+
+method Project.ExecuteSQLCommand(aConn: IDbConnection; aTrans: IDbTransaction; aCMD: String; aNames: array of String := nil; aValues: array of Object := nil; aLastInsertId: Boolean := false): Int64;
+begin
+  using db := aConn.CreateCommand do begin
+    db.Transaction := aTrans;
+    db.CommandText := aCMD;
+    for each el in aNames index n do begin 
+      var par := db.CreateParameter();
+      par.ParameterName := '@'+el;
+      par.Value := aValues[n];
+      db.Parameters.Add(par);
+    end;
+    result := db.ExecuteNonQuery;
+    if aLastInsertId then begin
+      db.Parameters.Clear;
+      db.CommandText := 'select last_insert_rowid()';
+      exit Convert.ToInt64(db.ExecuteScalar);
+    end;
+  end;
+end;
+method Project.BuildHelpDB(aFN, aTargetURL: String);
+begin
+  BuildNavRoot;
+  using dc := GetDB(aFN) do begin
+    var trans := dc.BeginTransaction;
+    ExecuteSQLCommand(dc, trans, 'create table info (version integer, title varchar (1024), css text, image blob)');
+    ExecuteSQLCommand(dc, trans, 'create table document (id integer, url varchar(2048), type int, name varchar(1024), parentid int null, haschildren bool, primary key (id))');
+    ExecuteSQLCommand(dc, trans, 'create table keyword (document bigint, keyword varchar (1024), keywordtype int)');
+    ExecuteSQLCommand(dc, trans, 'create index  if not exists keyword_keywordtype on keyword (keyword,keywordtype);');
+    ExecuteSQLCommand(dc, trans, 'create index if not exists doc_parent on document (parentid);');
+    ExecuteSQLCommand(dc, trans, 'insert into info (version, title) values (20140409, @v)', ['v'], [title]);
+
+    var ids := new Dictionary<String, Int64>;
+    for each el in Files do begin
+      var lTypeN := el.Value.Properties['dash_type'];
+      var lTypeID := 12;
+      if lTypeN = 'Method' then 
+        lTypeID := 1
+      else if lTypeN = 'Type' then
+        lTypeID := 0;
+      var lName: String;
+      if not String.IsNullOrEmpty(el.Value.Properties['page_title']) then
+        lName := el.Value.Properties['page_title']
+      else if not String.IsNullOrEmpty(el.Value.Properties['unique_title']) then
+        lName := el.Value.Properties['unique_title']
+      else 
+        lName := el.Value.Title;
+      if not String.IsNullOrEmpty(el.Value.Properties.Get('unique_title_suffix')) then
+        lName := lName + " "+el.Value.Properties.Get('unique_title_suffix').TrimStart;
+      if el.Key = '404.md' then continue;
+      var id := ExecuteSQLCommand(dc, trans, 
+        'insert into document (url, name, type, parentid) values (@url, @title ,@type, @parentid)',
+        ['url', 'title', 'type', 'parentid'],
+        [aTargetURL + el.Value.TargetURL, lName, lTypeID, 
+        if el.Key = 'index.md' then 0 else nil], true);
+      ids.Add(el.Value.RelativeFN, id);
+      var lKWD := new List<String>;
+      lKWD.Add(lName);
+      for each elv in coalesce(el.Value.Properties['keywords'], '').Split([';',','], StringSplitOptions.RemoveEmptyEntries) do begin
+        var m := elv.Trim;
+        if m <> '' then begin
+          lKWD.Add(m);
+        end;
+      end;
+      for each item in lKWD do 
+        ExecuteSQLCommand(dc, trans, 'insert into keyword (document, keyword, keywordtype) values (@doc, @kwd, 0)',
+          ['doc', 'kwd'],
+          [id, item]);
+    end;
+    for each el in Files do begin
+      var lPar := el.Value:Toc:Parent;
+      if lPar = nil then continue;
+      ExecuteSQLCommand(dc, trans, 'update document set parentid=@pid where id=@id',
+        ['id', 'pid'],
+        [ids[el.Value.RelativeFN], ids[lPar.File.RelativeFN]]);
+    end;
+
+    ExecuteSQLCommand(dc, trans, 'update document set haschildren = (case when exists (select * from document d2 where d2.parentid=document.id) then 1 else 0 end)');
+
+    trans.Commit;
+  end;
 end;
 
 
