@@ -73,7 +73,7 @@ type
 
     method GetDB(s: String): IDbConnection;
     method CreateDashIndex(aFN: String);
-    method BuildHelpDB(aFN, aTargetURL: String);
+    method BuildHelpDB(aFN, aTargetURL, aIcon: String);
     method ExecuteSQLCommand(aConn: IDbConnection; aTrans: IDbTransaction; aCMD: String; aNames: array of String := nil; aValues: array of Object := nil; aLastInsertId: Boolean := false): Int64;
     property Context: Context read fContext;
     property Output: String read Settings.Get('output').IfNullOrEmpty('_site');
@@ -1210,7 +1210,7 @@ begin
     end;
   end;
 end;
-method Project.BuildHelpDB(aFN, aTargetURL: String);
+method Project.BuildHelpDB(aFN, aTargetURL, aIcon: String);
 begin
   BuildNavRoot;
   using dc := GetDB(aFN) do begin
@@ -1221,6 +1221,8 @@ begin
     ExecuteSQLCommand(dc, trans, 'create index  if not exists keyword_keywordtype on keyword (keyword,keywordtype);');
     ExecuteSQLCommand(dc, trans, 'create index if not exists doc_parent on document (parentid);');
     ExecuteSQLCommand(dc, trans, 'insert into info (version, title) values (20140409, @v)', ['v'], [title]);
+    if not String.IsNullOrEmpty(aIcon) then
+      ExecuteSQLCommand(dc, trans, 'update info set image=@v', ['v'], [File.ReadAllBytes(aIcon)]);
 
     var ids := new Dictionary<String, Int64>;
     for each el in Files do begin

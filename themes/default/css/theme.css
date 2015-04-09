@@ -744,3 +744,18 @@ pre {
 }
 
 .newpage {page-break-after: always;}
+
+
+#footnotediv {
+	position:absolute;
+	width:400px;
+	overflow:visible;
+	background-color:white;
+	padding:3px;
+	padding-left:12px;
+	padding-right:12px;
+	border:1px solid #CDBBB5;
+	box-shadow:#555 0 0 10px;
+	-webkit-box-shadow:#555 0 0 10px;
+	-moz-box-shadow:0 0 10px #555;
+}

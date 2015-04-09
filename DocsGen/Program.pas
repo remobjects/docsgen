@@ -15,7 +15,7 @@ type
     class var fLogger: ILogger := new ConsoleLogger;
     class var fOverrideOptions: System.Collections.Generic.Dictionary<String, String> := new System.Collections.Generic.Dictionary<String, String>;
     class method Main(args: array of String): Integer;
-    class method BuildElementsHelpProject(aPath, aTargetURL: String);
+    class method BuildElementsHelpProject(aPath, aTargetURL, aIcon: String);
     class method BuildProject(aPath: String);
     class method BuildDocSetProject(aPath: String);
     class method ServeProject(aPath: String);
@@ -48,7 +48,7 @@ begin
       'build': BuildProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
       'serve': ServeProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
       'docset':BuildDocSetProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
-      'helpdb':BuildElementsHelpProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory, if args.Length > 2 then args[2] else 'http://localhost/');
+      'helpdb':BuildElementsHelpProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory, if args.Length > 2 then args[2] else 'http://localhost/', if args.Length > 3 then args[3]);
     else
       Console.WriteLine('DocsGen [command] [path]');
       Console.WriteLine('  - Build: Generate it');
@@ -132,7 +132,7 @@ begin
   fLogger.Info('Took: '+lTime.Elapsed);
 end;
 
-class method ConsoleApp.BuildElementsHelpProject(aPath, aTargetURL: String);
+class method ConsoleApp.BuildElementsHelpProject(aPath, aTargetURL, aIcon: String);
 begin
   if aTargetURL.EndsWith('/') then
     aTargetURL :=  aTargetURL.Substring(0, aTargetURL.Length-1);
@@ -142,7 +142,7 @@ begin
   lProject.fullfilename := false;
   var lTime := new System.Diagnostics.Stopwatch;
   lTime.Start;
-  lProject.BuildHelpDB(lDS, aTargetURL);
+  lProject.BuildHelpDB(lDS, aTargetURL, aIcon);
   fLogger.Info('Took: '+lTime.Elapsed);
 end;
 
