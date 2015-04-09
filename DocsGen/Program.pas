@@ -85,7 +85,8 @@ begin
   lWatcher.Deleted += (s,e) -> begin if not e.Name.StartsWith(lProject.Output) and not e.Name.Contains('__review.md') then  lProject.BeginRefresh; end;
   lWatcher.Renamed += (s,e) -> begin if not e.Name.StartsWith(lProject.Output) and not e.Name.Contains('__review.md') then  lProject.BeginRefresh; end;
   lWatcher.Created += (s,e) -> begin if not e.Name.StartsWith(lProject.Output) and not e.Name.Contains('__review.md') then  lProject.BeginRefresh; end;
-  lWatcher.EnableRaisingEvents := true;
+  if &Type.GetType('System.MonoType') = nil then
+    lWatcher.EnableRaisingEvents := true;
   var lHttp := new Mono.Net.HttpListener();
   lHttp.Prefixes.Add('http://*:'+fPort+'/');
   lHttp.Start();
