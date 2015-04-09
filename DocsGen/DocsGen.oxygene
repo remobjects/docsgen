@@ -69,304 +69,109 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\libraries\DotLiquid\Block.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Condition.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Context.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Document.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Drop.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Exceptions\ArgumentException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Exceptions\ContextException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Exceptions\FileSystemException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Exceptions\FilterNotFoundException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Exceptions\LiquidException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Exceptions\StackLevelException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Exceptions\SyntaxException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\FileSystems\BlankFileSystem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\FileSystems\EmbeddedFileSystem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\FileSystems\IFileSystem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\FileSystems\LocalFileSystem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Hash.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\IContextAware.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\IIndexable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\ILiquidizable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\IRenderable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\IValueTypeConvertible.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Liquid.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\LiquidTypeAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\NamingConventions\CSharpNamingConvention.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\NamingConventions\INamingConvention.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\NamingConventions\RubyNamingConvention.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Proc.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\RenderParameters.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\StandardFilters.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Strainer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tag.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Assign.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Block.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Capture.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Case.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Comment.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Cycle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Extends.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\For.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Html\TableRow.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\If.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\IfChanged.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Include.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Literal.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Raw.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Tags\Unless.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Template.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\EnumerableExtensionMethods.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\ExpressionUtility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\ListExtensionMethods.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\ObjectExtensionMethods.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\R.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\Range.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\StrFTime.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\Symbol.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\TypeUtility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Util\WeakTable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\DotLiquid\Variable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\Abbreviation.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\Block.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\BlockProcessor.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\FootnoteReference.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\HtmlTag.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\LinkDefinition.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\LinkInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\MardownDeep.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\SpanFormatter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\StringScanner.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\TableSpec.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\Token.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\MarkdownDeep\Utils.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\AuthenticationSchemes.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\AuthenticationSchemeSelector.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ChunkedInputStream.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ChunkStream.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\EndPointListener.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\EndPointManager.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\Extensions.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpConnection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListener.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerBasicIdentity.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerContext.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerException.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerPrefixCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerRequest.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerResponse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpStreamAsyncResult.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpUtility.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ListenerAsyncResult.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ListenerPrefix.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\RequestStream.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ResponseStream.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\WebHeaderCollection.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="RegexOptimizations.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="..\libraries\DotLiquid\Block.cs" />
+    <Compile Include="..\libraries\DotLiquid\Condition.cs" />
+    <Compile Include="..\libraries\DotLiquid\Context.cs" />
+    <Compile Include="..\libraries\DotLiquid\Document.cs" />
+    <Compile Include="..\libraries\DotLiquid\Drop.cs" />
+    <Compile Include="..\libraries\DotLiquid\Exceptions\ArgumentException.cs" />
+    <Compile Include="..\libraries\DotLiquid\Exceptions\ContextException.cs" />
+    <Compile Include="..\libraries\DotLiquid\Exceptions\FileSystemException.cs" />
+    <Compile Include="..\libraries\DotLiquid\Exceptions\FilterNotFoundException.cs" />
+    <Compile Include="..\libraries\DotLiquid\Exceptions\LiquidException.cs" />
+    <Compile Include="..\libraries\DotLiquid\Exceptions\StackLevelException.cs" />
+    <Compile Include="..\libraries\DotLiquid\Exceptions\SyntaxException.cs" />
+    <Compile Include="..\libraries\DotLiquid\FileSystems\BlankFileSystem.cs" />
+    <Compile Include="..\libraries\DotLiquid\FileSystems\EmbeddedFileSystem.cs" />
+    <Compile Include="..\libraries\DotLiquid\FileSystems\IFileSystem.cs" />
+    <Compile Include="..\libraries\DotLiquid\FileSystems\LocalFileSystem.cs" />
+    <Compile Include="..\libraries\DotLiquid\Hash.cs" />
+    <Compile Include="..\libraries\DotLiquid\IContextAware.cs" />
+    <Compile Include="..\libraries\DotLiquid\IIndexable.cs" />
+    <Compile Include="..\libraries\DotLiquid\ILiquidizable.cs" />
+    <Compile Include="..\libraries\DotLiquid\IRenderable.cs" />
+    <Compile Include="..\libraries\DotLiquid\IValueTypeConvertible.cs" />
+    <Compile Include="..\libraries\DotLiquid\Liquid.cs" />
+    <Compile Include="..\libraries\DotLiquid\LiquidTypeAttribute.cs" />
+    <Compile Include="..\libraries\DotLiquid\NamingConventions\CSharpNamingConvention.cs" />
+    <Compile Include="..\libraries\DotLiquid\NamingConventions\INamingConvention.cs" />
+    <Compile Include="..\libraries\DotLiquid\NamingConventions\RubyNamingConvention.cs" />
+    <Compile Include="..\libraries\DotLiquid\Proc.cs" />
+    <Compile Include="..\libraries\DotLiquid\RenderParameters.cs" />
+    <Compile Include="..\libraries\DotLiquid\StandardFilters.cs" />
+    <Compile Include="..\libraries\DotLiquid\Strainer.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tag.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Assign.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Block.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Capture.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Case.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Comment.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Cycle.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Extends.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\For.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Html\TableRow.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\If.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\IfChanged.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Include.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Literal.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Raw.cs" />
+    <Compile Include="..\libraries\DotLiquid\Tags\Unless.cs" />
+    <Compile Include="..\libraries\DotLiquid\Template.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\EnumerableExtensionMethods.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\ExpressionUtility.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\ListExtensionMethods.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\ObjectExtensionMethods.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\R.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\Range.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\StrFTime.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\Symbol.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\TypeUtility.cs" />
+    <Compile Include="..\libraries\DotLiquid\Util\WeakTable.cs" />
+    <Compile Include="..\libraries\DotLiquid\Variable.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\Abbreviation.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\Block.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\BlockProcessor.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\FootnoteReference.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\HtmlTag.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\LinkDefinition.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\LinkInfo.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\MardownDeep.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\SpanFormatter.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\StringScanner.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\TableSpec.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\Token.cs" />
+    <Compile Include="..\libraries\MarkdownDeep\Utils.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\AuthenticationSchemes.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\AuthenticationSchemeSelector.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ChunkedInputStream.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ChunkStream.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\EndPointListener.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\EndPointManager.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\Extensions.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpConnection.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListener.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerBasicIdentity.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerContext.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerException.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerPrefixCollection.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerRequest.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpListenerResponse.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpStreamAsyncResult.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\HttpUtility.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ListenerAsyncResult.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ListenerPrefix.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\RequestStream.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ResponseStream.cs" />
+    <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\WebHeaderCollection.cs" />
+    <Compile Include="RegexOptimizations.cs" />
     <Compile Include="HttpWorker.pas" />
     <Compile Include="Indexer.pas" />
-    <Compile Include="Logger.pas">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Options.pas">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Logger.pas" />
+    <Compile Include="Options.pas" />
     <Compile Include="Program.pas" />
     <Compile Include="Project.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Resources.Designer.pas">
-      <SubType>Code</SubType>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Content Include="Properties\App.ico" />

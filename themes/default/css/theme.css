@@ -47,7 +47,7 @@ ul {
     list-style: none;
     list-style-image: none;
 }
-li {
+ul > li {
     list-style: none;
 }
 img {

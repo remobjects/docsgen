@@ -164,7 +164,7 @@ type
     property previous_page: TocEntry read get_previous_page;
   end;
 
-  [DotLiquid.LiquidType(AllowedMembers := ['title', 'url', 'visible', 'children', 'active', 'tocclasses', 'title_prefix', 'title_suffix', 'seperatorafter', 'reviewstatus', 'reviewparameter'])]
+  [DotLiquid.LiquidType(['title', 'url', 'visible', 'children', 'active', 'tocclasses', 'title_prefix', 'title_suffix', 'seperatorafter', 'reviewstatus', 'reviewparameter'])]
   TocEntry = public class
   private
     fFile: ProjectFile;

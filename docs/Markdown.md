@@ -2,7 +2,7 @@
 title: Markdown syntax
 ---
 
-Docsgen uses the [standard markdown syntax](http://daringfireball.net/projects/markdown/syntax) except for the following adjustments:
+Docsgen uses the [^markdown] with the following extensions:
 
 * Github style syntax highlighting is added, which is done by using \`\`\` lang on one line, closed with \`\`\` on another line.
  
@@ -20,3 +20,8 @@ interface
 implementation
 end.
 ```
+
+
+
+[^markdown]:
+The [standard markdown syntax](http://daringfireball.net/projects/markdown/syntax) is used for docsgen.
