@@ -32,6 +32,26 @@ typealias Int = Int32
 		}
 	}
 	
+	public var trainPath: String {
+		get {
+			return NSUserDefaults.standardUserDefaults.stringForKey("TrainDocsPath")
+		}
+		set {
+			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "TrainDocsPath")
+			restartTrain()
+		}
+	}
+	
+	public var ciPath: String {
+		get {
+			return NSUserDefaults.standardUserDefaults.stringForKey("CI2DocsPath")
+		}
+		set {
+			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "CI2DocsPath")
+			//restartElements()
+		}
+	}
+	
 	public var reviewMode: Boolean {
 		get {
 			return NSUserDefaults.standardUserDefaults.boolForKey("ReviewMode")
@@ -46,6 +66,7 @@ typealias Int = Int32
 	@IBAction func restart(sender: Any?) {
 		restartElements()
 		restartDataAbstract()
+		restartTrain();
 	}
 
 	private var docsGenPath:String {
@@ -69,19 +90,27 @@ typealias Int = Int32
 		browseURL("http://localhost:4002/")
 	}
 
+	@IBAction func browseTrain(sender: Any?) {
+		browseURL("http://localhost:4003/")
+	}
+
+	@IBAction func browseCI(sender: Any?) {
+		browseURL("http://localhost:4004/")
+	}
+
 	@IBAction func pullDA(sender: Any?) {
 		enableGitButtons(false)
 		runTask("/usr/bin/git", folder: daPath, arguments: ["fetch"], callback: { (success: Bool) in 
-			enableGitButtons(true) 
+			self.enableGitButtons(true) 
 			if success {
-				runTask("/usr/bin/git", folder: daPath, arguments: ["pull"], callback: { (success2: Bool) in
-					enableGitButtons(true)
+				self.runTask("/usr/bin/git", folder: self.daPath, arguments: ["pull"], callback: { (success2: Bool) in
+					self.enableGitButtons(true)
 					if !success2 {
-						showError("Pull Failed.")
+						self.showError("Pull Failed.")
 					}
 				})
 			} else {
-				showError("Fetch Failed.")
+				self.showError("Fetch Failed.")
 			}
 		})
 	}
@@ -90,15 +119,15 @@ typealias Int = Int32
 		enableGitButtons(false)
 		runTask("/usr/bin/git", folder: daPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
-				runTask("/usr/bin/git", folder: daPath, arguments: ["push"], callback: { (success2: Bool) in
-					enableGitButtons(true)
+				self.runTask("/usr/bin/git", folder: self.daPath, arguments: ["push"], callback: { (success2: Bool) in
+					self.enableGitButtons(true)
 					if !success2 {
-						showError("Push Failed.")
+						self.showError("Push Failed.")
 					}
 				})
 			} else {
-				enableGitButtons(true)
-				showError("Commit Failed.")
+				self.enableGitButtons(true)
+				self.showError("Commit Failed.")
 			}
 		})
 	}
@@ -106,16 +135,16 @@ typealias Int = Int32
 	@IBAction func pullElements(sender: Any?) {
 		enableGitButtons(false)
 		runTask("/usr/bin/git", folder: elementsPath, arguments: ["fetch"], callback: { (success: Bool) in 
-			enableGitButtons(true)
+			self.enableGitButtons(true)
 			if success {
-				runTask("/usr/bin/git", folder: elementsPath, arguments: ["pull", "-v"], callback: { (success2: Bool) in
-					enableGitButtons(true)
+				self.runTask("/usr/bin/git", folder: self.elementsPath, arguments: ["pull", "-v"], callback: { (success2: Bool) in
+					self.enableGitButtons(true)
 					if !success2 {
-						showError("Pull Failed.")
+						self.showError("Pull Failed.")
 					}
 				})
 			} else {
-				showError("Fetch Failed.")
+				self.showError("Fetch Failed.")
 			}
 		})
 	}
@@ -124,24 +153,24 @@ typealias Int = Int32
 		enableGitButtons(false)
 		runTask("/usr/bin/git", folder: elementsPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
-				runTask("/usr/bin/git", folder: elementsPath, arguments: ["push"], callback: { (success2: Bool) in
-					enableGitButtons(true)
+				self.runTask("/usr/bin/git", folder: self.elementsPath, arguments: ["push"], callback: { (success2: Bool) in
+					self.enableGitButtons(true)
 					if !success2 {
-						showError("Push Failed.")
+						self.showError("Push Failed.")
 					}
 				})
 			} else {
-				enableGitButtons(true)
-				showError("Commit Failed.")
+				self.enableGitButtons(true)
+				self.showError("Commit Failed.")
 			}
 		})
 	}
 	
 	private func enableGitButtons(enabled: Bool) {
-		pullElementsButton.enabled = enabled
+		/*pullElementsButton.enabled = enabled
 		pushElementsButton.enabled = enabled
 		pullDAButton.enabled = enabled
-		pushDAButton.enabled = enabled
+		pushDAButton.enabled = enabled*/
 	}
 	
 	private func logLine(line: String) {
@@ -169,6 +198,8 @@ typealias Int = Int32
 	@IBOutlet var browseElementsButton: NSButton!
 	@IBOutlet var pullElementsButton: NSButton!
 	@IBOutlet var pushElementsButton: NSButton!
+	@IBOutlet var browseTrainButton: NSButton!
+	@IBOutlet var browseCIButton: NSButton!
 	@IBOutlet var log: NSTextView!
 	
 	var elementsTask: NSTask?
@@ -179,6 +210,11 @@ typealias Int = Int32
 	var dataAbstractTask: NSTask?
 	func restartDataAbstract() {
 		dataAbstractTask = restartOldTask(dataAbstractTask, port: 4002, folder: daPath)
+	}
+	
+	var trainTask: NSTask?
+	func restartTrain() {
+		trainTask = restartOldTask(trainTask, port: 4003, folder: trainPath)
 	}
 	
 	func processTaskOutputFromStdOut(stdOut: NSFileHandle, name: String, lastIncompleteLogLine: String?) {
@@ -199,7 +235,7 @@ typealias Int = Int32
 					break;
 				}
 				dispatch_async(dispatch_get_main_queue()) {
-					logLine("["+name+"] "+s!);
+					self.logLine("["+name+"] "+s!);
 				}
 			}
 		}
@@ -213,7 +249,7 @@ typealias Int = Int32
 			
 			while task.isRunning { 
 				autoreleasepool {
-					processTaskOutputFromStdOut(stdOut, name: name, lastIncompleteLogLine: lastIncompleteLogLine)
+					self.processTaskOutputFromStdOut(stdOut, name: name, lastIncompleteLogLine: lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
 				}
 			}
@@ -224,7 +260,7 @@ typealias Int = Int32
 			
 			while task.isRunning { 
 				autoreleasepool {
-					processTaskOutputFromStdOut(stdOut, name: name+" (stderr)", lastIncompleteLogLine: lastIncompleteLogLine)
+					self.processTaskOutputFromStdOut(stdOut, name: name+" (stderr)", lastIncompleteLogLine: lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
 				}
 			}
@@ -249,12 +285,12 @@ typealias Int = Int32
 			
 			while task.isRunning { 
 				autoreleasepool {
-					processTaskOutputFromStdOut(stdOut, name: exe.lastPathComponent+" "+arguments[0], lastIncompleteLogLine: lastIncompleteLogLine)
+					self.processTaskOutputFromStdOut(stdOut, name: exe.lastPathComponent+" "+arguments[0], lastIncompleteLogLine: lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
 				}
 			}
 			dispatch_async(dispatch_get_main_queue()) {
-				logLine(NSString.stringWithFormat("Exit code %d", task.terminationStatus))
+				self.logLine(NSString.stringWithFormat("Exit code %d", task.terminationStatus))
 				callback(task.terminationStatus == 0)
 			}
 		}
@@ -289,13 +325,13 @@ typealias Int = Int32
 	public override func close() {
 		restartOldTask(elementsTask, port: 4001, folder: nil)
 		restartOldTask(dataAbstractTask, port: 4002, folder: nil)
+		restartOldTask(trainTask, port: 4003, folder: nil)
 	}
 
 	public override func windowDidLoad() {
 
-		super.windowDidLoad();
-		restartDataAbstract()
-		restartElements()
+		super.windowDidLoad()
+		restart(nil)
 	}
 
 }
