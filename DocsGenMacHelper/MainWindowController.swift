@@ -308,6 +308,10 @@ typealias Int = Int32
 				args.addObject("--edit")
 			}
 			result.arguments = args
+			
+			let env = ["MONO_MANAGED_WATCHER" : "false"]
+			result.environment = env
+			
 			result.launchPath = "/usr/bin/mono"
 			result.setStandardInput(NSPipe.pipe)
 			result.setStandardOutput(NSPipe.pipe)
