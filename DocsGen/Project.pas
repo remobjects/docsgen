@@ -1380,13 +1380,25 @@ begin
   lte := lte.Parent;
   var lIndex := 0;
 
-  while lte <> nil do begin
+  if lte <> nil then begin
     lIndex := lte.children.IndexOf(prev) - 1;
     for i: Integer := lIndex downto 0 do
-      if String.IsNullOrEmpty(lte.children[i].anchor) then
-        exit lte.children[i];
-    prev := lte;
-    lte := lte.Parent;
+      if String.IsNullOrEmpty(lte.children[i].anchor) then begin
+        lte := lte.children[i];
+        loop begin
+          var lnewlte: TocEntry := nil;
+          for j: Integer := lte.children.Count -1 downto 0 do begin
+            if String.IsNullOrEmpty(lte.children[j].anchor) then begin
+              lnewlte := lte.children[j];
+              break;
+            end;
+          end;
+          if lnewlte = nil then break;
+          lte := lnewlte;
+        end;
+        exit lte;
+      end;
+    exit lte;
   end;
 end;
 
