@@ -12,7 +12,7 @@ typealias Int = Int32
 		// Custom initialization
 	}
 	
-	public var daPath: String {
+	public var daPath: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("DataAbstractDocsPath")
 		}
@@ -22,7 +22,7 @@ typealias Int = Int32
 		}
 	}
 	
-	public var elementsPath: String {
+	public var elementsPath: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("ElementsDocsPath")
 		}
@@ -32,7 +32,7 @@ typealias Int = Int32
 		}
 	}
 	
-	public var trainPath: String {
+	public var trainPath: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("TrainDocsPath")
 		}
@@ -42,7 +42,7 @@ typealias Int = Int32
 		}
 	}
 	
-	public var ciPath: String {
+	public var ciPath: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("CI2DocsPath")
 		}
@@ -100,7 +100,7 @@ typealias Int = Int32
 
 	@IBAction func pullDA(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: daPath, arguments: ["fetch"], callback: { (success: Bool) in 
+		/*runTask("/usr/bin/git", folder: daPath, arguments: ["fetch"], callback: { (success: Bool) in 
 			self.enableGitButtons(true) 
 			if success {
 				self.runTask("/usr/bin/git", folder: self.daPath, arguments: ["pull"], callback: { (success2: Bool) in
@@ -112,12 +112,12 @@ typealias Int = Int32
 			} else {
 				self.showError("Fetch Failed.")
 			}
-		})
+		})*/
 	}
 
 	@IBAction func pushDA(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: daPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
+		/*runTask("/usr/bin/git", folder: daPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
 				self.runTask("/usr/bin/git", folder: self.daPath, arguments: ["push"], callback: { (success2: Bool) in
 					self.enableGitButtons(true)
@@ -129,12 +129,12 @@ typealias Int = Int32
 				self.enableGitButtons(true)
 				self.showError("Commit Failed.")
 			}
-		})
+		})*/
 	}
 
 	@IBAction func pullElements(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: elementsPath, arguments: ["fetch"], callback: { (success: Bool) in 
+		/*runTask("/usr/bin/git", folder: elementsPath, arguments: ["fetch"], callback: { (success: Bool) in 
 			self.enableGitButtons(true)
 			if success {
 				self.runTask("/usr/bin/git", folder: self.elementsPath, arguments: ["pull", "-v"], callback: { (success2: Bool) in
@@ -146,12 +146,12 @@ typealias Int = Int32
 			} else {
 				self.showError("Fetch Failed.")
 			}
-		})
+		})*/
 	}
 
 	@IBAction func pushElements(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: elementsPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
+		/*runTask("/usr/bin/git", folder: elementsPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
 				self.runTask("/usr/bin/git", folder: self.elementsPath, arguments: ["push"], callback: { (success2: Bool) in
 					self.enableGitButtons(true)
@@ -163,7 +163,7 @@ typealias Int = Int32
 				self.enableGitButtons(true)
 				self.showError("Commit Failed.")
 			}
-		})
+		})*/
 	}
 	
 	private func enableGitButtons(enabled: Bool) {
@@ -175,11 +175,11 @@ typealias Int = Int32
 	
 	private func logLine(line: String) {
 		NSLog("%@", line)
-		log.textStorage.beginEditing()
-		log.textStorage.mutableString.appendString(line)
-		log.textStorage.mutableString.appendString("\n")
-		log.textStorage.endEditing()
-		log.scrollRangeToVisible(NSMakeRange(log.textStorage.mutableString.length-1, 0))
+		log.textStorage!.beginEditing()
+		log.textStorage!.mutableString.appendString(line)
+		log.textStorage!.mutableString.appendString("\n")
+		log.textStorage!.endEditing()
+		log.scrollRangeToVisible(NSMakeRange(log.textStorage!.mutableString.length-1, 0))
 	}
 
 	private func showError(message: String) {
@@ -189,7 +189,7 @@ typealias Int = Int32
 		alert.messageText = message
 		alert.informativeText = message
 		alert.alertStyle = .NSCriticalAlertStyle // should be .CriticalAlertStyle
-		alert.beginSheetModalForWindow(window, completionHandler: {})
+		alert.beginSheetModalForWindow(window!, completionHandler: {})
 	}
 	
 	@IBOutlet var browseDAButton: NSButton!
@@ -244,7 +244,7 @@ typealias Int = Int32
 	func processTaskOutput(task: NSTask, name: String) {
 		
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-			let stdOut = task.standardOutput.fileHandleForReading
+			let stdOut = task.standardOutput!.fileHandleForReading
 			var lastIncompleteLogLine: String?
 			
 			while task.isRunning { 
@@ -255,7 +255,7 @@ typealias Int = Int32
 			}
 		}
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-			let stdOut = task.standardError.fileHandleForReading
+			let stdOut = task.standardError!.fileHandleForReading
 			var lastIncompleteLogLine: String?
 			
 			while task.isRunning { 
@@ -280,7 +280,7 @@ typealias Int = Int32
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 			task.launch()
 
-			let stdOut = task.standardOutput.fileHandleForReading
+			let stdOut = task.standardOutput!.fileHandleForReading
 			var lastIncompleteLogLine: String?
 			
 			while task.isRunning { 
@@ -312,7 +312,10 @@ typealias Int = Int32
 			let env = ["MONO_MANAGED_WATCHER" : "false"]
 			result.environment = env
 			
-			result.launchPath = "/usr/bin/mono"
+			result.launchPath = "/usr/local/bin/mono"
+			if !NSFileManager.defaultManager.fileExistsAtPath(result.launchPath!) {
+				result.launchPath = "/Library/Frameworks/Mono.framework/Versions/Current/bin/mono"
+			}
 			result.setStandardInput(NSPipe.pipe)
 			result.setStandardOutput(NSPipe.pipe)
 			result.setStandardError(NSPipe.pipe)
