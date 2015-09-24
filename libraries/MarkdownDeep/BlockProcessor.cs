@@ -747,7 +747,7 @@ namespace MarkdownDeep
 				int count = 0;
 				while (!eol)
 				{
-					char chType = current;
+					//char chType = current;
 					if (current == ch)
 					{
 						count++;
@@ -1257,8 +1257,8 @@ namespace MarkdownDeep
 			// Preprocess
 			// 1. Collapse all plain lines (ie: handle hardwrapped lines)
 			// 2. Promote any unindented lines that have more leading space 
-			//    than the original list item to indented, including leading 
-			//    special chars
+			//	than the original list item to indented, including leading 
+			//	special chars
 			int leadingSpace = lines[0].leadingSpaces;
 			for (int i = 1; i < lines.Count; i++)
 			{
