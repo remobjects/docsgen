@@ -24,8 +24,10 @@ import ApplicationServices.HIServices
 	}
 	
 	@IBAction func restart(sender: Any?) {
-		mainWindowController?.restartElements()
-		mainWindowController?.restartDataAbstract()
+		mainWindowController?.restart1()
+		mainWindowController?.restart2()
+		mainWindowController?.restart3()
+		mainWindowController?.restart4()
 	}
 	
 }

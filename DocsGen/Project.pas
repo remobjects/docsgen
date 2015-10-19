@@ -45,13 +45,13 @@ type
     fLogger: ILogger;
     fContext: Context;
     fIndexer: Indexer;
-    fNavGuard: Hashset<String> := new HashSet<String>;
+    fNavGuard: HashSet<String> := new HashSet<String>;
     fBeforeRefresh: Integer;
     fBackgroundWait: System.Threading.AutoResetEvent;
     fBackgroundList: Queue<ProjectFile>;
     fReview: String;
     fTemplateFiles: Dictionary<String, Tuple<DateTime, String>> := new Dictionary<String, Tuple<DateTime, String>>;
-    fUnknownTargets: Dictionary<String, Hashset<String>> := new Dictionary<String,HashSet<String>>;
+    fUnknownTargets: Dictionary<String, HashSet<String>> := new Dictionary<String,HashSet<String>>;
     method GetCachedTemplateFile(s: String): String;
     method ReadTemplateFile(acontext: DotLiquid.Context; templateName: String): String;
   protected
@@ -94,7 +94,7 @@ type
     property ThemeResources: List<String> := new List<String>; readonly;
     property ThemeFiles: Dictionary<String, String> := new Dictionary<String,String>; readonly;
     property OtherFiles: List<String> := new List<String>; readonly;
-    property OtherFilesDict: Hashset<String> := new Hashset<String>; readonly;
+    property OtherFilesDict: HashSet<String> := new HashSet<String>; readonly;
 
     method LoadTheme;
     method Build;
