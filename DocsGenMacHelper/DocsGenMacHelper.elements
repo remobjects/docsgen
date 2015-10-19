@@ -16,6 +16,7 @@
         <InfoPListFile>.\Resources\Info.plist</InfoPListFile>
         <EntitlementsFile>Resources\Entitlements.entitlements</EntitlementsFile>
         <MacIconFile>.\Resources\App.icns</MacIconFile>
+        <DeploymentTargetVersion>10.10</DeploymentTargetVersion>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
         <Optimize>false</Optimize>
