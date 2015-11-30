@@ -1,4 +1,4 @@
-//
+﻿//
 // System.Net.EndPointListener
 //
 // Author:
@@ -49,7 +49,7 @@ namespace Mono.Net {
 		Socket sock;
 		Hashtable prefixes;  // Dictionary <ListenerPrefix, HttpListener>
 		ArrayList unhandled; // List<ListenerPrefix> unhandled; host = '*'
-		ArrayList all;       // List<ListenerPrefix> all;  host = '+'
+		ArrayList all;	   // List<ListenerPrefix> all;  host = '+'
 		X509Certificate2 cert;
 		AsymmetricAlgorithm key;
 		bool secure;

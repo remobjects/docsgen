@@ -6,49 +6,46 @@ typealias Int = Int32
 @IBObject public class MainWindowController : NSWindowController {
 
 	init() {
-
 		super.init(windowNibName: "MainWindowController");
-
-		// Custom initialization
 	}
 	
-	public var daPath: String {
+	public var path1: String? {
 		get {
-			return NSUserDefaults.standardUserDefaults.stringForKey("DataAbstractDocsPath")
+			return NSUserDefaults.standardUserDefaults.stringForKey("Path1")
 		}
 		set {
-			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "DataAbstractDocsPath")
-			restartDataAbstract()
-		}
-	}
-	
-	public var elementsPath: String {
-		get {
-			return NSUserDefaults.standardUserDefaults.stringForKey("ElementsDocsPath")
-		}
-		set {
-			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "ElementsDocsPath")
-			restartElements()
+			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "Path1")
+			restart1()
 		}
 	}
 	
-	public var trainPath: String {
+	public var path2: String? {
 		get {
-			return NSUserDefaults.standardUserDefaults.stringForKey("TrainDocsPath")
+			return NSUserDefaults.standardUserDefaults.stringForKey("Path2")
 		}
 		set {
-			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "TrainDocsPath")
-			restartTrain()
+			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "Path2")
+			restart2()
 		}
 	}
 	
-	public var ciPath: String {
+	public var path3: String? {
 		get {
-			return NSUserDefaults.standardUserDefaults.stringForKey("CI2DocsPath")
+			return NSUserDefaults.standardUserDefaults.stringForKey("Path3")
 		}
 		set {
-			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "CI2DocsPath")
-			//restartElements()
+			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "Path3")
+			restart3()
+		}
+	}
+	
+	public var path4: String? {
+		get {
+			return NSUserDefaults.standardUserDefaults.stringForKey("Path4")
+		}
+		set {
+			NSUserDefaults.standardUserDefaults.setObject(newValue, forKey: "Path4")
+			restart4()
 		}
 	}
 	
@@ -58,15 +55,12 @@ typealias Int = Int32
 		}
 		set {
 			NSUserDefaults.standardUserDefaults.setBool(newValue, forKey: "ReviewMode")
-			restartElements()
-			restartDataAbstract()
+			restartAll()
 		}
 	}
 
 	@IBAction func restart(sender: Any?) {
-		restartElements()
-		restartDataAbstract()
-		restartTrain();
+		restartAll()
 	}
 
 	private var docsGenPath:String {
@@ -82,28 +76,28 @@ typealias Int = Int32
 		NSWorkspace.sharedWorkspace.openURL(NSURL.URLWithString(url))
 	}
 
-	@IBAction func browseElements(sender: Any?) {
+	@IBAction func browse1(sender: Any?) {
 		browseURL("http://localhost:4001/")
 	}
 	
-	@IBAction func browseDa(sender: Any?) {
+	@IBAction func browse2(sender: Any?) {
 		browseURL("http://localhost:4002/")
 	}
 
-	@IBAction func browseTrain(sender: Any?) {
+	@IBAction func browse3(sender: Any?) {
 		browseURL("http://localhost:4003/")
 	}
 
-	@IBAction func browseCI(sender: Any?) {
+	@IBAction func browse4(sender: Any?) {
 		browseURL("http://localhost:4004/")
 	}
 
-	@IBAction func pullDA(sender: Any?) {
+   /* @IBAction func pullDA(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: daPath, arguments: ["fetch"], callback: { (success: Bool) in 
+		/*runTask("/usr/bin/git", folder: path1, arguments: ["fetch"], callback: { (success: Bool) in 
 			self.enableGitButtons(true) 
 			if success {
-				self.runTask("/usr/bin/git", folder: self.daPath, arguments: ["pull"], callback: { (success2: Bool) in
+				self.runTask("/usr/bin/git", folder: self.path1, arguments: ["pull"], callback: { (success2: Bool) in
 					self.enableGitButtons(true)
 					if !success2 {
 						self.showError("Pull Failed.")
@@ -112,14 +106,14 @@ typealias Int = Int32
 			} else {
 				self.showError("Fetch Failed.")
 			}
-		})
+		})*/
 	}
 
 	@IBAction func pushDA(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: daPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
+		/*runTask("/usr/bin/git", folder: path1, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
-				self.runTask("/usr/bin/git", folder: self.daPath, arguments: ["push"], callback: { (success2: Bool) in
+				self.runTask("/usr/bin/git", folder: self.path1, arguments: ["push"], callback: { (success2: Bool) in
 					self.enableGitButtons(true)
 					if !success2 {
 						self.showError("Push Failed.")
@@ -129,15 +123,15 @@ typealias Int = Int32
 				self.enableGitButtons(true)
 				self.showError("Commit Failed.")
 			}
-		})
+		})*/
 	}
 
 	@IBAction func pullElements(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: elementsPath, arguments: ["fetch"], callback: { (success: Bool) in 
+		/*runTask("/usr/bin/git", folder: path2, arguments: ["fetch"], callback: { (success: Bool) in 
 			self.enableGitButtons(true)
 			if success {
-				self.runTask("/usr/bin/git", folder: self.elementsPath, arguments: ["pull", "-v"], callback: { (success2: Bool) in
+				self.runTask("/usr/bin/git", folder: self.path2, arguments: ["pull", "-v"], callback: { (success2: Bool) in
 					self.enableGitButtons(true)
 					if !success2 {
 						self.showError("Pull Failed.")
@@ -146,14 +140,14 @@ typealias Int = Int32
 			} else {
 				self.showError("Fetch Failed.")
 			}
-		})
+		})*/
 	}
 
 	@IBAction func pushElements(sender: Any?) {
 		enableGitButtons(false)
-		runTask("/usr/bin/git", folder: elementsPath, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
+		/*runTask("/usr/bin/git", folder: path2, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
-				self.runTask("/usr/bin/git", folder: self.elementsPath, arguments: ["push"], callback: { (success2: Bool) in
+				self.runTask("/usr/bin/git", folder: self.path2, arguments: ["push"], callback: { (success2: Bool) in
 					self.enableGitButtons(true)
 					if !success2 {
 						self.showError("Push Failed.")
@@ -163,8 +157,8 @@ typealias Int = Int32
 				self.enableGitButtons(true)
 				self.showError("Commit Failed.")
 			}
-		})
-	}
+		})*/
+	}*/
 	
 	private func enableGitButtons(enabled: Bool) {
 		/*pullElementsButton.enabled = enabled
@@ -175,11 +169,11 @@ typealias Int = Int32
 	
 	private func logLine(line: String) {
 		NSLog("%@", line)
-		log.textStorage.beginEditing()
-		log.textStorage.mutableString.appendString(line)
-		log.textStorage.mutableString.appendString("\n")
-		log.textStorage.endEditing()
-		log.scrollRangeToVisible(NSMakeRange(log.textStorage.mutableString.length-1, 0))
+		log.textStorage!.beginEditing()
+		log.textStorage!.mutableString.appendString(line)
+		log.textStorage!.mutableString.appendString("\n")
+		log.textStorage!.endEditing()
+		log.scrollRangeToVisible(NSMakeRange(log.textStorage!.mutableString.length-1, 0))
 	}
 
 	private func showError(message: String) {
@@ -189,7 +183,7 @@ typealias Int = Int32
 		alert.messageText = message
 		alert.informativeText = message
 		alert.alertStyle = .NSCriticalAlertStyle // should be .CriticalAlertStyle
-		alert.beginSheetModalForWindow(window, completionHandler: {})
+		alert.beginSheetModalForWindow(window!, completionHandler: {})
 	}
 	
 	@IBOutlet var browseDAButton: NSButton!
@@ -202,21 +196,33 @@ typealias Int = Int32
 	@IBOutlet var browseCIButton: NSButton!
 	@IBOutlet var log: NSTextView!
 	
-	var elementsTask: NSTask?
-	func restartElements() {
-		elementsTask = restartOldTask(elementsTask, port: 4001, folder: elementsPath)
+	var task1: NSTask?
+	func restart1() {
+		task1 = restartOldTask(task1, port: 4001, folder: path2)
 	}
 
-	var dataAbstractTask: NSTask?
-	func restartDataAbstract() {
-		dataAbstractTask = restartOldTask(dataAbstractTask, port: 4002, folder: daPath)
+	var task2: NSTask?
+	func restart2() {
+		task2 = restartOldTask(task2, port: 4002, folder: path1)
 	}
 	
-	var trainTask: NSTask?
-	func restartTrain() {
-		trainTask = restartOldTask(trainTask, port: 4003, folder: trainPath)
+	var task3: NSTask?
+	func restart3() {
+		task3 = restartOldTask(task3, port: 4003, folder: path3)
 	}
 	
+	var task4: NSTask?
+	func restart4() {
+		task4 = restartOldTask(task4, port: 4004, folder: path4)
+	}
+
+	func restartAll() {
+		restart1()
+		restart2()
+		restart3()
+		restart4()
+	}
+
 	func processTaskOutputFromStdOut(stdOut: NSFileHandle, name: String, lastIncompleteLogLine: String?) {
 		let d = stdOut.availableData;
 		if (d != nil && d.length > 0) {
@@ -244,7 +250,7 @@ typealias Int = Int32
 	func processTaskOutput(task: NSTask, name: String) {
 		
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-			let stdOut = task.standardOutput.fileHandleForReading
+			let stdOut = task.standardOutput!.fileHandleForReading
 			var lastIncompleteLogLine: String?
 			
 			while task.isRunning { 
@@ -255,7 +261,7 @@ typealias Int = Int32
 			}
 		}
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-			let stdOut = task.standardError.fileHandleForReading
+			let stdOut = task.standardError!.fileHandleForReading
 			var lastIncompleteLogLine: String?
 			
 			while task.isRunning { 
@@ -280,7 +286,7 @@ typealias Int = Int32
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 			task.launch()
 
-			let stdOut = task.standardOutput.fileHandleForReading
+			let stdOut = task.standardOutput!.fileHandleForReading
 			var lastIncompleteLogLine: String?
 			
 			while task.isRunning { 
@@ -312,7 +318,10 @@ typealias Int = Int32
 			let env = ["MONO_MANAGED_WATCHER" : "false"]
 			result.environment = env
 			
-			result.launchPath = "/usr/bin/mono"
+			result.launchPath = "/usr/local/bin/mono"
+			if !NSFileManager.defaultManager.fileExistsAtPath(result.launchPath!) {
+				result.launchPath = "/Library/Frameworks/Mono.framework/Versions/Current/bin/mono"
+			}
 			result.setStandardInput(NSPipe.pipe)
 			result.setStandardOutput(NSPipe.pipe)
 			result.setStandardError(NSPipe.pipe)
@@ -327,9 +336,10 @@ typealias Int = Int32
 	}
 	
 	public override func close() {
-		restartOldTask(elementsTask, port: 4001, folder: nil)
-		restartOldTask(dataAbstractTask, port: 4002, folder: nil)
-		restartOldTask(trainTask, port: 4003, folder: nil)
+		restartOldTask(task1, port: 4001, folder: nil)
+		restartOldTask(task2, port: 4002, folder: nil)
+		restartOldTask(task3, port: 4003, folder: nil)
+		restartOldTask(task4, port: 4004, folder: nil)
 	}
 
 	public override func windowDidLoad() {

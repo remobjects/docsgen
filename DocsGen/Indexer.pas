@@ -18,7 +18,7 @@ type
     method MakeHash(s: String): Integer;
     fKeywords: Dictionary<String, List<Tuple<Integer, Integer>>> := new Dictionary<String, List<Tuple<Integer, Integer>>>(StringComparer.OrdinalIgnoreCase);
     fFiles: List<IndexerDoc> := new List<IndexerDoc>;
-    class var fStopWords: Hashset<String> := new Hashset<String>(['a', 'the', 'on', 'off', 'do', 'an', 'that', 'value'], StringComparer.OrdinalIgnoreCase);
+    class var fStopWords: HashSet<String> := new HashSet<String>(['a', 'the', 'on', 'off', 'do', 'an', 'that', 'value'], StringComparer.OrdinalIgnoreCase);
     method RegisterKeyword(s: String; aDoc, aIndex: Integer);
     method IndexFile(s: String; aDoc: Integer);
   protected

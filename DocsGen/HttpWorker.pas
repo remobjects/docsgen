@@ -290,7 +290,7 @@ begin
     end;
   end;
   locking fWaitingRequests do begin
-    var lWork:  LinkeDList<WaitingRequest>;
+    var lWork:  LinkedList<WaitingRequest>;
     if not fWaitingRequests.TryGetValue(lPath, out lWork) then begin
       lWork := new LinkedList<WaitingRequest>;
       fWaitingRequests.Add(lPath, lWork);
