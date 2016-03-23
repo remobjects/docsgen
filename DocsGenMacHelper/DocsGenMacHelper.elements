@@ -38,10 +38,11 @@
         <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="Cocoa.fx"/>
-        <Reference Include="rtl.fx"/>
-        <Reference Include="libNougat.fx"/>
-        <Reference Include="libSwift.fx"/>
+        <Reference Include="Cocoa"/>
+        <Reference Include="rtl"/>
+        <Reference Include="libNougat"/>
+        <Reference Include="libSwift"/>
+        <Reference Include="ApplicationServices.HIServices"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AppDelegate.swift"/>
@@ -61,5 +62,5 @@
         <AppResource Include="..\Bin"/>
         <AppResource Include="..\themes"/>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)/RemObjects Software/Oxygene/RemObjects.Oxygene.Nougat.targets"/>
+    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
 </Project>

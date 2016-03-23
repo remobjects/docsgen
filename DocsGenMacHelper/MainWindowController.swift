@@ -63,13 +63,14 @@ typealias Int = Int32
 		restartAll()
 	}
 
-	private var docsGenPath:String {
+	private var docsGenPath: String {
 		get {
-			return NSBundle.mainBundle.pathForResource("Bin", ofType: "")?.stringByAppendingPathComponent("DocsGen.exe")
+			return NSBundle.mainBundle.pathForResource("Bin", ofType: "")!.stringByAppendingPathComponent("DocsGen.exe")!
 		}
 	}
 	
 	@IBAction func browseURL(url: String) {
+		var url = url
 		if reviewMode { 
 			url += "__status.html"
 		}
@@ -223,7 +224,7 @@ typealias Int = Int32
 		restart4()
 	}
 
-	func processTaskOutputFromStdOut(stdOut: NSFileHandle, name: String, lastIncompleteLogLine: String?) {
+	func processTaskOutputFromStdOut(stdOut: NSFileHandle, name: String, inout lastIncompleteLogLine: String?) {
 		let d = stdOut.availableData;
 		if (d != nil && d.length > 0) {
 			var rawString = NSString(data: d, encoding: .NSUTF8StringEncoding)
@@ -255,7 +256,7 @@ typealias Int = Int32
 			
 			while task.isRunning { 
 				autoreleasepool {
-					self.processTaskOutputFromStdOut(stdOut, name: name, lastIncompleteLogLine: lastIncompleteLogLine)
+					self.processTaskOutputFromStdOut(stdOut, name: name, lastIncompleteLogLine: &lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
 				}
 			}
@@ -266,7 +267,7 @@ typealias Int = Int32
 			
 			while task.isRunning { 
 				autoreleasepool {
-					self.processTaskOutputFromStdOut(stdOut, name: name+" (stderr)", lastIncompleteLogLine: lastIncompleteLogLine)
+					self.processTaskOutputFromStdOut(stdOut, name: name+" (stderr)", lastIncompleteLogLine: &lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
 				}
 			}
@@ -291,7 +292,7 @@ typealias Int = Int32
 			
 			while task.isRunning { 
 				autoreleasepool {
-					self.processTaskOutputFromStdOut(stdOut, name: exe.lastPathComponent+" "+arguments[0], lastIncompleteLogLine: lastIncompleteLogLine)
+					self.processTaskOutputFromStdOut(stdOut, name: exe.lastPathComponent+" "+arguments[0], lastIncompleteLogLine: &lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
 				}
 			}
