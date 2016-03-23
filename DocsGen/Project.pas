@@ -626,7 +626,7 @@ begin
       exit '';
     end;
   end;
-  s := fContext.MakeRelative(s);
+  s := fContext.MakeRelative(coalesce(s, ''));
   exit s + anch;
 end;
 
@@ -785,7 +785,7 @@ begin
     for each el in fFiles.Where(a-> not a.Value.Touched).ToList do
       fFiles.Remove(el.Key);
 
-    for each el in fFiles do begin
+    for each el in fFiles.ToList do begin
       var date := File.GetLastWriteTimeUtc(el.Value.FullFN);
       fLogger.Debug('Checking '+el.Value.FullFN + ' filedate: '+date+' loaddate:'+el.Value.LoadDate);
       if date > el.Value.LoadDate then begin
