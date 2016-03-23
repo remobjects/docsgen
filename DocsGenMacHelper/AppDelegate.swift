@@ -1,6 +1,5 @@
 ﻿import AppKit
 import ApplicationServices.HIServices
-import AppleScriptKit
 
 @IBObject @NSApplicationMain class AppDelegate : INSApplicationDelegate {
 
