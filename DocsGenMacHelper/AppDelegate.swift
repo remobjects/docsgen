@@ -1,5 +1,6 @@
 ﻿import AppKit
 import ApplicationServices.HIServices
+import AppleScriptKit
 
 @IBObject @NSApplicationMain class AppDelegate : INSApplicationDelegate {
 
@@ -19,8 +20,10 @@ import ApplicationServices.HIServices
 	
 	public func handleGetURLEvent(_ event: NSAppleEventDescriptor!, withReplyEvent replyEvent: NSAppleEventDescriptor!) {
 		NSLog("handleGetURLEvent:withReplyEvent:")
-		let url = NSURL.URLWithString(event.paramDescriptorForKeyword(keyDirectObject)?.stringValue);
-		NSLog("%@", url);
+		if let urlString = event.paramDescriptorForKeyword(keyDirectObject)?.stringValue {
+			let url = NSURL.URLWithString(urlString);
+			NSLog("%@", url);
+		}
 	}
 	
 	@IBAction func restart(sender: Any?) {

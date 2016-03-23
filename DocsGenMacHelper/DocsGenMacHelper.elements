@@ -43,6 +43,8 @@
         <Reference Include="libNougat"/>
         <Reference Include="libSwift"/>
         <Reference Include="ApplicationServices.HIServices"/>
+        <Reference Include="AppleScriptKit"/>
+        <Reference Include="CoreServices.AE"/>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AppDelegate.swift"/>
