@@ -447,7 +447,7 @@ begin
     exit;
   end;
   fNavGuard.Add(aFile.FullFN);
-  for each index in aFile.Properties['index']:Split([',']) do begin
+  for each index in aFile.Properties.GetValues('index') do begin
     var lIndex := index;
     var hidden := false;
     if lIndex.StartsWith('!') then begin
