@@ -1228,7 +1228,7 @@ begin
     for each el in Files do begin
       var lTypeN := el.Value.Properties['dash_type'];
 
-      var lTypeID := 12;
+      var lTypeID := 0;
       case lTypeN:ToLowerInvariant() of 
         'unknown': lTypeID := 0;
         'alias': lTypeID := 1;
@@ -1256,11 +1256,12 @@ begin
       
 
       var lName: String;
-      if not String.IsNullOrEmpty(el.Value.Properties['page_title']) then
-        lName := el.Value.Properties['page_title']
-      else if not String.IsNullOrEmpty(el.Value.Properties['unique_title']) then
-        lName := el.Value.Properties['unique_title']
-      else 
+      //if not String.IsNullOrEmpty(el.Value.Properties['page_title']) then
+        //lName := el.Value.Properties['page_title']
+      //else 
+      //if not String.IsNullOrEmpty(el.Value.Properties['unique_title']) then
+        //lName := el.Value.Properties['unique_title']
+      //else 
         lName := el.Value.Title;
       if not String.IsNullOrEmpty(el.Value.Properties.Get('unique_title_suffix')) then
         lName := lName + " "+el.Value.Properties.Get('unique_title_suffix').TrimStart;
