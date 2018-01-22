@@ -33,7 +33,6 @@ implementation
 
 method Indexer.Index(aURL: String; aTitle, aHeadings, aBody: String);
 begin
-  aBody := aBody;
   var lIndex := fFiles.Count;
   fFiles.Add(new IndexerDoc(Url := aURL, Title := aTitle));
   IndexFile(aBody, lIndex);

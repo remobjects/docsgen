@@ -33,14 +33,8 @@ using System.Collections.Generic;
 using System.Net;
 
 namespace Mono.Net {
-#if EMBEDDED_IN_1_0
-	public class HttpListenerPrefixCollection : IEnumerable, ICollection {
-		ArrayList prefixes;
-		
-#else
 	public class HttpListenerPrefixCollection : ICollection<string>, IEnumerable<string>, IEnumerable {
 		List<string> prefixes = new List<string> ();
-#endif
 		HttpListener listener;
 
 		internal HttpListenerPrefixCollection (HttpListener listener)

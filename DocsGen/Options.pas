@@ -939,8 +939,8 @@ begin
 
   var  lResult: StringBuilder := new StringBuilder(description.Length);
   var  lStart: Int32 := -1;
-
-  for  i: Int32  :=  0  to  description.Length-1  do  begin
+  var i := 0;
+  while i < description.Length do begin 
     case  (description[i])  of
       '{':  begin
         if  (i = lStart)  then  begin
@@ -978,6 +978,7 @@ begin
           lResult.Append(description[i])
       end;
     end;
+    inc(i);
   end;
 
   exit  (lResult.ToString());

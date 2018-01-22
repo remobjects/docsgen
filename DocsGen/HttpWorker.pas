@@ -168,7 +168,7 @@ begin
   aCtx.Response.OutputStream.Close;
 end;
 
-method HttpWorker.WriteString(aCtx: HttpListenerContext; s: String): System.Threading.Tasks.Task;
+method HttpWorker.WriteString(aCtx: HttpListenerContext; s: String): Task;
 begin
   var b := Encoding.UTF8.GetBytes(s);
   exit aCtx.Response.OutputStream.WriteAsync(b, 0, b.Length);

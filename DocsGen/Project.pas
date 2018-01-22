@@ -1216,7 +1216,7 @@ begin
   using dc := GetDB(aFN) do begin
     var trans := dc.BeginTransaction;
     ExecuteSQLCommand(dc, trans, 'create table info (version integer, title varchar (1024), css text, image blob)');
-    ExecuteSQLCommand(dc, trans, 'create table document (id integer, url varchar(2048), type int, name varchar(1024), parentid int null, haschildren bool, primary key (id))');
+    ExecuteSQLCommand(dc, trans, 'create table document (id integer, url varchar(2048), type int, name varchar(1024), parentid int null, haschildren bool, parentindex int null, primary key (id))');
     ExecuteSQLCommand(dc, trans, 'create table keyword (document bigint, keyword varchar (1024), keywordtype int)');
     ExecuteSQLCommand(dc, trans, 'create index  if not exists keyword_keywordtype on keyword (keyword,keywordtype);');
     ExecuteSQLCommand(dc, trans, 'create index if not exists doc_parent on document (parentid);');
@@ -1227,11 +1227,33 @@ begin
     var ids := new Dictionary<String, Int64>;
     for each el in Files do begin
       var lTypeN := el.Value.Properties['dash_type'];
+
       var lTypeID := 12;
-      if lTypeN = 'Method' then 
-        lTypeID := 1
-      else if lTypeN = 'Type' then
-        lTypeID := 0;
+      case lTypeN:ToLowerInvariant() of 
+        'unknown': lTypeID := 0;
+        'alias': lTypeID := 1;
+        'class': lTypeID := 2;
+        'const': lTypeID := 3;
+        'delegate': lTypeID := 4;
+        'enum': lTypeID := 5;
+        'event': lTypeID := 6;
+        'extension': lTypeID := 7;
+        'extensionmethod': lTypeID := 8;
+        'field': lTypeID := 9;
+        'generic': lTypeID := 10;
+        'interface': lTypeID := 11;
+        'keyword': lTypeID := 12;
+        'method': lTypeID := 13;
+        'namespace': lTypeID := 14;
+        'pointer': lTypeID := 15;
+        'property': lTypeID := 16;
+        'valuetype': lTypeID := 17;
+        'function': lTypeID := 18;
+        else if Int32.TryParse(lTypeN, out var n) then 
+          lTypeID := n;
+      end;
+      
+
       var lName: String;
       if not String.IsNullOrEmpty(el.Value.Properties['page_title']) then
         lName := el.Value.Properties['page_title']
@@ -1264,9 +1286,10 @@ begin
     for each el in Files do begin
       var lPar := el.Value:Toc:Parent;
       if lPar = nil then continue;
-      ExecuteSQLCommand(dc, trans, 'update document set parentid=@pid where id=@id',
-        ['id', 'pid'],
-        [ids[el.Value.RelativeFN], ids[lPar.File.RelativeFN]]);
+      
+      ExecuteSQLCommand(dc, trans, 'update document set parentid=@pid, parentindex=@pidx where id=@id',
+        ['id', 'pid', 'pidx'],
+        [ids[el.Value.RelativeFN], ids[lPar.File.RelativeFN], lPar.children.IndexOf(el.Value.Toc)]);
     end;
 
     ExecuteSQLCommand(dc, trans, 'update document set haschildren = (case when exists (select * from document d2 where d2.parentid=document.id) then 1 else 0 end)');
