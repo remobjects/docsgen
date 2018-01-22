@@ -1247,8 +1247,9 @@ begin
         'namespace': lTypeID := 14;
         'pointer': lTypeID := 15;
         'property': lTypeID := 16;
-        'valuetype': lTypeID := 17;
+        'record', 'valuetype': lTypeID := 17;
         'function': lTypeID := 18;
+        'block': lTypeID := 19;
         else if Int32.TryParse(lTypeN, out var n) then 
           lTypeID := n;
       end;
