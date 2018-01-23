@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   {% block htmltitle %}
-  <title>{{ page_title | markdown | strip_html }}</title>
+  <title>{{ page_title | escape | markdown }}</title>
   {% endblock %}
 
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
@@ -99,7 +99,7 @@
 				{% for t1 in pathdown %}
 				<li><a href="{{ t1.url }}">{{ t1.title }}</a> &raquo;</li>
 				{% endfor %}
-				<li>{{ page_title| markdown | strip_html }}	</li>
+				<li>{{ page_title | escape | markdown }}	</li>
 				  <li class="breadcrumbs-aside">
 
 				  </li>
@@ -119,7 +119,7 @@
           <div role="main">
             <div class="section main-content">
 			{% block content %}
-			<h1>{{ page_title | markdown }}</h1>
+			<h1>{{ page_title | escape | markdown }}</h1>
               {{ content }}
 			{% endblock %}
             </div>
