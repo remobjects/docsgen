@@ -1215,12 +1215,12 @@ begin
   BuildNavRoot;
   using dc := GetDB(aFN) do begin
     var trans := dc.BeginTransaction;
-    ExecuteSQLCommand(dc, trans, 'create table info (version integer, title varchar (1024), css text, image blob)');
+    ExecuteSQLCommand(dc, trans, 'create table info (version integer, title varchar (1024), css text, image blob, rooturl varchar(2048))');
     ExecuteSQLCommand(dc, trans, 'create table document (id integer, url varchar(2048), type int, name varchar(1024), parentid int null, haschildren bool, parentindex int null, primary key (id))');
     ExecuteSQLCommand(dc, trans, 'create table keyword (document bigint, keyword varchar (1024), keywordtype int)');
     ExecuteSQLCommand(dc, trans, 'create index  if not exists keyword_keywordtype on keyword (keyword,keywordtype);');
     ExecuteSQLCommand(dc, trans, 'create index if not exists doc_parent on document (parentid);');
-    ExecuteSQLCommand(dc, trans, 'insert into info (version, title) values (20140409, @v)', ['v'], [title]);
+    ExecuteSQLCommand(dc, trans, 'insert into info (version, title, rooturl) values (20180113, @v, @q)', ['v', 'q'], [title, aTargetURL]);
     if not String.IsNullOrEmpty(aIcon) then
       ExecuteSQLCommand(dc, trans, 'update info set image=@v', ['v'], [File.ReadAllBytes(aIcon)]);
 
@@ -1250,6 +1250,7 @@ begin
         'record', 'valuetype': lTypeID := 17;
         'function': lTypeID := 18;
         'block': lTypeID := 19;
+        'type': lTypeID := 20;
         else if Int32.TryParse(lTypeN, out var n) then 
           lTypeID := n;
       end;
