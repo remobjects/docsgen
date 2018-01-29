@@ -1264,13 +1264,14 @@ begin
         //lName := el.Value.Properties['unique_title']
       //else 
         lName := el.Value.Title;
-      if not String.IsNullOrEmpty(el.Value.Properties.Get('unique_title_suffix')) then
-        lName := lName + " "+el.Value.Properties.Get('unique_title_suffix').TrimStart;
+      //if not String.IsNullOrEmpty(el.Value.Properties.Get('unique_title_suffix')) then
+        //lName := lName + " "+el.Value.Properties.Get('unique_title_suffix').TrimStart;
       if el.Key = '404.md' then continue;
+      var lURL := aTargetURL + el.Value.TargetURL;
       var id := ExecuteSQLCommand(dc, trans, 
         'insert into document (url, name, type, parentid) values (@url, @title ,@type, @parentid)',
         ['url', 'title', 'type', 'parentid'],
-        [aTargetURL + el.Value.TargetURL, lName, lTypeID, 
+        [lURL, lName, lTypeID, 
         if el.Key = 'index.md' then 0 else nil], true);
       ids.Add(el.Value.RelativeFN, id);
       var lKWD := new List<String>;
