@@ -114,6 +114,18 @@ $(".filename").text(path);
 	});
 });
 
+   window.addEventListener('keydown', function(event) {
+       if (event.ctrlKey || event.metaKey) {
+           switch (String.fromCharCode(event.which).toLowerCase()) {
+             case 's':
+                 event.preventDefault();
+                 save();
+                 break;
+           }
+       }
+   });
+
+
 </script>
 </head>
 <body>
