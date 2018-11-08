@@ -18,7 +18,7 @@ interface
 
 uses
     System;
-    
+
 type
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
@@ -31,7 +31,7 @@ type
     [System.Diagnostics.DebuggerNonUserCodeAttribute]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute]
     Resources = class
-    private 
+    private
         class var resourceMan: System.Resources.ResourceManager;
         class var resourceCulture: System.Globalization.CultureInfo;
         class method get_ResourceManager: System.Resources.ResourceManager;
@@ -72,7 +72,7 @@ type
         class method get_TableRowTagSyntaxException: System.String;
         class method get_VariableFilterNotFoundException: System.String;
         class method get_WeakTableKeyNotFoundException: System.String;
-    assembly 
+    assembly
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         class property ResourceManager: System.Resources.ResourceManager read get_ResourceManager;
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -112,11 +112,11 @@ type
         class property TableRowTagSyntaxException: System.String read get_TableRowTagSyntaxException;
         class property VariableFilterNotFoundException: System.String read get_VariableFilterNotFoundException;
         class property WeakTableKeyNotFoundException: System.String read get_WeakTableKeyNotFoundException;
-    assembly 
+    assembly
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('Microsoft.Performance', 'CA1811:AvoidUncalledPrivateCode')]
         constructor;
     end;
-    
+
 implementation
 
 { Resources }

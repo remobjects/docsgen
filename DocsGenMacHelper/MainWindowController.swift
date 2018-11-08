@@ -8,7 +8,7 @@ typealias Int = Int32
 	init() {
 		super.init(windowNibName: "MainWindowController");
 	}
-	
+
 	public var path1: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("Path1")
@@ -18,7 +18,7 @@ typealias Int = Int32
 			restart1()
 		}
 	}
-	
+
 	public var path2: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("Path2")
@@ -28,7 +28,7 @@ typealias Int = Int32
 			restart2()
 		}
 	}
-	
+
 	public var path3: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("Path3")
@@ -38,7 +38,7 @@ typealias Int = Int32
 			restart3()
 		}
 	}
-	
+
 	public var path4: String? {
 		get {
 			return NSUserDefaults.standardUserDefaults.stringForKey("Path4")
@@ -48,7 +48,7 @@ typealias Int = Int32
 			restart4()
 		}
 	}
-	
+
 	public var reviewMode: Boolean {
 		get {
 			return NSUserDefaults.standardUserDefaults.boolForKey("ReviewMode")
@@ -59,7 +59,7 @@ typealias Int = Int32
 		}
 	}
 
-	@IBAction func restart(sender: Any?) {
+	@IBAction func restart(_ sender: Any?) {
 		restartAll()
 	}
 
@@ -68,35 +68,35 @@ typealias Int = Int32
 			return NSBundle.mainBundle.pathForResource("Bin", ofType: "")!.stringByAppendingPathComponent("DocsGen.exe")!
 		}
 	}
-	
-	@IBAction func browseURL(url: String) {
+
+	@IBAction func browseURL(_ url: String) {
 		var url = url
-		if reviewMode { 
+		if reviewMode {
 			url += "__status.html"
 		}
 		NSWorkspace.sharedWorkspace.openURL(NSURL.URLWithString(url))
 	}
 
-	@IBAction func browse1(sender: Any?) {
+	@IBAction func browse1(_ sender: Any?) {
 		browseURL("http://localhost:4001/")
 	}
-	
-	@IBAction func browse2(sender: Any?) {
+
+	@IBAction func browse2(_ sender: Any?) {
 		browseURL("http://localhost:4002/")
 	}
 
-	@IBAction func browse3(sender: Any?) {
+	@IBAction func browse3(_ sender: Any?) {
 		browseURL("http://localhost:4003/")
 	}
 
-	@IBAction func browse4(sender: Any?) {
+	@IBAction func browse4(_ sender: Any?) {
 		browseURL("http://localhost:4004/")
 	}
 
-   /* @IBAction func pullDA(sender: Any?) {
+   /* @IBAction func pullDA(_ sender: Any?) {
 		enableGitButtons(false)
-		/*runTask("/usr/bin/git", folder: path1, arguments: ["fetch"], callback: { (success: Bool) in 
-			self.enableGitButtons(true) 
+		/*runTask("/usr/bin/git", folder: path1, arguments: ["fetch"], callback: { (success: Bool) in
+			self.enableGitButtons(true)
 			if success {
 				self.runTask("/usr/bin/git", folder: self.path1, arguments: ["pull"], callback: { (success2: Bool) in
 					self.enableGitButtons(true)
@@ -110,7 +110,7 @@ typealias Int = Int32
 		})*/
 	}
 
-	@IBAction func pushDA(sender: Any?) {
+	@IBAction func pushDA(_ sender: Any?) {
 		enableGitButtons(false)
 		/*runTask("/usr/bin/git", folder: path1, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
@@ -127,9 +127,9 @@ typealias Int = Int32
 		})*/
 	}
 
-	@IBAction func pullElements(sender: Any?) {
+	@IBAction func pullElements(_ sender: Any?) {
 		enableGitButtons(false)
-		/*runTask("/usr/bin/git", folder: path2, arguments: ["fetch"], callback: { (success: Bool) in 
+		/*runTask("/usr/bin/git", folder: path2, arguments: ["fetch"], callback: { (success: Bool) in
 			self.enableGitButtons(true)
 			if success {
 				self.runTask("/usr/bin/git", folder: self.path2, arguments: ["pull", "-v"], callback: { (success2: Bool) in
@@ -144,7 +144,7 @@ typealias Int = Int32
 		})*/
 	}
 
-	@IBAction func pushElements(sender: Any?) {
+	@IBAction func pushElements(_ sender: Any?) {
 		enableGitButtons(false)
 		/*runTask("/usr/bin/git", folder: path2, arguments: ["commit","-m", "LatestReviews"], callback: { (success: Bool) in
 			if success {
@@ -160,15 +160,15 @@ typealias Int = Int32
 			}
 		})*/
 	}*/
-	
+
 	private func enableGitButtons(enabled: Bool) {
 		/*pullElementsButton.enabled = enabled
 		pushElementsButton.enabled = enabled
 		pullDAButton.enabled = enabled
 		pushDAButton.enabled = enabled*/
 	}
-	
-	private func logLine(line: String) {
+
+	private func logLine(_ line: String) {
 		NSLog("%@", line)
 		log.textStorage!.beginEditing()
 		log.textStorage!.mutableString.appendString(line)
@@ -186,7 +186,7 @@ typealias Int = Int32
 		alert.alertStyle = .NSCriticalAlertStyle // should be .CriticalAlertStyle
 		alert.beginSheetModalForWindow(window!, completionHandler: {})
 	}
-	
+
 	@IBOutlet var browseDAButton: NSButton!
 	@IBOutlet var pullDAButton: NSButton!
 	@IBOutlet var pushDAButton: NSButton!
@@ -196,7 +196,7 @@ typealias Int = Int32
 	@IBOutlet var browseTrainButton: NSButton!
 	@IBOutlet var browseCIButton: NSButton!
 	@IBOutlet var log: NSTextView!
-	
+
 	var task1: NSTask?
 	func restart1() {
 		task1 = restartOldTask(task1, port: 4001, folder: path2)
@@ -206,12 +206,12 @@ typealias Int = Int32
 	func restart2() {
 		task2 = restartOldTask(task2, port: 4002, folder: path1)
 	}
-	
+
 	var task3: NSTask?
 	func restart3() {
 		task3 = restartOldTask(task3, port: 4003, folder: path3)
 	}
-	
+
 	var task4: NSTask?
 	func restart4() {
 		task4 = restartOldTask(task4, port: 4004, folder: path4)
@@ -224,7 +224,7 @@ typealias Int = Int32
 		restart4()
 	}
 
-	func processTaskOutputFromStdOut(stdOut: NSFileHandle, name: String, inout lastIncompleteLogLine: String?) {
+	func processTaskOutputFromStdOut(_ stdOut: NSFileHandle, name: String, inout lastIncompleteLogLine: String?) {
 		let d = stdOut.availableData;
 		if (d != nil && d.length > 0) {
 			var rawString = NSString(data: d, encoding: .NSUTF8StringEncoding)
@@ -233,7 +233,7 @@ typealias Int = Int32
 				lastIncompleteLogLine = nil;
 			}
 			let lines = rawString.componentsSeparatedByString("\n");
-			for var i: Int = 0; i < lines.count; i++ {
+			for i in 0 ..< lines.count {
 				let s: String = lines[i]!;
 				if i == lines.count-1 && !s.hasSuffix("\n") {
 					if s.length > 0 {
@@ -247,14 +247,14 @@ typealias Int = Int32
 			}
 		}
 	}
-	
-	func processTaskOutput(task: NSTask, name: String) {
-		
+
+	func processTaskOutput(_ task: NSTask, name: String) {
+
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 			let stdOut = task.standardOutput!.fileHandleForReading
 			var lastIncompleteLogLine: String?
-			
-			while task.isRunning { 
+
+			while task.isRunning {
 				autoreleasepool {
 					self.processTaskOutputFromStdOut(stdOut, name: name, lastIncompleteLogLine: &lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
@@ -264,8 +264,8 @@ typealias Int = Int32
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 			let stdOut = task.standardError!.fileHandleForReading
 			var lastIncompleteLogLine: String?
-			
-			while task.isRunning { 
+
+			while task.isRunning {
 				autoreleasepool {
 					self.processTaskOutputFromStdOut(stdOut, name: name+" (stderr)", lastIncompleteLogLine: &lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
@@ -273,8 +273,8 @@ typealias Int = Int32
 			}
 		}
 	}
-	
-	
+
+
 	func runTask(exe: String, folder: String, arguments: Object[], callback: (Bool)->() ) {
 		let task = NSTask()
 		task.arguments = NSArray.arrayWithObjects((&arguments[0]) as! UnsafePointer<id>, count: length(arguments)) // workaround
@@ -289,8 +289,8 @@ typealias Int = Int32
 
 			let stdOut = task.standardOutput!.fileHandleForReading
 			var lastIncompleteLogLine: String?
-			
-			while task.isRunning { 
+
+			while task.isRunning {
 				autoreleasepool {
 					self.processTaskOutputFromStdOut(stdOut, name: exe.lastPathComponent+" "+arguments[0], lastIncompleteLogLine: &lastIncompleteLogLine)
 					NSRunLoop.currentRunLoop().runUntilDate(NSDate.date)
@@ -302,23 +302,23 @@ typealias Int = Int32
 			}
 		}
 	}
-	
-	func restartOldTask(oldTask:NSTask?, port:Int, folder: String?) -> NSTask? {
+
+	func restartOldTask(_ oldTask: NSTask?, port:Int, folder: String?) -> NSTask? {
 		if let task = oldTask {
 			task.terminate();
 		}
 		if length(folder) > 0 {
 			let result = NSTask()
 			//let args: [String] = [String](arrayLiteral: [docsGenPath, "serve", folder!, "--port", port.stringValue, "--loop"])
-			let args: NSMutableArray! = [docsGenPath, "serve", folder!, "--port", port.stringValue, "--loop"]
+			let args: NSMutableArray<String> = [docsGenPath, "serve", folder!, "--port", port.stringValue, "--loop"]
 			if reviewMode {
 				args.addObject("--edit")
 			}
 			result.arguments = args
-			
+
 			let env = ["MONO_MANAGED_WATCHER" : "false"]
 			result.environment = env
-			
+
 			result.launchPath = "/usr/local/bin/mono"
 			if !NSFileManager.defaultManager.fileExistsAtPath(result.launchPath!) {
 				result.launchPath = "/Library/Frameworks/Mono.framework/Versions/Current/bin/mono"
@@ -328,14 +328,14 @@ typealias Int = Int32
 			result.setStandardError(NSPipe.pipe)
 			result.launch()
 			processTaskOutput(result, name: folder!.lastPathComponent)
-			
+
 			NSLog("Starting %@ %@", result.launchPath, result.arguments)
 			return result
 		} else {
 			return nil
 		}
 	}
-	
+
 	public override func close() {
 		restartOldTask(task1, port: 4001, folder: nil)
 		restartOldTask(task2, port: 4002, folder: nil)
