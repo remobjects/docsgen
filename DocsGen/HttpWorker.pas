@@ -289,8 +289,8 @@ begin
       if length(lFolder) > 0 then begin
         lFolder := lFolder.Trim('/');
         lFolder := System.IO.Path.Combine(fProject.ProjectPath, lFolder.Replace("/", System.IO.Path.DirectorySeparatorChar));
-        System.IO.Directory.CreateDirectory(lFile);
-        System.IO.File.WriteAllText(System.IO.Path.Combine(lFile, "index.md"), "---"#13#10"title:"+System.IO.Path.GetFileName(lFile)+#13#10"---"#13#10);
+        System.IO.Directory.CreateDirectory(lFolder);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(lFolder, "index.md"), "---"#13#10"title:"+System.IO.Path.GetFileName(lFolder)+#13#10"---"#13#10);
         SendError(aContext, 200, $'created folder "{lFolder}"', $'created folder "{lFolder}"');
       end;
     end;

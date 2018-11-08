@@ -1112,7 +1112,9 @@ end;
 method Project.get_Missing: String;
 begin
   var sb := new StringBuilder;
-  for each d in fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key) do begin
+  var lMissingPages := fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key).ToList;
+  sb.Append($"{lMissingPages.Count} pages are missing.<br />");
+  for each d in lMissingPages do begin
     sb.Append('<b>');
     sb.Append(d.Key);
     sb.Append(' ');
