@@ -25,6 +25,13 @@ type
   end;
   Project = public class(DotLiquid.FileSystems.IFileSystem)
   private
+    method OnAfterBrokenLink(sb: StringBuilder; link, atitle: String);
+    begin 
+      if not link.EndsWith('.md') then 
+        sb.AppendFormat('<a href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'/index.md&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
+      sb.AppendFormat('<a class="btn btn-warning" href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
+    end;
+
     method GetRegularDB(s: String): IDbConnection;
     method GetMonoDB(s: String): IDbConnection;
     method get_Missing: String;
@@ -640,6 +647,8 @@ begin
   result.AutoHeadingIDs := true;
   result.QualifyUrl := @AdjustURL;
   result.HeadingGenerated += (h, id, value) -> fHeadings.Add(Tuple.Create(h, id, value));
+  if edit then 
+    result.OnAfterBrokenLink += OnAfterBrokenLink;
 end;
 
 class method Project.GetHeadingLevel(s: String): Integer;
@@ -1526,6 +1535,11 @@ begin
   result := lProject.Markdown.Transform(md).Trim;
   if result.StartsWith('<p>') and result.EndsWith('</p>') then
     result := result.Substring(3, result.Length -7);
+end;
+
+method OnAfterBrokenLink(arg1: StringBuilder; arg2: String);
+begin
+
 end;
 
 

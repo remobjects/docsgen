@@ -224,6 +224,25 @@ end;
 method HttpWorker.Editor(aContext: HttpListenerContext; aPath: String): Boolean;
 begin
   try
+    if aPath = '__new' then begin 
+      var lFile := aContext.Request.QueryString['path'];
+      var lerr := System.IO.Path.Combine(self.fProject.ProjectPath, lFile.Replace('/',System.IO.Path.DirectorySeparatorChar));
+      if not System.IO.File.Exists(lerr) then begin 
+        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(lerr));
+        System.IO.File.WriteAllText(System.IO.Path.Combine(self.fProject.ProjectPath, lFile.Replace('/',System.IO.Path.DirectorySeparatorChar)), '---'#13#10'title: '+aContext.Request.QueryString['title']+#13#10'---'#13#10);
+      end;
+        try
+          aContext.Response.StatusCode := 302;
+          aContext.Response.StatusDescription := 'moved temporarily';
+          aContext.Response.Headers['Location'] := '/__edit/editor.html?path='+HttpUtility.UrlEncode(lFile);
+          aContext.Response.ContentType := 'text/html';
+  
+          WriteString(aContext, String.Format("<html />")).Wait;
+        except
+        end;
+        aContext.Response.OutputStream.Close;
+      exit true;
+    end;
     if aPath = '__load' then begin
       var lFile := aContext.Request.QueryString['path'];
       var pf: ProjectFile;

@@ -46,6 +46,7 @@ namespace MarkdownDeep
 			m_UsedHeaderIDs = new Dictionary<string, bool>();
 		}
 
+
 		internal List<Block> ProcessBlocks(string str)
 		{
 			// Reset the list of link definitions
@@ -66,6 +67,12 @@ namespace MarkdownDeep
 		}
 
 
+        public event Action<StringBuilder, String, String> OnAfterBrokenLink;
+        public void AfterBrokenLink(StringBuilder sb, string link, string title)
+        {
+            if (OnAfterBrokenLink != null)
+                OnAfterBrokenLink(sb, link, title);
+        }
 
         public event HeadingCallback HeadingGenerated;
         

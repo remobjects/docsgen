@@ -108,6 +108,9 @@ namespace MarkdownDeep
 
 				b.Append(link_text);	  // Link text already escaped by SpanFormatter
 				b.AppendFormat("</{0}>", tag.name);
+                if (href =="") {
+                    m.AfterBrokenLink(b, sb.ToString(), link_text);
+                }
 			}
 		}
 
