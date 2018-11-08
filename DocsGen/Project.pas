@@ -18,18 +18,20 @@ type
     property Value: String;
     property Items: List<FileTocNode> := new List<FileTocNode>; readonly;
   end;
+
   MyNameValueCollection = public class(System.Collections.Specialized.NameValueCollection, DotLiquid.IIndexable)
   public
     method ContainsKey(key: Object): Boolean;
     property Item[key: Object]: Object read inherited Item[key:ToString];
   end;
+
   Project = public class(DotLiquid.FileSystems.IFileSystem)
   private
     method OnAfterBrokenLink(sb: StringBuilder; link, atitle: String);
     begin
-      if not link.EndsWith('.md') then
-        sb.AppendFormat('<a href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'/index.md&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
-      sb.AppendFormat('<a class="btn btn-warning" href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
+      //if not link.EndsWith('.md') then
+        //sb.AppendFormat('<a href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'/index.md&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
+      //sb.AppendFormat('<a class="btn btn-warning" href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
     end;
 
     method GetRegularDB(s: String): IDbConnection;
@@ -1113,6 +1115,11 @@ begin
   for each d in fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key) do begin
     sb.Append('<b>');
     sb.Append(d.Key);
+    sb.Append(' ');
+    sb.Append('<a href="/__edit/__create?file='+ d.Key.Replace('\', '/') +'">(create file)</a> ');
+    sb.Append('<a href="/__edit/__create?folder='+ d.Key.Replace('\', '/') +'">(create folder)</a> ');
+    //sb.Append(' <a href="docsgen://action=createfile?path='+ d.Key.Replace('\', '/') +'">(create as file)</a> ');
+    //sb.Append(' <a href="docsgen://action=createfolder&url=file://'+ d.Key.Replace('\', '/') +'">(create as folder)</a> ');
     sb.Append('</b></br>');
     sb.AppendLine('<ul>');
     for each el in d do begin

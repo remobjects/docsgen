@@ -276,6 +276,24 @@ begin
         end);
       exit true;
     end;
+    if aPath = '__create' then begin
+      var lFile := aContext.Request.QueryString['file'];
+      var lFolder := aContext.Request.QueryString['folder'];
+      if length(lFile) > 0 then begin
+        lFile := lFile.Trim('/');
+        lFile := System.IO.Path.Combine(fProject.ProjectPath, lFile.Replace("/", System.IO.Path.DirectorySeparatorChar))+".md";
+        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(lFile));
+        System.IO.File.WriteAllText(lFile, "---"#13#10"title:"+System.IO.Path.GetFileNameWithoutExtension(lFile)+#13#10"---"#13#10);
+        SendError(aContext, 200, $'created file "{lFile}""', $'created file "{lFile}"');
+      end;
+      if length(lFolder) > 0 then begin
+        lFolder := lFolder.Trim('/');
+        lFolder := System.IO.Path.Combine(fProject.ProjectPath, lFolder.Replace("/", System.IO.Path.DirectorySeparatorChar));
+        System.IO.Directory.CreateDirectory(lFile);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(lFile, "index.md"), "---"#13#10"title:"+System.IO.Path.GetFileName(lFile)+#13#10"---"#13#10);
+        SendError(aContext, 200, $'created folder "{lFolder}"', $'created folder "{lFolder}"');
+      end;
+    end;
     var tp := System.IO.Path.GetFullPath(System.IO.Path.Combine(Project.StandardThemePath.Replace('/', System.IO.Path.DirectorySeparatorChar), 'editor'));
 
     var nf :=System.IO. Path.Combine(tp, aPath.Replace('/', System.IO.Path.DirectorySeparatorChar));
