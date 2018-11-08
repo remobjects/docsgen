@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Info.plist" />
-    <Content Include="Resources\App.icns" />
+    <AppResource Include="Resources\App.icns" />
     <Xib Include="MainWindowController.xib">
       <DependentUpon>MainWindowController.swift</DependentUpon>
     </Xib>
