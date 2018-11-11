@@ -1112,19 +1112,21 @@ end;
 method Project.get_Missing: String;
 begin
   var sb := new StringBuilder;
-  var lMissingPages := fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key).ToList;
-  sb.Append($"{lMissingPages.Count} pages are missing.<br />");
+
+  var lMissingPages := fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key.Trim('/')).ToList;
+  sb.Append($"<h2>Missing Pages</h2>");
+  sb.Append($"{lMissingPages.Count} pages are missing.");
+  sb.Append($"<ul>");
   for each d in lMissingPages do begin
-    sb.Append('<b>');
-    sb.Append(d.Key);
-    sb.Append(' ');
-    sb.Append('<a href="/__edit/__create?file='+ d.Key.Replace('\', '/') +'">(create file)</a> ');
-    sb.Append('<a href="/__edit/__create?folder='+ d.Key.Replace('\', '/') +'">(create folder)</a> ');
-    //sb.Append(' <a href="docsgen://action=createfile?path='+ d.Key.Replace('\', '/') +'">(create as file)</a> ');
-    //sb.Append(' <a href="docsgen://action=createfolder&url=file://'+ d.Key.Replace('\', '/') +'">(create as folder)</a> ');
-    sb.Append('</b></br>');
+    sb.Append($"<li>");
+    sb.Append($"<b>{d.Key.Trim('/')}</b>");
+    if edit then begin
+      sb.Append(" &mdash; ");
+      sb.Append($"<a href='/__edit/__create?file={d.Key.Replace("\", "/")}'>(create file)</a> ");
+      sb.Append($"<a href='/__edit/__create?folder={d.Key.Replace('\', '/')}'>(create folder)</a> ");
+    end;
     sb.AppendLine('<ul>');
-    for each el in d do begin
+    for each el in d.OrderBy(a->a.Trim('/') do begin
       var pf: ProjectFile;
       fFiles.TryGetValue(el.Replace('\', '/'), out pf);
       if pf = nil then begin
@@ -1134,17 +1136,59 @@ begin
         continue;
       end;
       sb.Append('<li>');
+      if pf.IncludeFile then
+        sb.Append($"/{pf.RelativeFN.Replace('\','/').Trim('/')}")
+      else
+        sb.Append($"<a href='{pf.TargetURL}'>{pf.RelativeFN.Replace("\","/").Trim('/')}</a>");
       if edit then begin
+        sb.Append(" &mdash; ");
         sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
         sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
       end;
-      if pf.IncludeFile then
-        sb.AppendLine('/'+pf.RelativeFN.Replace('\','/')+' </li>')
-      else
-        sb.AppendLine('<a href="'+pf.TargetURL+'">/'+pf.RelativeFN.Replace('\','/')+'</a> </li>');
+      sb.Append('</li>');
     end;
     sb.AppendLine('</ul>');
   end;
+  sb.Append($"</ul>");
+
+  sb.Append($"<hr>");
+
+  sb.Append($"<h2>Pages with Broken Links</h2>");
+  sb.Append($"{fUnknownTargets.Count} pages have broken links.");
+  sb.Append($"<ul>");
+  for each el in fUnknownTargets.OrderBy(a -> a.Key.Trim('/')) do begin
+    fFiles.TryGetValue(el.Key.Replace('\', '/'), out var pf);
+    if pf = nil then begin
+      sb.Append($"<li>{el.Key.Trim('/')}</li>");
+      continue;
+    end;
+    sb.Append($"<li>");
+    if pf.IncludeFile then
+      sb.Append($"/{pf.RelativeFN.Replace('\','/').Trim('/')}")
+    else
+      sb.Append($"<a href='{pf.TargetURL}'>{pf.RelativeFN.Replace("\","/").Trim('/')}</a>");
+    if edit then begin
+      sb.Append(" &mdash; ");
+      sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
+      sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+    end;
+    sb.Append($"<ul>");
+    for each d in el.Value.OrderBy(a->a.Key.Trim('/') do begin
+      sb.Append($"<li>");
+      sb.Append($"<b>{d.Trim('/')}</b>");
+      if edit then begin
+        sb.Append(" &mdash; ");
+        sb.Append($"<a href='/__edit/__create?file={d.Replace("\", "/")}'>(create file)</a> ");
+        sb.Append($"<a href='/__edit/__create?folder={d.Replace('\', '/')}'>(create folder)</a> ");
+      end;
+      sb.Append($"</li>");
+    end;
+    sb.Append($"</ul>");
+    sb.Append($"</li>");
+  end;
+  sb.Append($"</ul>");
+
+
   fContext.CurrentFile := Files['index.md'];
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
