@@ -281,16 +281,20 @@ begin
       var lFolder := aContext.Request.QueryString['folder'];
       if length(lFile) > 0 then begin
         lFile := lFile.Trim('/');
+        if lFile.EndsWith(".md") then
+          lFile := lFile.Substring(length(lFile)-3);
         lFile := System.IO.Path.Combine(fProject.ProjectPath, lFile.Replace("/", System.IO.Path.DirectorySeparatorChar))+".md";
         System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(lFile));
-        System.IO.File.WriteAllText(lFile, "---"#13#10"title:"+System.IO.Path.GetFileNameWithoutExtension(lFile)+#13#10"---"#13#10);
+        System.IO.File.WriteAllText(lFile, "---"#13#10"title: "+System.IO.Path.GetFileNameWithoutExtension(lFile)+#13#10"---"#13#10);
         SendError(aContext, 200, $'created file "{lFile}""', $'created file "{lFile}"');
       end;
       if length(lFolder) > 0 then begin
         lFolder := lFolder.Trim('/');
+        if lFolder.EndsWith(".md") then
+          lFolder := lFolder.Substring(length(lFolder)-3);
         lFolder := System.IO.Path.Combine(fProject.ProjectPath, lFolder.Replace("/", System.IO.Path.DirectorySeparatorChar));
         System.IO.Directory.CreateDirectory(lFolder);
-        System.IO.File.WriteAllText(System.IO.Path.Combine(lFolder, "index.md"), "---"#13#10"title:"+System.IO.Path.GetFileName(lFolder)+#13#10"---"#13#10);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(lFolder, "index.md"), "---"#13#10"title: "+System.IO.Path.GetFileName(lFolder)+#13#10"---"#13#10);
         SendError(aContext, 200, $'created folder "{lFolder}"', $'created folder "{lFolder}"');
       end;
     end;
