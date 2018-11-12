@@ -80,7 +80,7 @@ begin
               SendError(aContext, 500, 'Internal Error', e.Message);
           end;
           exit;
-        end else 
+        end else
         if s = '__keywords.html'then begin
           try
             SendHtml(aContext, fProject.Keywords);
@@ -89,7 +89,7 @@ begin
               SendError(aContext, 500, 'Internal Error', e.Message);
           end;
           exit;
-        end else 
+        end else
         if s = '__status.html' then begin
           try
             SendHtml(aContext, fProject.Review);
@@ -110,7 +110,7 @@ begin
 
         var lPath: ProjectFile;
         if s.EndsWith('index.html') then s := s.Substring(0, s.Length - 10);
-        if (s = '') and fProject.Files.TryGetValue('index.md', out lPath)  then begin 
+        if (s = '') and fProject.Files.TryGetValue('index.md', out lPath)  then begin
           ServeFile(aContext, lPath);
           exit;
         end;
@@ -130,7 +130,7 @@ begin
           exit;
         end;
 
-        
+
         if fProject.OtherFilesDict.Contains(s) then begin
           SendFile(aContext, System.IO.Path.Combine(fProject.ProjectPath, s));
           exit;
@@ -142,7 +142,7 @@ begin
         SendError(aContext, 404, 'Not Found', 'Could not find that file');
       end;
     end;
-    else 
+    else
       SendError(aContext, 403, 'Forbidden', 'Only GET and HEAD are allowed');
   end;
 end;
@@ -153,7 +153,7 @@ begin
     aCtx.Response.StatusCode := aCode;
     aCtx.Response.StatusDescription := aReason;
     aCtx.Response.ContentType := 'text/html';
-  
+
     await WriteString(aCtx, String.Format("<html>
   <head>
     <title>{0} {1}</title>
@@ -210,7 +210,7 @@ begin
   try
     fProject.Logger.Debug('Serving file: '+aFile.FullFN+'; Last build date: '+aFile.BuildDate);
     fProject.BuildIfNeeded(aFile);
-            
+
     SendFile(aContext, System.IO.Path.Combine(fProject.ProjectPath, fProject.Output, aFile.TargetFN));
     exit;
   except
@@ -224,10 +224,10 @@ end;
 method HttpWorker.Editor(aContext: HttpListenerContext; aPath: String): Boolean;
 begin
   try
-    if aPath = '__new' then begin 
+    if aPath = '__new' then begin
       var lFile := aContext.Request.QueryString['path'];
       var lerr := System.IO.Path.Combine(self.fProject.ProjectPath, lFile.Replace('/',System.IO.Path.DirectorySeparatorChar));
-      if not System.IO.File.Exists(lerr) then begin 
+      if not System.IO.File.Exists(lerr) then begin
         System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(lerr));
         System.IO.File.WriteAllText(System.IO.Path.Combine(self.fProject.ProjectPath, lFile.Replace('/',System.IO.Path.DirectorySeparatorChar)), '---'#13#10'title: '+aContext.Request.QueryString['title']+#13#10'---'#13#10);
       end;
@@ -236,7 +236,7 @@ begin
           aContext.Response.StatusDescription := 'moved temporarily';
           aContext.Response.Headers['Location'] := '/__edit/editor.html?path='+HttpUtility.UrlEncode(lFile);
           aContext.Response.ContentType := 'text/html';
-  
+
           WriteString(aContext, String.Format("<html />")).Wait;
         except
         end;
@@ -275,6 +275,28 @@ begin
         end;
         end);
       exit true;
+    end;
+    if aPath = '__create' then begin
+      var lFile := aContext.Request.QueryString['file'];
+      var lFolder := aContext.Request.QueryString['folder'];
+      if length(lFile) > 0 then begin
+        lFile := lFile.Trim('/');
+        if lFile.EndsWith(".md") then
+          lFile := lFile.Substring(length(lFile)-3);
+        lFile := System.IO.Path.Combine(fProject.ProjectPath, lFile.Replace("/", System.IO.Path.DirectorySeparatorChar))+".md";
+        System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(lFile));
+        System.IO.File.WriteAllText(lFile, "---"#13#10"title: "+System.IO.Path.GetFileNameWithoutExtension(lFile)+#13#10"---"#13#10);
+        SendError(aContext, 200, $'created file "{lFile}""', $'created file "{lFile}"');
+      end;
+      if length(lFolder) > 0 then begin
+        lFolder := lFolder.Trim('/');
+        if lFolder.EndsWith(".md") then
+          lFolder := lFolder.Substring(length(lFolder)-3);
+        lFolder := System.IO.Path.Combine(fProject.ProjectPath, lFolder.Replace("/", System.IO.Path.DirectorySeparatorChar));
+        System.IO.Directory.CreateDirectory(lFolder);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(lFolder, "index.md"), "---"#13#10"title: "+System.IO.Path.GetFileName(lFolder)+#13#10"---"#13#10);
+        SendError(aContext, 200, $'created folder "{lFolder}"', $'created folder "{lFolder}"');
+      end;
     end;
     var tp := System.IO.Path.GetFullPath(System.IO.Path.Combine(Project.StandardThemePath.Replace('/', System.IO.Path.DirectorySeparatorChar), 'editor'));
 
@@ -328,9 +350,9 @@ begin
     aContext.Response.StatusCode := 200;
     aContext.Response.StatusDescription := 'OK';
     aContext.Response.ContentType := 'text/plain';
-  
+
     await WriteString(aContext, 'NOT UPDATED');
-  except 
+  except
   end;
   try
     aContext.Response.Close();
@@ -355,9 +377,9 @@ begin
       el.Item.Response.StatusCode := 200;
       el.Item.Response.StatusDescription := 'OK';
       el.Item.Response.ContentType := 'text/plain';
-  
+
       await WriteString(el.Item, 'UPDATED');
-    except 
+    except
     end;
     try el.Item.Response.OutputStream.Close; except end;
   end;
@@ -369,7 +391,7 @@ begin
     aCtx.Response.StatusCode := 200;
     aCtx.Response.StatusDescription := 'OK';
     aCtx.Response.ContentType := 'text/html';
-  
+
     await WriteString(aCtx, s);
   except
   end;
@@ -392,7 +414,7 @@ begin
         if not fProject.Files.TryGetValue(el, out pf) then continue;
         try
           var date := System.IO.File.GetLastWriteTimeUtc(pf.FullFN);
-          if pf.LoadDate < date then 
+          if pf.LoadDate < date then
             FileUpdated(el);
         except
         end;

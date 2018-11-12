@@ -70,7 +70,7 @@ begin
       aTarget.Write(']');
       lItem := lItem.Next;
       if assigned(lItem) then
-        aTarget.Write(',');      
+        aTarget.Write(',');
     end;
     aTarget.Write('}');
   end;
@@ -82,7 +82,7 @@ begin
   for i: Integer := 0 to fFiles.Count -1 do begin
     if i <> 0 then aTarget.Write(',');
     aTarget.Write('{t:'#39 + coalesce(fFiles[i].Title, '').Replace(#39, '\'#39)+#39', u:'#39+fFiles[i].Url+#39'}');
-  end; 
+  end;
   aTarget.Write('];');
 end;
 
@@ -126,7 +126,7 @@ begin
     if s[i] in ['a'..'z', 'A'..'Z', '_'] then begin
       lMark := i;
       inc(i);
-      while (i < s.Length) and (s[i] in ['a'..'z', 'A'..'Z', '_', '-', '0'..'9']) do 
+      while (i < s.Length) and (s[i] in ['a'..'z', 'A'..'Z', '_', '-', '0'..'9']) do
         inc(i);
       RegisterKeyword(s.Substring(lMark, i - lMark), aDoc, lIndex);
       inc(lIndex);

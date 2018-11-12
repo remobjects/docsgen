@@ -11,13 +11,13 @@ namespace DotLiquid
 			System.Text.RegularExpressions.Regex x;
 			lock(m) {
 				if (!m.TryGetValue(pattern, out x)) {
-					x = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.Compiled); 
+					x = new System.Text.RegularExpressions.Regex(pattern, System.Text.RegularExpressions.RegexOptions.Compiled);
 					m[pattern] = x;
 				}
 			}
 			return x;
 		}
-	public static System.Text.RegularExpressions.MatchCollection Matches(string inp, string pat){ 
+	public static System.Text.RegularExpressions.MatchCollection Matches(string inp, string pat){
 		return GetCachedRegex(pat).Matches(inp);
 	}
 		public static string Replace(string input, string pattern, string replacement) {

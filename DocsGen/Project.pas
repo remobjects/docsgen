@@ -18,18 +18,20 @@ type
     property Value: String;
     property Items: List<FileTocNode> := new List<FileTocNode>; readonly;
   end;
+
   MyNameValueCollection = public class(System.Collections.Specialized.NameValueCollection, DotLiquid.IIndexable)
   public
     method ContainsKey(key: Object): Boolean;
     property Item[key: Object]: Object read inherited Item[key:ToString];
   end;
+
   Project = public class(DotLiquid.FileSystems.IFileSystem)
   private
     method OnAfterBrokenLink(sb: StringBuilder; link, atitle: String);
-    begin 
-      if not link.EndsWith('.md') then 
-        sb.AppendFormat('<a href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'/index.md&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
-      sb.AppendFormat('<a class="btn btn-warning" href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
+    begin
+      //if not link.EndsWith('.md') then
+        //sb.AppendFormat('<a href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'/index.md&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
+      //sb.AppendFormat('<a class="btn btn-warning" href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
     end;
 
     method GetRegularDB(s: String): IDbConnection;
@@ -112,8 +114,8 @@ type
     property Missing: String read get_Missing;
 
     method BeginRefresh;
-    method BackgroundGenerate; 
-    method BackgroundGenerate(pf: ProjectFile); 
+    method BackgroundGenerate;
+    method BackgroundGenerate(pf: ProjectFile);
     method BuildIfNeeded(aFile: ProjectFile);
     method GenerateFile(aFile: ProjectFile);
     method BuildNavigation(aParent: TocEntry; aFile: ProjectFile);
@@ -134,7 +136,7 @@ type
     method get_previous_page: TocEntry;
     method get_extra_javascript: List<String>;
     method get_extra_css: List<String>;
-    method get_pathdown: sequence of TocEntry; 
+    method get_pathdown: sequence of TocEntry;
   public
     class method ResolvePath(s: String): String;
     property _Project: Project;
@@ -143,11 +145,11 @@ type
 
     method MakeRelative(s: String): String;
     method MakeAbsolute(s: String): String;
-    property page_title: String read 
-      if not String.IsNullOrEmpty(CurrentFile.Properties['page_title']) then CurrentFile.Properties['page_title'] else 
+    property page_title: String read
+      if not String.IsNullOrEmpty(CurrentFile.Properties['page_title']) then CurrentFile.Properties['page_title'] else
       CurrentFile.Title;
 
-    property base_url: String read 
+    property base_url: String read
       if CurrentFile.Absolute then '' else MakeRelative('/');
     property homepage_url: String read MakeRelative(if _Project.fullfilename then '/index.html' else '/');
     property content: String;
@@ -159,7 +161,7 @@ type
     property file: MyNameValueCollection read CurrentFile.Properties;
     [Lazy]
     property edit: Boolean := _Project.edit;
-    
+
     property showedit: Boolean read edit;
     property project: MyNameValueCollection read _Project.Settings;
     property pathdown: sequence of TocEntry read get_pathdown;
@@ -188,7 +190,7 @@ type
     property children: List<TocEntry> := new List<TocEntry>; readonly;
     property tocclasses: String read fFile.Properties['tocclasses'];
     property title_suffix: String read fFile.Properties['title_suffix'];
-    property title_prefix: String read 
+    property title_prefix: String read
       if fContext._Project.edit then RenderStatus else fFile.Properties['title_prefix'];
     property seperatorafter: Boolean;
     property reviewstatus: String read fFile.reviewstatus;
@@ -213,7 +215,7 @@ type
     property FullFN: String;
     property RelativeFN: String;
     property Format: FileFormat;
-    
+
     property Content: String;
     property TargetFN: String;
     property TargetURL: String;
@@ -260,7 +262,7 @@ type
   extension method String.IfNullOrEmpty(NewVal: String): String;
 implementation
 
-uses 
+uses
   System.Threading.Tasks;
 
 extension method String.IfNullOrEmpty(NewVal: String): String;
@@ -277,14 +279,14 @@ constructor Project(aLogger: ILogger; aPath: String; aOverrides: Dictionary<Stri
 begin
   fLogger := aLogger;
   fOverrides := aOverrides;
-  if not Directory.Exists(aPath) then 
+  if not Directory.Exists(aPath) then
     raise new ArgumentException('Invalid path: '+aPath);
   fPath := aPath;
-  var lSettings := 
+  var lSettings :=
     Path.Combine(aPath, '_config');
-  if not File.Exists(lSettings) then 
+  if not File.Exists(lSettings) then
     lSettings := Path.Combine(aPath, '_config.yml');
-  if not File.Exists(lSettings) then 
+  if not File.Exists(lSettings) then
     raise new ArgumentException('config file missing');
   ReadSettings(lSettings, aOverrides);
   var td := theme;
@@ -307,7 +309,7 @@ end;
 method Project.ReadSettings(aFN: String; aOverrides: Dictionary<String, String> := nil);
 begin
   fLogger.Debug('Loading settings: '+aFN);
-  
+
   Settings.Clear;
   for each el in File.ReadAllLines(aFN) do begin
     var kv := el.Trim.Split([':'], 2);
@@ -329,7 +331,7 @@ end;
 method Project.LoadTheme;
 begin
   ThemeFiles.Clear;
-  for each file in Directory.EnumerateFiles(ThemePath, '*.html') do 
+  for each file in Directory.EnumerateFiles(ThemePath, '*.html') do
     ThemeFiles[Path.GetFileName(file)] := System.IO.File.ReadAllText(file);
   if not ThemeFiles.ContainsKey('base.html') then
     fLogger.Error('Theme has no base.html');
@@ -366,7 +368,7 @@ begin
     if not Directory.Exists(Path.Combine(lOut, 'js')) then
       Directory.CreateDirectory(Path.Combine(lOut, 'js'));
 
-    using sw := new StreamWriter(Path.Combine(lOut, 'js', 'searchindex.js')) do 
+    using sw := new StreamWriter(Path.Combine(lOut, 'js', 'searchindex.js')) do
       fIndexer.GenerateJS(sw);
   end;
   for each el in OtherFiles do begin
@@ -385,7 +387,7 @@ begin
       if sn.EndsWith('.md', StringComparison.InvariantCultureIgnoreCase) then begin
         var lVal := entry.Substring(aRoot.Length).Replace('\', '/');
         var pp: ProjectFile;
-        if fFiles.TryGetValue(lVal, out pp) then 
+        if fFiles.TryGetValue(lVal, out pp) then
           pp.Touched := true
         else begin
           var lFile := new ProjectFile(FullFN := entry, IncludeFile := sn.StartsWith('_'), Touched := true, Format := FileFormat.Markdown, RelativeFN := entry.Substring(aRoot.Length));
@@ -492,7 +494,7 @@ begin
       r.title := lTitle;
     if aParent = nil then
       fContext.nav.Add(r)
-    else 
+    else
       aParent.children.Add(r);
     if lAnch = nil then begin
       pf.Toc := r;
@@ -524,14 +526,14 @@ begin
     fUnknownTargets.Remove(aFile.RelativeFN);
   fContext.CurrentFile := aFile;
   aFile.BuildDate := System.IO.File.GetLastWriteTimeUtc(aFile.FullFN);
-  case aFile.Format of 
+  case aFile.Format of
     FileFormat.Markdown: begin
-      
+
       fLogger.Debug('Processing '+aFile.RelativeFN);
       var cp := new DotLiquid.RenderParameters;
       cp.Registers := new DotLiquid.Hash;
       cp.Registers.Add('__project', self);
-      
+
       cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
       cp.Registers["file_system"] := self;
       fHeadings.Clear;
@@ -547,10 +549,10 @@ begin
         if not String.IsNullOrEmpty(aFile.Properties.Get('unique_title_suffix')) then
           lTitle := lTitle + ' '+aFile.Properties.Get('unique_title_suffix').TrimStart;
       end;
-      for each elv in coalesce(aFile.Properties.Get('keywords'), '').Split([';',','], StringSplitOptions.RemoveEmptyEntries) do 
+      for each elv in coalesce(aFile.Properties.Get('keywords'), '').Split([';',','], StringSplitOptions.RemoveEmptyEntries) do
         fHeadings.Add(Tuple.Create('', '', elv));
       fIndexer:&Index(aFile.TargetURL, lTitle, String.Join(#13#10, fHeadings.Select(a-> a[2])), lWork);
-      
+
       if aFile.Properties['toc']:Trim:ToLowerInvariant = 'true' then begin
         lWork := GenerateToc + lWork;
       end;
@@ -573,10 +575,10 @@ begin
   fContext.content := aInput;
   rp.Registers := new DotLiquid.Hash;
   rp.Registers.Add('__project', self);
-  
+
   rp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
   rp.Registers["file_system"] := self;
-  
+
   BaseTemplate.Render(fs, rp);
 end;
 
@@ -630,7 +632,7 @@ begin
     if not s.EndsWith('/') then
       s := s +'/';
     if not fFiles.Any(ar-> ar.Value.TargetURL = s) then begin
-      //if not edit then 
+      //if not edit then
       AppendUnknownTarget(s, fContext.CurrentFile.RelativeFN);
       fLogger.Warn(fContext.CurrentFile.RelativeFN+': refers to unknown target: '+s);
       exit '';
@@ -650,7 +652,7 @@ begin
   result.AutoHeadingIDs := true;
   result.QualifyUrl := @AdjustURL;
   result.HeadingGenerated += (h, id, value) -> fHeadings.Add(Tuple.Create(h, id, value));
-  if edit then 
+  if edit then
     result.OnAfterBrokenLink += OnAfterBrokenLink;
 end;
 
@@ -735,7 +737,7 @@ begin
   var i := 0;
   while i < s.Length do begin
     if s[i] = '<' then begin
-      while (i < s.Length) and (s[i] <> '>') do 
+      while (i < s.Length) and (s[i] <> '>') do
         inc(i);
     end else
       sb.Append(s[i]);
@@ -779,7 +781,7 @@ method Project.Refresh;
 begin
   locking self do begin
     var lSettings := Path.Combine(fPath, '_config');
-    if not File.Exists(lSettings) then 
+    if not File.Exists(lSettings) then
       lSettings := Path.Combine(fPath, '_config.json');
     ReadSettings(lSettings, fOverrides);
 
@@ -825,7 +827,7 @@ begin
 
   if not fFiles.ContainsKey('index.md') then
     raise new ArgumentException('index.md file missing');
-    
+
   var lVal := fFiles['index.md'];
   var lEntry := new TocEntry(nil, fContext, lVal);
   lVal.Toc := lEntry;
@@ -872,12 +874,12 @@ begin
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
   cp.Registers.Add('__project', self);
-      
+
   cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
   cp.Registers["file_system"] := self;
   cp.LocalVariables['content'] := sb.ToString;
   cp.LocalVariables['showedit'] := false;
-      
+
   fReview := BaseTemplate.Render(cp);
   exit fReview;
 end;
@@ -898,17 +900,17 @@ begin
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
   cp.Registers.Add('__project', self);
-      
+
   cp.Registers["file_system"] := self;
 
   var sbrel := new StringBuilder;
   for each el in fContext.nav do
     AppendSingleFileContent(el, sbrel);
-      
+
   fHeadings.Clear;
-  Context.CurrentFile := fContext.nav[0].File; 
+  Context.CurrentFile := fContext.nav[0].File;
   cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
-  cp.LocalVariables['content'] := sbrel.ToString;  
+  cp.LocalVariables['content'] := sbrel.ToString;
   cp.LocalVariables['showedit'] := false;
   File.WriteAllText(Path.Combine(aOut, 'index_all.html'), SingleFileTemplate.Render(cp));
 
@@ -924,7 +926,7 @@ begin
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
   cp.Registers.Add('__project', self);
-      
+
   cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
   cp.Registers["file_system"] := self;
   var lResolved := DotLiquid.Template.Parse(aToc.File.Content).Render(cp);
@@ -989,7 +991,7 @@ begin
           lName.Value := el.Value.Properties['page_title']
         else if not String.IsNullOrEmpty(el.Value.Properties['unique_title']) then
           lName.Value := el.Value.Properties['unique_title']
-        else 
+        else
           lName.Value := el.Value.Title;
         if not String.IsNullOrEmpty(el.Value.Properties.Get('unique_title_suffix')) then
           lName.Value := lName.Value + " "+el.Value.Properties.Get('unique_title_suffix').TrimStart;
@@ -1019,7 +1021,7 @@ begin
   sb.AppendLine('<h4>Keywords</h4><ul>');
   for each d in m.GroupBy(a -> a.v).OrderBy(a->a.Key.ToLowerInvariant) do begin
     sb.AppendLine('<li>');
-    
+
     sb.Append(d.Key);
     sb.Append(' ');
     for each el in d do begin
@@ -1030,7 +1032,7 @@ begin
         sb.Append('/'+el.a.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(el.a.Title:Trim) then '' else  StripHtml(el.a.Title)));
       end else begin
       sb.AppendLine('<a href="'+el.a.TargetURL);
-      
+
       sb.Append('">/'+el.a.RelativeFN.Replace('\','/')+' '+(if String.IsNullOrEmpty(el.a.Title:Trim) then '' else  StripHtml(el.a.Title)) +'</a> ');
       end;
     end;
@@ -1041,12 +1043,12 @@ begin
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
   cp.Registers.Add('__project', self);
-      
+
   cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
   cp.Registers["file_system"] := self;
   cp.LocalVariables['content'] := sb.ToString;
   cp.LocalVariables['showedit'] := false;
-      
+
   var lKeywords := BaseTemplate.Render(cp);
   exit lKeywords;
 
@@ -1056,7 +1058,7 @@ method Project.BackgroundGenerate;
 begin
   fBackgroundWait := new System.Threading.AutoResetEvent(false);
   fBackgroundList := new Queue<ProjectFile>();
-  var tp := new System.Threading.Thread( -> 
+  var tp := new System.Threading.Thread( ->
     begin
       loop begin
         var lItem: ProjectFile;
@@ -1069,15 +1071,15 @@ begin
         end;
         if lItem <> nil then begin
           try
-            locking self do 
+            locking self do
               BuildIfNeeded(lItem);
           except
           end;
           System.Threading.Thread.Sleep(10);
-        end else 
+        end else
           fBackgroundWait.WaitOne;
       end;
-    end);  
+    end);
   tp.Name := 'Background Builder';
   tp.Priority := System.Threading.ThreadPriority.Lowest;
   tp.IsBackground := true;
@@ -1086,16 +1088,16 @@ begin
     BackgroundGenerate(el);
 end;
 
-method Project.BackgroundGenerate(pf: ProjectFile); 
+method Project.BackgroundGenerate(pf: ProjectFile);
 begin
   Logger.Debug('Starting background generate for '+pf.RelativeFN);
-  
-  
+
+
   locking fBackgroundList do
     fBackgroundList.Enqueue(pf);
   fBackgroundWait.Set;
 end;
-    
+
 
 method Project.BuildIfNeeded(aFile: ProjectFile);
 begin
@@ -1113,12 +1115,21 @@ end;
 method Project.get_Missing: String;
 begin
   var sb := new StringBuilder;
-  for each d in fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key) do begin
-    sb.Append('<b>');
-    sb.Append(d.Key);
-    sb.Append('</b></br>');
+
+  var lMissingPages := fUnknownTargets.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key.Trim('/')).ToList;
+  sb.Append($"<h2>Missing Pages</h2>");
+  sb.Append($"{lMissingPages.Count} pages are missing.");
+  sb.Append($"<ul>");
+  for each d in lMissingPages do begin
+    sb.Append($"<li>");
+    sb.Append($"<b>{d.Key.Trim('/')}</b>");
+    if edit then begin
+      sb.Append(" &mdash; ");
+      sb.Append($"<a href='/__edit/__create?file={d.Key.Replace("\", "/")}'>(create file)</a> ");
+      sb.Append($"<a href='/__edit/__create?folder={d.Key.Replace('\', '/')}'>(create folder)</a> ");
+    end;
     sb.AppendLine('<ul>');
-    for each el in d do begin
+    for each el in d.OrderBy(a->a.Trim('/') do begin
       var pf: ProjectFile;
       fFiles.TryGetValue(el.Replace('\', '/'), out pf);
       if pf = nil then begin
@@ -1128,27 +1139,69 @@ begin
         continue;
       end;
       sb.Append('<li>');
+      if pf.IncludeFile then
+        sb.Append($"/{pf.RelativeFN.Replace('\','/').Trim('/')}")
+      else
+        sb.Append($"<a href='{pf.TargetURL}'>{pf.RelativeFN.Replace("\","/").Trim('/')}</a>");
       if edit then begin
+        sb.Append(" &mdash; ");
         sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
         sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
       end;
-      if pf.IncludeFile then 
-        sb.AppendLine('/'+pf.RelativeFN.Replace('\','/')+' </li>')
-      else 
-        sb.AppendLine('<a href="'+pf.TargetURL+'">/'+pf.RelativeFN.Replace('\','/')+'</a> </li>');
+      sb.Append('</li>');
     end;
     sb.AppendLine('</ul>');
   end;
+  sb.Append($"</ul>");
+
+  sb.Append($"<hr>");
+
+  sb.Append($"<h2>Pages with Broken Links</h2>");
+  sb.Append($"{fUnknownTargets.Count} pages have broken links.");
+  sb.Append($"<ul>");
+  for each el in fUnknownTargets.OrderBy(a -> a.Key.Trim('/')) do begin
+    fFiles.TryGetValue(el.Key.Replace('\', '/'), out var pf);
+    if pf = nil then begin
+      sb.Append($"<li>{el.Key.Trim('/')}</li>");
+      continue;
+    end;
+    sb.Append($"<li>");
+    if pf.IncludeFile then
+      sb.Append($"/{pf.RelativeFN.Replace('\','/').Trim('/')}")
+    else
+      sb.Append($"<a href='{pf.TargetURL}'>{pf.RelativeFN.Replace("\","/").Trim('/')}</a>");
+    if edit then begin
+      sb.Append(" &mdash; ");
+      sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
+      sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+    end;
+    sb.Append($"<ul>");
+    for each d in el.Value.OrderBy(a->a.Key.Trim('/') do begin
+      sb.Append($"<li>");
+      sb.Append($"<b>{d.Trim('/')}</b>");
+      if edit then begin
+        sb.Append(" &mdash; ");
+        sb.Append($"<a href='/__edit/__create?file={d.Replace("\", "/")}'>(create file)</a> ");
+        sb.Append($"<a href='/__edit/__create?folder={d.Replace('\', '/')}'>(create folder)</a> ");
+      end;
+      sb.Append($"</li>");
+    end;
+    sb.Append($"</ul>");
+    sb.Append($"</li>");
+  end;
+  sb.Append($"</ul>");
+
+
   fContext.CurrentFile := Files['index.md'];
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
   cp.Registers.Add('__project', self);
-      
+
   cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
   cp.Registers["file_system"] := self;
   cp.LocalVariables['content'] := sb.ToString;
   cp.LocalVariables['showedit'] := false;
-      
+
   var lKeywords := BaseTemplate.Render(cp);
   exit lKeywords;
 
@@ -1160,7 +1213,7 @@ var sb := new StringBuilder;
   //var sbrel := new StringBuilder;
   var m := Files.SelectMany(a -> coalesce(a.Value.Properties.Get('flags'):Split([';', ','], StringSplitOptions.RemoveEmptyEntries), new String[0]), (a,v) -> new class (a := a.Value, v)).Where(a -> a.v  <> '').GroupBy(a -> a.v, a -> a.a);
   sb.AppendLine('<h4>TOC</h4><ul>');
-  
+
   for each el in m do begin
     var lKey := el.Key;
     sb.AppendLine('<li><a href="#'+lKey+'">'+lKey+'</a></li>');
@@ -1192,12 +1245,12 @@ var sb := new StringBuilder;
   var cp := new DotLiquid.RenderParameters;
   cp.Registers := new DotLiquid.Hash;
   cp.Registers.Add('__project', self);
-      
+
   cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
   cp.Registers["file_system"] := self;
   cp.LocalVariables['content'] := sb.ToString;
   cp.LocalVariables['showedit'] := false;
-      
+
   fReview := BaseTemplate.Render(cp);
   exit fReview;
 end;
@@ -1208,7 +1261,7 @@ begin
   using db := aConn.CreateCommand do begin
     db.Transaction := aTrans;
     db.CommandText := aCMD;
-    for each el in aNames index n do begin 
+    for each el in aNames index n do begin
       var par := db.CreateParameter();
       par.ParameterName := '@'+el;
       par.Value := aValues[n];
@@ -1241,7 +1294,7 @@ begin
       var lTypeN := el.Value.Properties['dash_type'];
 
       var lTypeID := 0;
-      case lTypeN:ToLowerInvariant() of 
+      case lTypeN:ToLowerInvariant() of
         'unknown': lTypeID := 0;
         'alias': lTypeID := 1;
         'class': lTypeID := 2;
@@ -1263,27 +1316,27 @@ begin
         'function': lTypeID := 18;
         'block': lTypeID := 19;
         'type': lTypeID := 20;
-        else if Int32.TryParse(lTypeN, out var n) then 
+        else if Int32.TryParse(lTypeN, out var n) then
           lTypeID := n;
       end;
-      
+
 
       var lName: String;
       //if not String.IsNullOrEmpty(el.Value.Properties['page_title']) then
         //lName := el.Value.Properties['page_title']
-      //else 
+      //else
       //if not String.IsNullOrEmpty(el.Value.Properties['unique_title']) then
         //lName := el.Value.Properties['unique_title']
-      //else 
+      //else
         lName := el.Value.Title;
       //if not String.IsNullOrEmpty(el.Value.Properties.Get('unique_title_suffix')) then
         //lName := lName + " "+el.Value.Properties.Get('unique_title_suffix').TrimStart;
       if el.Key = '404.md' then continue;
       var lURL := aTargetURL + el.Value.TargetURL;
-      var id := ExecuteSQLCommand(dc, trans, 
+      var id := ExecuteSQLCommand(dc, trans,
         'insert into document (url, name, type, parentid) values (@url, @title ,@type, @parentid)',
         ['url', 'title', 'type', 'parentid'],
-        [lURL, lName, lTypeID, 
+        [lURL, lName, lTypeID,
         if el.Key = 'index.md' then 0 else nil], true);
       ids.Add(el.Value.RelativeFN, id);
       var lKWD := new List<String>;
@@ -1294,7 +1347,7 @@ begin
           lKWD.Add(m);
         end;
       end;
-      for each item in lKWD do 
+      for each item in lKWD do
         ExecuteSQLCommand(dc, trans, 'insert into keyword (document, keyword, keywordtype) values (@doc, @kwd, 0)',
           ['doc', 'kwd'],
           [id, item]);
@@ -1302,7 +1355,7 @@ begin
     for each el in Files do begin
       var lPar := el.Value:Toc:Parent;
       if lPar = nil then continue;
-      
+
       ExecuteSQLCommand(dc, trans, 'update document set parentid=@pid, parentindex=@pidx where id=@id',
         ['id', 'pid', 'pidx'],
         [ids[el.Value.RelativeFN], ids[lPar.File.RelativeFN], lPar.children.IndexOf(el.Value.Toc)]);
@@ -1351,7 +1404,7 @@ begin
     if not SingleFile then
     for i: Integer := 0 to CurrentFile.TargetURL.Count(a -> a = '/') -2 do
       s := '../'+s;
-    if length(s) = 0 then 
+    if length(s) = 0 then
       exit '.';
   end;
   exit s;

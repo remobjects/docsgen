@@ -1,68 +1,67 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
-    <PropertyGroup>
-        <RootNamespace>DocsGenMacHelper</RootNamespace>
-        <ProjectGuid>1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B</ProjectGuid>
-        <OutputType>executable</OutputType>
-        <AssemblyName>DocsGenMacHelper</AssemblyName>
-        <AllowGlobals>False</AllowGlobals>
-        <AllowLegacyWith>False</AllowLegacyWith>
-        <AllowLegacyOutParams>False</AllowLegacyOutParams>
-        <AllowLegacyCreate>False</AllowLegacyCreate>
-        <AllowUnsafeCode>False</AllowUnsafeCode>
-        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-        <SDK>OS X</SDK>
-        <CreateAppBundle>True</CreateAppBundle>
-        <InfoPListFile>.\Resources\Info.plist</InfoPListFile>
-        <EntitlementsFile>Resources\Entitlements.entitlements</EntitlementsFile>
-        <MacIconFile>.\Resources\App.icns</MacIconFile>
-        <DeploymentTargetVersion>10.10</DeploymentTargetVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <Optimize>false</Optimize>
-        <OutputPath>..\Bin\</OutputPath>
-        <DefineConstants>DEBUG;TRACE;</DefineConstants>
-        <GenerateDebugInfo>True</GenerateDebugInfo>
-        <EnableAsserts>True</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <Optimize>true</Optimize>
-        <OutputPath>.\bin\Release</OutputPath>
-        <GenerateDebugInfo>False</GenerateDebugInfo>
-        <EnableAsserts>False</EnableAsserts>
-        <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-        <CaptureConsoleOutput>False</CaptureConsoleOutput>
-        <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="Cocoa"/>
-        <Reference Include="rtl"/>
-        <Reference Include="libNougat"/>
-        <Reference Include="libSwift"/>
-        <Reference Include="ApplicationServices.HIServices"/>
-        <Reference Include="AppleScriptKit"/>
-        <Reference Include="CoreServices.AE"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="AppDelegate.swift"/>
-        <Compile Include="MainWindowController.swift"/>
-        <None Include="Resources\Entitlements.entitlements"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Resources"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="Resources\Info.plist"/>
-        <Content Include="Resources\App.icns"/>
-        <Xib Include="MainWindowController.xib">
-            <DependentUpon>MainWindowController.swift</DependentUpon>
-        </Xib>
-        <Xib Include="Resources\MainMenu.xib"/>
-        <AppResource Include="..\Bin"/>
-        <AppResource Include="..\themes"/>
-    </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Nougat.targets"/>
+  <PropertyGroup>
+    <RootNamespace>DocsGenMacHelper</RootNamespace>
+    <ProjectGuid>1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B</ProjectGuid>
+    <OutputType>executable</OutputType>
+    <AssemblyName>DocsGenMacHelper</AssemblyName>
+    <AllowGlobals>False</AllowGlobals>
+    <AllowLegacyWith>False</AllowLegacyWith>
+    <AllowLegacyOutParams>False</AllowLegacyOutParams>
+    <AllowLegacyCreate>False</AllowLegacyCreate>
+    <AllowUnsafeCode>False</AllowUnsafeCode>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <SDK>OS X</SDK>
+    <CreateAppBundle>True</CreateAppBundle>
+    <InfoPListFile>.\Resources\Info.plist</InfoPListFile>
+    <EntitlementsFile>Resources\Entitlements.entitlements</EntitlementsFile>
+    <MacIconFile>.\Resources\App.icns</MacIconFile>
+    <DeploymentTargetVersion>10.10</DeploymentTargetVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>false</Optimize>
+    <OutputPath>..\Bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;</DefineConstants>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <EnableAsserts>True</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Optimize>true</Optimize>
+    <OutputPath>.\bin\Release</OutputPath>
+    <GenerateDebugInfo>False</GenerateDebugInfo>
+    <EnableAsserts>False</EnableAsserts>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <CaptureConsoleOutput>False</CaptureConsoleOutput>
+    <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Cocoa" />
+    <Reference Include="rtl" />
+    <Reference Include="libToffee" />
+    <Reference Include="libSwift" />
+    <Reference Include="AppleScriptKit" />
+    <Reference Include="CoreServices.AE" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppDelegate.swift" />
+    <Compile Include="MainWindowController.swift" />
+    <None Include="Resources\Entitlements.entitlements" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Info.plist" />
+    <AppResource Include="Resources\App.icns" />
+    <Xib Include="MainWindowController.xib">
+      <DependentUpon>MainWindowController.swift</DependentUpon>
+    </Xib>
+    <Xib Include="Resources\MainMenu.xib" />
+    <AppResource Include="..\Bin" />
+    <AppResource Include="..\themes" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Toffee.targets" />
 </Project>

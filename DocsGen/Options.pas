@@ -1,4 +1,4 @@
-{$HIDE W27}
+﻿{$HIDE W27}
 //
 // Options.Pas
 // Converted to Oxygene from original code by Anton Kasyanov
@@ -398,7 +398,7 @@ method OptionValueCollection.get_Item(&index: Int32): String;
 begin
   self.AssertValid(&index);
 
-	if  (&index < self.fValues.Count)  then
+  if  (&index < self.fValues.Count)  then
     exit  (self.fValues[&index])
   else
     exit  (nil);
@@ -940,7 +940,7 @@ begin
   var  lResult: StringBuilder := new StringBuilder(description.Length);
   var  lStart: Int32 := -1;
   var i := 0;
-  while i < description.Length do begin 
+  while i < description.Length do begin
     case  (description[i])  of
       '{':  begin
         if  (i = lStart)  then  begin
@@ -1096,7 +1096,7 @@ begin
   var  lOption: Option := self.Items[&index];
   var  lDictionary := self.Dictionary;
 
-	for  i: Int32  :=  1  to  lOption.Names.Length  do
+  for  i: Int32  :=  1  to  lOption.Names.Length  do
     lDictionary.Remove(lOption.Names[i]);
 end;
 

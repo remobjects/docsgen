@@ -38,7 +38,7 @@ begin
   lOptionSet.Add('edit', 'Show review/edit options',  a -> begin fOverrideOptions['edit'] := if assigned(a) then 'true' else 'false' end );
   lOptionSet.Add('port|p=', 'Set the port to use when serving; defaults to 4000', a -> begin Int32.TryParse(a, out fPort) end);
   lOptionSet.Add('loop', 'If set serve won''t wait for enter but loop', a -> begin fLoop := assigned(a) end);
-  
+
   args := lOptionSet.Parse(args).ToArray;
   var lCmd := '';
   if length(args) > 0 then
@@ -118,14 +118,14 @@ begin
 '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">'#13#10+
 '<plist version="1.0">'#13#10+
 '<dict>'#13#10+
-	'<key>CFBundleIdentifier</key>'#13#10+
-	'<string>'+lShortName+'</string>'#13#10+
-	'<key>CFBundleName</key>'#13#10+
-	'<string>'+lProject.title+'</string>'#13#10+
-	'<key>DocSetPlatformFamily</key>'#13#10+
-	'<string>'+lShortName+'</string>'#13#10+
-	'<key>isDashDocset</key>'#13#10+
-	'<true/>'#13#10+
+  '<key>CFBundleIdentifier</key>'#13#10+
+  '<string>'+lShortName+'</string>'#13#10+
+  '<key>CFBundleName</key>'#13#10+
+  '<string>'+lProject.title+'</string>'#13#10+
+  '<key>DocSetPlatformFamily</key>'#13#10+
+  '<string>'+lShortName+'</string>'#13#10+
+  '<key>isDashDocset</key>'#13#10+
+  '<true/>'#13#10+
 '</dict>'#13#10+
 '</plist>'#13#10);
 

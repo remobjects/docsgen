@@ -5,18 +5,18 @@ import ApplicationServices.HIServices
 
 	var mainWindowController: MainWindowController?
 
-	public func applicationDidFinishLaunching(notification: NSNotification!) {
+	public func applicationDidFinishLaunching(_ notification: NSNotification!) {
 
-		NSAppleEventManager.sharedAppleEventManager.setEventHandler(self, andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)), forEventClass: kInternetEventClass, andEventID: kAEGetURL)
+		//NSAppleEventManager.sharedAppleEventManager.setEventHandler(self, andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)), for: kInternetEventClass, andEventID: kAEGetURL)
 
 		mainWindowController = MainWindowController();
 		mainWindowController?.showWindow(nil);
 	}
-	
+
 	public func applicationWillTerminate(_ aNotification: NSNotification!) {
 		mainWindowController?.close()
 	}
-	
+
 	public func handleGetURLEvent(_ event: NSAppleEventDescriptor!, withReplyEvent replyEvent: NSAppleEventDescriptor!) {
 		NSLog("handleGetURLEvent:withReplyEvent:")
 		if let urlString = event.paramDescriptorForKeyword(keyDirectObject)?.stringValue {
@@ -24,12 +24,12 @@ import ApplicationServices.HIServices
 			NSLog("%@", url);
 		}
 	}
-	
-	@IBAction func restart(sender: Any?) {
+
+	@IBAction func restart(_ sender: Any?) {
 		mainWindowController?.restart1()
 		mainWindowController?.restart2()
 		mainWindowController?.restart3()
 		mainWindowController?.restart4()
 	}
-	
+
 }
