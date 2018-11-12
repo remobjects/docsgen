@@ -49,6 +49,8 @@ Other file specific properties are:
 * **flags**: Used for the "edit mode" flags page
 * **review-status**: Used for the "edit mode" status page
 * **keywords**: Used for the "edit mode" keywords page
+* **sort_by:title**: Sort the index for this file by title instead of original order
+
 
 ## Second document
 Writing the secondd document is pretty much the same as the first, generate a new file, add a header with a title and a content.

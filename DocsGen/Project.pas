@@ -500,6 +500,9 @@ begin
     end else
       r.anchor := lAnch;
   end;
+  if (aFile.Properties['sort_by'] = 'title') and (aParent <> nil) then begin 
+    aParent.children.Sort((a, b) -> a.title.CompareTo(b.title));
+  end;
 end;
 
 method Project.CopyFile(a: String; b: String);
