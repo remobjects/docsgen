@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
 <meta charset="utf-8">
 <title>Editor</title>
@@ -104,7 +104,7 @@ $(".filename").text(path);
 	function(data) {
 	 $("#data").val(data);
 	 $("#data").removeAttr('disabled');
-	 $('#data').on('change keyup paste', function() { setConfirmUnload(true); });
+	 $('#data').on('change paste', function() { setConfirmUnload(true); });
 	 
      window.onerror = UnspecifiedErrorHandler;
             
@@ -122,7 +122,9 @@ $(".filename").text(path);
                  save();
                  break;
            }
+           return;
        }
+       setConfirmUnload(true);
    });
 
 
