@@ -3,7 +3,7 @@
 /*
 
 Visual Studio-like style based on original C# coloring by Jason Diamond <jason@diamond.name>
-Adjusted for RemObejcts Docs by mh
+Adjusted for RemObjects Docs by mh
 
 */
 
@@ -95,3 +95,7 @@ Adjusted for RemObejcts Docs by mh
 .vhdl .hljs-attribute { color: #00b0e8; }
 
 .xml .hljs-attribute { color: #f00; }
+
+.hljs-subst {
+    color: black;
+}
