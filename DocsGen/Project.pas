@@ -1129,7 +1129,7 @@ begin
       sb.Append($"<a href='/__edit/__create?folder={d.Key.Replace('\', '/')}'>(create folder)</a> ");
     end;
     sb.AppendLine('<ul>');
-    for each el in d.OrderBy(a->a.Trim('/') do begin
+    for each el in d.OrderBy(a->a.Trim('/')) do begin
       var pf: ProjectFile;
       fFiles.TryGetValue(el.Replace('\', '/'), out pf);
       if pf = nil then begin
@@ -1176,7 +1176,7 @@ begin
       sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
     end;
     sb.Append($"<ul>");
-    for each d in el.Value.OrderBy(a->a.Key.Trim('/') do begin
+    for each d in el.Value.OrderBy(a->a.Trim('/')) do begin
       sb.Append($"<li>");
       sb.Append($"<b>{d.Trim('/')}</b>");
       if edit then begin
