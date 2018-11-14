@@ -1389,6 +1389,7 @@ begin
     'new': exit '<span class="reviewstatus" style="color: red">[NEW]</span> ';
     'reviewed': exit '<span class="reviewstatus" style="color: green">[OKE]</span> ';
     'needs-review': exit '<span class="reviewstatus" style="color: maroon">[REV]</span> ';
+    'tech-review': exit '<span class="techreviewstatus" style="color: orange">[TEC]</span> ';
     'wip': exit '<span class="reviewstatus" style="color: DeepPink">[WIP]</span> ';
     'auto': exit '<span class="reviewstatus" style="color: yellow">[AUT]</span> ';
   else
