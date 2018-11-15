@@ -624,7 +624,7 @@ begin
     exit fContext.MakeRelative((if not s.StartsWith('/') then '/' else '')+s);
   end else if fFiles.TryGetValue(if s.StartsWith('/') then s.Substring(1) else s, out p) then
     s := p.TargetURL
-  else if fFiles.TryGetValue((s+'/index.md').TrimStart('/'), out p) then
+  else if fFiles.TryGetValue((s.TrimEnd('/')+'/index.md').TrimStart('/'), out p) then
     s := p.TargetURL
   else if fFiles.TryGetValue((if s.StartsWith('/') then s.Substring(1) else s).TrimEnd('/')+'.md', out p) then
     s := p.TargetURL
