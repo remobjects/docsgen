@@ -692,6 +692,7 @@ namespace MarkdownDeep
 
 						break;
 					}
+                    if (bContinue) break;
 				}
 			}
 		}
