@@ -27,12 +27,19 @@ type
 
   Project = public class(DotLiquid.FileSystems.IFileSystem)
   private
+    class method MatchString(aMatch, aStr: String): Boolean;
+    begin
+      aMatch := "^" + System.Text.RegularExpressions.Regex.Escape(aMatch).Replace("\*", ".*") + "$";
+      exit System.Text.RegularExpressions.Regex.Match(aStr, aMatch).Success;
+    end;
     method OnAfterBrokenLink(sb: StringBuilder; link, atitle: String);
     begin
       //if not link.EndsWith('.md') then
         //sb.AppendFormat('<a href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'/index.md&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
       //sb.AppendFormat('<a class="btn btn-warning" href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
     end;
+
+    method ExpandFiles(s: String): sequence of String; iterator;
 
     method GetRegularDB(s: String): IDbConnection;
     method GetMonoDB(s: String): IDbConnection;
@@ -443,6 +450,14 @@ begin
   end;
 end;
 
+method Project.ExpandFiles(s: String): sequence of String;
+begin
+  if (s = nil) or not s.Contains('*') then begin yield s; exit ;end;
+  for each el in fFiles.Keys do begin
+    if MatchString(s, el) then yield el;
+  end;
+end;
+
 method Project.BuildNavigation(aParent: TocEntry; aFile: ProjectFile);
 begin
   if fNavGuard.Contains(aFile.FullFN) then begin
@@ -452,7 +467,6 @@ begin
       fLogger.Warn('Call Stack: '+lPar.File:RelativeFN);
       lPar := lPar.Parent;
     end;
-
     exit;
   end;
   fNavGuard.Add(aFile.FullFN);
@@ -481,28 +495,29 @@ begin
       lAnch := lIndex.Substring(lIndex.IndexOf('#')).Trim;
       lIndex := lIndex.Substring(0, lIndex.IndexOf('#'));
     end;
-    var tar := Path.Combine(Path.GetDirectoryName(aFile.RelativeFN), lIndex).Replace('\','/');
-    var pf : ProjectFile;
-    if not fFiles.TryGetValue(if tar.StartsWith('/') then tar.Substring(1) else tar, out pf) then begin
-      fLogger.Warn('Cannot open nav info for '+tar+' referenced from '+aFile.RelativeFN);
-      continue;
+    for each tar in ExpandFiles(Path.Combine(Path.GetDirectoryName(aFile.RelativeFN), lIndex).Replace('\','/')) do begin
+      var pf : ProjectFile;
+      if not fFiles.TryGetValue(if tar.StartsWith('/') then tar.Substring(1) else tar, out pf) then begin
+        fLogger.Warn('Cannot open nav info for '+tar+' referenced from '+aFile.RelativeFN);
+        continue;
+      end;
+      if hidden and (pf.reviewstatus <> 'hidden') then
+        pf.Properties['status'] := 'hidden:'+ if not String.IsNullOrEmpty(pf.reviewstatus) then pf.reviewstatus+':'+pf.reviewparameter else '';
+      var r := new TocEntry(aParent, fContext, pf);
+      if not String.IsNullOrEmpty(lTitle) then
+        r.title := lTitle;
+      if aParent = nil then
+        fContext.nav.Add(r)
+      else
+        aParent.children.Add(r);
+      if lAnch = nil then begin
+        pf.Toc := r;
+        BuildNavigation(r, pf);
+      end else
+        r.anchor := lAnch;
     end;
-    if hidden and (pf.reviewstatus <> 'hidden') then
-      pf.Properties['status'] := 'hidden:'+ if not String.IsNullOrEmpty(pf.reviewstatus) then pf.reviewstatus+':'+pf.reviewparameter else '';
-    var r := new TocEntry(aParent, fContext, pf);
-    if not String.IsNullOrEmpty(lTitle) then
-      r.title := lTitle;
-    if aParent = nil then
-      fContext.nav.Add(r)
-    else
-      aParent.children.Add(r);
-    if lAnch = nil then begin
-      pf.Toc := r;
-      BuildNavigation(r, pf);
-    end else
-      r.anchor := lAnch;
   end;
-  if (aFile.Properties['sort_by'] = 'title') and (aParent <> nil) then begin 
+  if (aFile.Properties['sort_by'] = 'title') and (aParent <> nil) then begin
     aParent.children.Sort((a, b) -> a.title.CompareTo(b.title));
   end;
 end;
