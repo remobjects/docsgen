@@ -495,7 +495,7 @@ begin
       lAnch := lIndex.Substring(lIndex.IndexOf('#')).Trim;
       lIndex := lIndex.Substring(0, lIndex.IndexOf('#'));
     end;
-    for each tar in ExpandFiles(Path.Combine(Path.GetDirectoryName(aFile.RelativeFN), lIndex).Replace('\','/')) do begin
+    for each tar in ExpandFiles(Path.Combine(Path.GetDirectoryName(aFile.RelativeFN), lIndex).Replace('\','/')).OrderBy(f -> Path.GetFileName(f).ToLowerInvariant) do begin
       var pf : ProjectFile;
       if not fFiles.TryGetValue(if tar.StartsWith('/') then tar.Substring(1) else tar, out pf) then begin
         fLogger.Warn('Cannot open nav info for '+tar+' referenced from '+aFile.RelativeFN);
