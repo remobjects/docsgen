@@ -274,11 +274,11 @@ p, .maincontent li {
     margin: 0;
     font-size: 16px;
 }
-p, ul {
+p {
     margin-bottom: 0.75em;
 }
 .maincontent li {
-    margin-bottom: 0.40em;
+    margin-top: 0.40em;
 }
 h1 {
     margin-top: 0;
@@ -287,6 +287,10 @@ h1 {
     list-style: disc;
     line-height: 24px;
     margin-bottom: 24px;
+}
+
+.maincontent .section ul ul {
+    margin-bottom: 0;
 }
 .maincontent .section ul li {
     list-style: disc;
