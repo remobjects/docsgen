@@ -337,10 +337,10 @@ typealias Int = Int32
 	}
 
 	public override func close() {
-		restartOldTask(task1, port: 4001, folder: nil)
-		restartOldTask(task2, port: 4002, folder: nil)
-		restartOldTask(task3, port: 4003, folder: nil)
-		restartOldTask(task4, port: 4004, folder: nil)
+		_ = restartOldTask(task1, port: 4001, folder: nil)
+		_ = restartOldTask(task2, port: 4002, folder: nil)
+		_ = restartOldTask(task3, port: 4003, folder: nil)
+		_ = restartOldTask(task4, port: 4004, folder: nil)
 	}
 
 	public override func windowDidLoad() {
