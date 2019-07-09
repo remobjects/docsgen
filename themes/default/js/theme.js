@@ -40,6 +40,17 @@ function search(s, cb)
 			}
 		} catch(e) {}
 	}
+	if (searchProvider && searchProvider.length > 0) {
+		$.getJSON(searchProvider+encodeURIComponent(s))
+		.done(function(s){
+			cb(s);
+		})
+		.error(function(){
+			searchProvider = null;
+			search(s, cb);
+		});
+		return;
+    }
 	if (!dgSearchIndex.index) 
 	{
 		var head = document.getElementsByTagName('head')[0];

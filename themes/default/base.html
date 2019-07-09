@@ -33,6 +33,10 @@
   if (baseurl.charAt(baseurl.length-1) == '/')
 	baseurl = baseurl.substring(0, baseurl.length-1);
   var current = "{{page_url}}";
+  var searchProvider = "";
+  {% if project.searchurl %}
+  searchProvider = "{{project.searchurl}}";
+  {% endif %}
   {% if showedit %}
   function updatecheck() {
       $.get("/__updatecheck?since={{lastupdateticks}}&path={{relative_path}}", function(data,status) {
