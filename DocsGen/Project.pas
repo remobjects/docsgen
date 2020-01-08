@@ -1362,6 +1362,12 @@ begin
           lKWD.Add(m);
         end;
       end;
+      for each elv in coalesce(el.Value.Properties['keyword'], '').Split([';',','], StringSplitOptions.RemoveEmptyEntries) do begin
+        var m := elv.Trim;
+        if m <> '' then begin
+          lKWD.Add(m);
+        end;
+      end;
       for each item in lKWD do
         ExecuteSQLCommand(dc, trans, 'insert into keyword (document, keyword, keywordtype) values (@doc, @kwd, 0)',
           ['doc', 'kwd'],
