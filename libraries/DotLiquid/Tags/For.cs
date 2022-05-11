@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +10,7 @@ using DotLiquid.Util;
 namespace DotLiquid.Tags
 {
 	/// <summary>
-	/// "For" iterates over an array or collection. 
+	/// "For" iterates over an array or collection.
 	/// Several useful variables are available to you within the loop.
 	///
 	/// == Basic usage:
@@ -30,7 +30,7 @@ namespace DotLiquid.Tags
 	///
 	///    {% for item in collection limit:5 offset:10 %}
 	///      {{ item.name }}
-	///    {% end %}             
+	///    {% end %}
 	///
 	///  To reverse the for loop simply use {% for item in collection reversed %}
 	///
@@ -39,7 +39,7 @@ namespace DotLiquid.Tags
 	/// forloop.name:: 'item-collection'
 	/// forloop.length:: Length of the loop
 	/// forloop.index:: The current item's position in the collection;
-	///                 forloop.index starts at 1. 
+	///                 forloop.index starts at 1.
 	///                 This is helpful for non-programmers who start believe
 	///                 the first item in an array is 1, not 0.
 	/// forloop.index0:: The current item's position in the collection
@@ -96,7 +96,7 @@ namespace DotLiquid.Tags
 				: 0;
 
 			int? limit = _attributes.ContainsKey("limit") ? context[_attributes["limit"]] as int? : null;
-			int? to = (limit != null) ? (int?) (limit.Value + from) : null;
+			int? to = (limit != null) ? (int?) (limit + from) : null;
 
 			List<object> segment = SliceCollectionUsingEach((IEnumerable) collection, from, to);
 
@@ -135,7 +135,7 @@ namespace DotLiquid.Tags
 			int index = 0;
 			foreach (object item in collection)
 			{
-				if (to != null && to.Value <= index)
+				if (to != null && to <= index)
 					break;
 
 				if (from <= index)
