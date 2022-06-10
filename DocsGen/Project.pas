@@ -631,8 +631,8 @@ begin
       s := e + s
     else
       s := e.Substring(0, e.LastIndexOf('/')+1) + s;
-    s := Context.ResolvePath(s);
   end;
+  s := Context.ResolvePath(s);  // process `.` and `..` inside path. case = `/path1/path2/./path3/../path4`
   var p: ProjectFile;
 
   if OtherFilesDict.Contains(if s.StartsWith('/') then s.Substring(1) else s) then begin
@@ -1482,6 +1482,11 @@ begin
     if i = -1 then break;
     lItems.RemoveAt(i-1);
     lItems.RemoveAt(i-1);
+  end;
+  loop begin
+    var i := lItems.FindIndex(1, a->a = '.');
+    if i = -1 then break;
+    lItems.RemoveAt(i);
   end;
   exit String.Join('/', lItems);
 end;
