@@ -60,10 +60,10 @@ namespace MarkdownDeep
 			// Process blocks
 			return new BlockProcessor(this, MarkdownInHtml).Process(str);
 		}
-		public string Transform(string str)
+		public string Transform(string str,out HashSet<string> hrefs)
 		{
 			Dictionary<string, LinkDefinition> defs;
-			return Transform(str, out defs);
+			return Transform(str, out defs, out hrefs);
 		}
 
 
@@ -76,12 +76,54 @@ namespace MarkdownDeep
 
         public event HeadingCallback HeadingGenerated;
         
-        
-        // Transform a string
-		public string Transform(string str, out Dictionary<string, LinkDefinition> definitions)
+        private void GenerateHref(List<Block> blocks, HashSet<string> hrefs)
+		{
+			if (!assigned(blocks)) return;
+			for (int i = 0; i < blocks.Count; i++)
+			{
+				var b = blocks[i];
+				GenerateHref(b.children, hrefs);
+				if (assigned(b.data))
+					switch (b.blockType)
+					{
+						case BlockType.h1:
+						case BlockType.h2:
+						case BlockType.h3:
+						case BlockType.h4:
+						case BlockType.h5:
+						case BlockType.h6: 
+						{
+							if (b.data is string) 
+							{
+								hrefs.Add((String)b.data); 
+							}
+							break;
+
+						}
+						case BlockType.HtmlTag:
+						{
+							if (b.data is HtmlTag)
+							{
+								foreach (KeyValuePair<String,String> attr in ((HtmlTag)b.data).attributes)
+									if (String.Equals("id", attr.Key, StringComparison.OrdinalIgnoreCase))
+										hrefs.Add(attr.Value);
+							}
+							break;
+						}
+						default:
+						{
+							// do nothing
+							break;
+						}
+					}
+			}
+		}
+		// Transform a string
+		public string Transform(string str, out Dictionary<string, LinkDefinition> definitions, out HashSet<string> hrefs)
 		{
 			// Build blocks
 			var blocks = ProcessBlocks(str);
+			hrefs = new HashSet<string>();
 
 			// Sort abbreviations by length, longest to shortest
 			if (m_AbbreviationMap != null)
@@ -208,7 +250,7 @@ namespace MarkdownDeep
 					sb.Append("</div>\n");
 				}
 			}
-
+			GenerateHref(blocks, hrefs);
 			definitions = m_LinkDefinitions;
 
 			// Done

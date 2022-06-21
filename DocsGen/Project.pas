@@ -44,6 +44,8 @@ type
     method GetRegularDB(s: String): IDbConnection;
     method GetMonoDB(s: String): IDbConnection;
     method get_Missing: String;
+    method get_Broken: String;
+    method get_HRefs: String;
     method get_Flags: String;
     method get_Keywords: String;
     method AppendSingleFileContent(aToc: TocEntry; sb: StringBuilder);
@@ -68,6 +70,8 @@ type
     fReview: String;
     fTemplateFiles: Dictionary<String, Tuple<DateTime, String>> := new Dictionary<String, Tuple<DateTime, String>>;
     fUnknownTargets: Dictionary<String, HashSet<String>> := new Dictionary<String,HashSet<String>>;
+    fHrefs: Dictionary<String, HashSet<String>> := new Dictionary<String,HashSet<String>>;
+    fKnownHrefs: Dictionary<String, HashSet<String>> := new Dictionary<String,HashSet<String>>;
     method GetCachedTemplateFile(s: String): String;
     method ReadTemplateFile(acontext: DotLiquid.Context; templateName: String): String;
   protected
@@ -78,6 +82,7 @@ type
     [Lazy]
     class property StandardThemePath: String := Path.Combine(Path.GetDirectoryName(typeOf(Project).Assembly.Location), '../themes/');
     method AppendUnknownTarget(aTarget, aFrom: String);
+    method AddHRef(aTarget, aFrom: String);
     method Refresh;
     method AdjustURL(s: String): String;
     property Logger: ILogger read fLogger;
@@ -119,6 +124,8 @@ type
     property Review: String read get_Review;
     property &Flags: String read get_Flags;
     property Missing: String read get_Missing;
+    property Broken: String read get_Broken;
+    property HRefs: String read get_HRefs;
 
     method BeginRefresh;
     method BackgroundGenerate;
@@ -537,8 +544,13 @@ end;
 method Project.GenerateFile(aFile: ProjectFile);
 begin
   if aFile.IncludeFile then exit;
-  if edit then
+  var s := '/'+aFile.RelativeFN.Replace('\','/');
+  if s.EndsWith('.md') then s:=s.Substring(0, s.Length-3)+'/';
+  if edit then begin
     fUnknownTargets.Remove(aFile.RelativeFN);
+    fHrefs.Remove(aFile.RelativeFN);
+    fKnownHrefs.Remove(s);
+  end;
   fContext.CurrentFile := aFile;
   aFile.BuildDate := System.IO.File.GetLastWriteTimeUtc(aFile.FullFN);
   case aFile.Format of
@@ -553,7 +565,11 @@ begin
       cp.Registers["file_system"] := self;
       fHeadings.Clear;
       var lResolved := DotLiquid.Template.Parse(aFile.Content).Render(cp);
-      var lWork := Markdown.Transform(lResolved);
+      var lhrefs: HashSet<String>;
+      var lWork := Markdown.Transform(lResolved, out lhrefs);
+      if lhrefs.Count > 0 then begin
+        fKnownHrefs.Add(s, lhrefs);
+      end;
       if String.IsNullOrEmpty(aFile.Title) then
         fLogger.Error(aFile.RelativeFN+' does not have a title!');
       var lTitle := aFile.Properties.Get('unique_title');
@@ -621,7 +637,7 @@ begin
 
   var anch := '';
   var a := s.LastIndexOf('#');
-  if a<> -1 then begin
+  if a<> -1 then begin    
     anch := s.Substring(a);
     s := s.Substring(0, a);
   end;
@@ -652,6 +668,12 @@ begin
       fLogger.Warn(fContext.CurrentFile.RelativeFN+': refers to unknown target: '+s);
       exit '';
     end;
+  end;
+  if anch <> '' then begin
+    if s.EndsWith('index.html') then
+      AddHRef(s.Substring(0,s.Length-10)+anch, fContext.CurrentFile.RelativeFN)
+    else
+      AddHRef(s+'/'+anch, fContext.CurrentFile.RelativeFN);
   end;
   s := fContext.MakeRelative(coalesce(s, ''));
   exit s + anch;
@@ -946,7 +968,8 @@ begin
   cp.Registers["file_system"] := self;
   var lResolved := DotLiquid.Template.Parse(aToc.File.Content).Render(cp);
   sb.AppendLine('<div class="newpage">');
-  sb.Append(Markdown.Transform(lResolved));
+  var lhrefs: HashSet<String>;
+  sb.Append(Markdown.Transform(lResolved, out lhrefs));
   sb.AppendLine('</div>');
   for each el in aToc.children do
     AppendSingleFileContent(el, sb);
@@ -1160,8 +1183,8 @@ begin
         sb.Append($"<a href='{pf.TargetURL}'>{pf.RelativeFN.Replace("\","/").Trim('/')}</a>");
       if edit then begin
         sb.Append(" &mdash; ");
-        sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
-        sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+        sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'"  target="blank">(edit)</a> ');
+        sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'"  target="blank">(edit externally)</a> ');
       end;
       sb.Append('</li>');
     end;
@@ -1170,7 +1193,7 @@ begin
   sb.Append($"</ul>");
 
   sb.Append($"<hr>");
-
+/*
   sb.Append($"<h2>Pages with Broken Links</h2>");
   sb.Append($"{fUnknownTargets.Count} pages have broken links.");
   sb.Append($"<ul>");
@@ -1205,7 +1228,7 @@ begin
     sb.Append($"</li>");
   end;
   sb.Append($"</ul>");
-
+*/
 
   fContext.CurrentFile := Files['index.md'];
   var cp := new DotLiquid.RenderParameters;
@@ -1615,7 +1638,8 @@ end;
 method MyFilters.Markdown(ctx: DotLiquid.Context; md: String): String;
 begin
   var lProject := Project(ctx.Registers['__project']);
-  result := lProject.Markdown.Transform(md).Trim;
+  var hrefs: HashSet<String>;
+  result := lProject.Markdown.Transform(md, out hrefs).Trim;
   if result.StartsWith('<p>') and result.EndsWith('</p>') then
     result := result.Substring(3, result.Length -7);
 end;
@@ -1623,6 +1647,133 @@ end;
 method OnAfterBrokenLink(arg1: StringBuilder; arg2: String);
 begin
 
+end;
+
+method Project.get_Broken: String;
+begin
+  var sb := new StringBuilder;
+  sb.Append($"<h2>Pages with Broken Links</h2>");
+  sb.Append($"{fUnknownTargets.Count} pages have broken links.");
+  sb.Append($"<ul>");
+  for each el in fUnknownTargets.OrderBy(a -> a.Key.Trim('/')) do begin
+    fFiles.TryGetValue(el.Key.Replace('\', '/'), out var pf);
+    if pf = nil then begin
+      sb.Append($"<li>{el.Key.Trim('/')}</li>");
+      continue;
+    end;
+    sb.Append($"<li>");
+    if pf.IncludeFile then
+      sb.Append($"/{pf.RelativeFN.Replace('\','/').Trim('/')}")
+    else
+      sb.Append($"<a href='{pf.TargetURL}'>{pf.RelativeFN.Replace("\","/").Trim('/')}</a>");
+    if edit then begin
+      sb.Append(" &mdash; ");
+      sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'">(edit)</a> ');
+      sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'">(edit externally)</a> ');
+    end;
+    sb.Append($"<ul>");
+    for each d in el.Value.OrderBy(a->a.Trim('/')) do begin
+      sb.Append($"<li>");
+      sb.Append($"<b>{d.Trim('/')}</b>");
+      if edit then begin
+        sb.Append(" &mdash; ");
+        sb.Append($"<a href='/__edit/__create?file={d.Replace("\", "/")}'>(create file)</a> ");
+        sb.Append($"<a href='/__edit/__create?folder={d.Replace('\', '/')}'>(create folder)</a> ");
+      end;
+      sb.Append($"</li>");
+    end;
+    sb.Append($"</ul>");
+    sb.Append($"</li>");
+  end;
+  sb.Append($"</ul>");
+
+
+  fContext.CurrentFile := Files['index.md'];
+  var cp := new DotLiquid.RenderParameters;
+  cp.Registers := new DotLiquid.Hash;
+  cp.Registers.Add('__project', self);
+
+  cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
+  cp.Registers["file_system"] := self;
+  cp.LocalVariables['content'] := sb.ToString;
+  cp.LocalVariables['showedit'] := false;
+
+  var lKeywords := BaseTemplate.Render(cp);
+  exit lKeywords;
+end;
+
+method Project.AddHRef(aTarget: String; aFrom: String);
+begin
+  var lVal: HashSet<String>;
+  if not fHrefs.TryGetValue(aFrom, out lVal) then begin
+    lVal := new HashSet<String>;
+    fHrefs.Add(aFrom, lVal);
+  end;
+  lVal.Add(aTarget);
+end;
+
+
+method Project.get_HRefs: String;
+begin
+  var sb := new StringBuilder;
+
+  var lPages := fHrefs.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).Where(s->
+		begin 
+      var a := s.missing.LastIndexOf('#');
+      if a = -1 then exit false;
+      var anch := s.missing.Substring(a+1);  //cut first `#`
+      var u := s.missing.Substring(0, a); //cut first `/`
+      var hs: HashSet<String>;
+      if not fKnownHrefs.TryGetValue(u, out hs) then exit true;
+      exit not hs.Contains(anch);
+		end).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key.Trim('/')).ToList;
+  sb.Append("<h2>Broken Hrefs links</h2>");
+  sb.Append(lPages.Count.ToString + " pages with broken hrefs.");
+  sb.Append("<ul>");
+  for each d in lPages do begin
+    sb.Append("<li>");
+    sb.Append("<a href='"+d.Key+"' target='blank'>"+d.Key+"</a>" );
+    sb.AppendLine('<ul>');
+    for each el in d.OrderBy(a->a.Trim('/')) do begin
+      var pf: ProjectFile;
+      fFiles.TryGetValue(el.Replace('\', '/'), out pf);
+      if pf = nil then begin
+        sb.Append('<li>');
+        sb.Append(el);
+        sb.Append('</li>');
+        continue;
+      end;
+      sb.Append('<li>');
+      var t := pf.RelativeFN.Replace('\','/').Trim('/');
+      if pf.IncludeFile then
+        sb.Append('/'+t)
+      else
+        sb.Append("<a href='"+pf.TargetURL+"' target='blank'>"+t+"</a>");
+      if edit then begin
+        sb.Append(" &mdash; ");
+        sb.Append('<a href="/__edit/editor.html?path='+ pf.RelativeFN.Replace('\', '/') +'" target="blank">(edit)</a> ');
+        sb.Append('<a href="docsgen://action=edit&url=file://'+ pf.FullFN.Replace('\', '/') +'" target="blank">(edit externally)</a> ');
+      end;
+      sb.Append('</li>');
+    end;
+    sb.AppendLine('</ul>');
+  end;
+  sb.Append("</ul>");
+
+  sb.Append("<hr>");
+
+  fContext.CurrentFile := Files['index.md'];
+  var cp := new DotLiquid.RenderParameters;
+  cp.Registers := new DotLiquid.Hash;
+  cp.Registers.Add('__project', self);
+
+  cp.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
+  cp.Registers["file_system"] := self;
+  cp.LocalVariables['content'] := sb.ToString;
+  cp.LocalVariables['showedit'] := false;
+
+  var lKeywords := BaseTemplate.Render(cp);
+  exit lKeywords;
 end;
 
 

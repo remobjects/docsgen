@@ -81,6 +81,24 @@ begin
           end;
           exit;
         end else
+        if s = '__broken.html'then begin
+          try
+            SendHtml(aContext, fProject.Broken);
+          except
+            on e: Exception do
+              SendError(aContext, 500, 'Internal Error', e.Message);
+          end;
+          exit;
+        end else
+        if s = '__brokenhrefs.html'then begin
+          try
+            SendHtml(aContext, fProject.HRefs);
+          except
+            on e: Exception do
+              SendError(aContext, 500, 'Internal Error', e.Message);
+          end;
+          exit;
+        end else
         if s = '__keywords.html'then begin
           try
             SendHtml(aContext, fProject.Keywords);
