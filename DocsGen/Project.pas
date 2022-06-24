@@ -637,7 +637,7 @@ begin
 
   var anch := '';
   var a := s.LastIndexOf('#');
-  if a<> -1 then begin    
+  if a<> -1 then begin
     anch := s.Substring(a);
     s := s.Substring(0, a);
   end;
@@ -1718,7 +1718,7 @@ begin
   var sb := new StringBuilder;
 
   var lPages := fHrefs.SelectMany(a->a.Value, (a,b) -> new class(caller := a.Key, missing := b)).Where(s->
-		begin 
+    begin
       var a := s.missing.LastIndexOf('#');
       if a = -1 then exit false;
       var anch := s.missing.Substring(a+1);  //cut first `#`
@@ -1726,8 +1726,8 @@ begin
       var hs: HashSet<String>;
       if not fKnownHrefs.TryGetValue(u, out hs) then exit true;
       exit not hs.Contains(anch);
-		end).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key.Trim('/')).ToList;
-  sb.Append("<h2>Broken Hrefs links</h2>");
+    end).GroupBy(a->a.missing, a -> a.caller).OrderBy(a->a.Key.Trim('/')).ToList;
+  sb.Append("<h2>Broken Anchors</h2>");
   sb.Append(lPages.Count.ToString + " pages with broken hrefs.");
   sb.Append("<ul>");
   for each d in lPages do begin
