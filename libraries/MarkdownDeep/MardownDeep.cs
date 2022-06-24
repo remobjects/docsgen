@@ -110,6 +110,21 @@ namespace MarkdownDeep
 							}
 							break;
 						}
+						case BlockType.table_spec:
+						{
+							if (b.data is TableSpec)
+							{
+								foreach (List<String> rows in ((TableSpec)b.data).Rows)
+								{
+									if (rows.Count > 0)
+									{
+										var lblocks = ProcessBlocks(rows[0]);
+										GenerateHref(lblocks, hrefs);
+									}
+								}
+							}
+							break;
+						}
 						default:
 						{
 							// do nothing

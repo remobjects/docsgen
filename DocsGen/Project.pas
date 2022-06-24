@@ -545,7 +545,8 @@ method Project.GenerateFile(aFile: ProjectFile);
 begin
   if aFile.IncludeFile then exit;
   var s := '/'+aFile.RelativeFN.Replace('\','/');
-  if s.EndsWith('.md') then s:=s.Substring(0, s.Length-3)+'/';
+  if s.EndsWith('index.md') then s:=s.Substring(0, s.Length-8)
+  else if s.EndsWith('.md') then s:=s.Substring(0, s.Length-3)+'/';
   if edit then begin
     fUnknownTargets.Remove(aFile.RelativeFN);
     fHrefs.Remove(aFile.RelativeFN);
