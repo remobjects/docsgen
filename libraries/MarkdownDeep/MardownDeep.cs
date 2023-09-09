@@ -1,14 +1,14 @@
-﻿// 
+﻿//
 //   MarkdownDeep - http://www.toptensoftware.com/markdowndeep
-//	 Copyright (C) 2010-2011 Topten Software
-// 
-//   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this product except in 
+//     Copyright (C) 2010-2011 Topten Software
+//
+//   Licensed under the Apache License, Version 2.0 (the "License"); you may not use this product except in
 //   compliance with the License. You may obtain a copy of the License at
 //
 //   http://www.apache.org/licenses/LICENSE-2.0
 //
-//   Unless required by applicable law or agreed to in writing, software distributed under the License is 
-//   distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+//   Unless required by applicable law or agreed to in writing, software distributed under the License is
+//   distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //   See the License for the specific language governing permissions and limitations under the License.
 //
 
@@ -27,8 +27,8 @@ namespace MarkdownDeep
 		public int width;
 		public int height;
 	}
-    public delegate void HeadingCallback(string blocktype, string id, string content);
-        
+	public delegate void HeadingCallback(string blocktype, string id, string content);
+
 
 	public class Markdown
 	{
@@ -67,16 +67,16 @@ namespace MarkdownDeep
 		}
 
 
-        public event Action<StringBuilder, String, String> OnAfterBrokenLink;
-        public void AfterBrokenLink(StringBuilder sb, string link, string title)
-        {
-            if (OnAfterBrokenLink != null)
-                OnAfterBrokenLink(sb, link, title);
-        }
+		public event Action<StringBuilder, String, String> OnAfterBrokenLink;
+		public void AfterBrokenLink(StringBuilder sb, string link, string title)
+		{
+			if (OnAfterBrokenLink != null)
+				OnAfterBrokenLink(sb, link, title);
+		}
 
-        public event HeadingCallback HeadingGenerated;
-        
-        private void GenerateHref(List<Block> blocks, HashSet<string> hrefs)
+		public event HeadingCallback HeadingGenerated;
+
+		private void GenerateHref(List<Block> blocks, HashSet<string> hrefs)
 		{
 			if (!assigned(blocks)) return;
 			for (int i = 0; i < blocks.Count; i++)
@@ -91,11 +91,11 @@ namespace MarkdownDeep
 						case BlockType.h3:
 						case BlockType.h4:
 						case BlockType.h5:
-						case BlockType.h6: 
+						case BlockType.h6:
 						{
-							if (b.data is string) 
+							if (b.data is string)
 							{
-								hrefs.Add((String)b.data); 
+								hrefs.Add((String)b.data);
 							}
 							break;
 
@@ -232,7 +232,7 @@ namespace MarkdownDeep
 						var fn = m_UsedFootnotes[i];
 
 						sb.Append("<li id=\"fn:");
-						sb.Append((string)fn.data);	// footnote id
+						sb.Append((string)fn.data);    // footnote id
 						sb.Append("\">\n");
 
 
@@ -285,7 +285,7 @@ namespace MarkdownDeep
 			set;
 		}
 
-		// Set to true to enable ExtraMode, which enables the same set of 
+		// Set to true to enable ExtraMode, which enables the same set of
 		// features as implemented by PHP Markdown Extra.
 		//  - Markdown in html (eg: <div markdown="1"> or <div markdown="deep"> )
 		//  - Header ID attributes
@@ -301,7 +301,7 @@ namespace MarkdownDeep
 		}
 
 		// When set, all html block level elements automatically support
-		// markdown syntax within them.  
+		// markdown syntax within them.
 		// (Similar to Pandoc's handling of markdown in html)
 		public bool MarkdownInHtml
 		{
@@ -386,14 +386,14 @@ namespace MarkdownDeep
 			set;
 		}
 
-        /// <summary>
-        /// Add the NoFollow attribute to all external links.
-        /// </summary>
-        public bool NoFollowExternalLinks
-        {
-            get;
-            set;
-        }
+		/// <summary>
+		/// Add the NoFollow attribute to all external links.
+		/// </summary>
+		public bool NoFollowExternalLinks
+		{
+			get;
+			set;
+		}
 
 
 
@@ -413,9 +413,9 @@ namespace MarkdownDeep
 			if (String.IsNullOrEmpty(UrlBaseLocation))
 				return url;
 
-            // Is the url a fragment?
-            if (url.StartsWith("#"))
-                return url;
+			// Is the url a fragment?
+			if (url.StartsWith("#"))
+				return url;
 
 			// Is the url already fully qualified?
 			if (Utils.IsUrlFullyQualified(url))
@@ -427,7 +427,7 @@ namespace MarkdownDeep
 				{
 					return UrlRootLocation + url;
 				}
-				
+
 				 // Quit if we don't have a base location
 				 if (String.IsNullOrEmpty(UrlBaseLocation))
 					return url;
@@ -460,6 +460,7 @@ namespace MarkdownDeep
 		public Func<ImageInfo, bool> GetImageSize;
 
 		// Override to supply the size of an image
+		#if !NETSTANDARD
 		public virtual bool OnGetImageSize(string url, bool TitledImage, out int width, out int height)
 		{
 			if (GetImageSize != null)
@@ -498,7 +499,7 @@ namespace MarkdownDeep
 			str=str + "\\" + url.Replace("/", "\\");
 
 
-			// 
+			//
 
 			//Create an image object from the uploaded file
 			try
@@ -520,10 +521,10 @@ namespace MarkdownDeep
 				return false;
 			}
 		}
-
+		#endif
 
 		public Func<HtmlTag, bool> PrepareLink;
-		
+
 		// Override to modify the attributes of a link
 		public virtual void OnPrepareLink(HtmlTag tag)
 		{
@@ -541,13 +542,13 @@ namespace MarkdownDeep
 				tag.attributes["rel"] = "nofollow";
 			}
 
-            // No follow external links only
-            if (NoFollowExternalLinks)
-            {
-                if (Utils.IsUrlFullyQualified(url))
-                    tag.attributes["rel"] = "nofollow";
-            }
- 		
+			// No follow external links only
+			if (NoFollowExternalLinks)
+			{
+				if (Utils.IsUrlFullyQualified(url))
+					tag.attributes["rel"] = "nofollow";
+			}
+
 
 
 			// New window?
@@ -575,12 +576,14 @@ namespace MarkdownDeep
 			}
 
 			// Try to determine width and height
+			#if !NETSTANDARD
 			int width, height;
 			if (OnGetImageSize(tag.attributes["src"], TitledImage, out width, out height))
 			{
 				tag.attributes["width"] = width.ToString();
 				tag.attributes["height"] = height.ToString();
 			}
+			#endif
 
 			// Now qualify the url
 			tag.attributes["src"] = OnQualifyUrl(tag.attributes["src"]);
@@ -627,10 +630,10 @@ namespace MarkdownDeep
 		// Set the classname for titled images
 		// A titled image is defined as a paragraph that contains an image and nothing else.
 		// If not set (the default), this features is disabled, otherwise the output is:
-		// 
+		//
 		// <div class="<%=this.HtmlClassTitledImags%>">
-		//	<img src="image.png" />
-		//	<p>Alt text goes here</p>
+		//    <img src="image.png" />
+		//    <p>Alt text goes here</p>
 		// </div>
 		//
 		// Use CSS to style the figure and the caption
@@ -940,7 +943,7 @@ namespace MarkdownDeep
 							dest.Append(' ');
 							pos++;
 						}
-						pos--;		// Compensate for the pos++ below
+						pos--;        // Compensate for the pos++ below
 						break;
 
 					case '\r':
@@ -1011,12 +1014,12 @@ namespace MarkdownDeep
 
 
 		/*
-		 * Get this markdown processors string builder.  
-		 * 
-		 * We re-use the same string builder whenever we can for performance.  
-		 * We just reset the length before starting to / use it again, which 
+		 * Get this markdown processors string builder.
+		 *
+		 * We re-use the same string builder whenever we can for performance.
+		 * We just reset the length before starting to / use it again, which
 		 * hopefully should keep the memory around for next time.
-		 * 
+		 *
 		 * Note, care should be taken when using this string builder to not
 		 * call out to another function that also uses it.
 		 */
@@ -1072,11 +1075,11 @@ namespace MarkdownDeep
 
 
 
-        internal void OnHeadingGenerated(string blocktype, string id, string buf, int contentStart, int contentLen)
-        {
-            if (HeadingGenerated != null)
-                HeadingGenerated(blocktype,id, buf.Substring(contentStart, contentLen));
-        }
-    }
+		internal void OnHeadingGenerated(string blocktype, string id, string buf, int contentStart, int contentLen)
+		{
+			if (HeadingGenerated != null)
+				HeadingGenerated(blocktype,id, buf.Substring(contentStart, contentLen));
+		}
+	}
 
 }
