@@ -1,2 +1,1231 @@
-!function(e){"undefined"!=typeof exports?e(exports):(window.hljs=e({}),"function"==typeof define&&define.amd&&define([],function(){return window.hljs}))}(function(e){function t(e){return e.replace(/&/gm,"&amp;").replace(/</gm,"&lt;").replace(/>/gm,"&gt;")}function r(e){return e.nodeName.toLowerCase()}function n(e,t){var r=e&&e.exec(t);return r&&0==r.index}function a(e){var t=(e.className+" "+(e.parentNode?e.parentNode.className:"")).split(/\s+/);return t=t.map(function(e){return e.replace(/^lang(uage)?-/,"")}),t.filter(function(e){return N(e)||/no(-?)highlight/.test(e)})[0]}function i(e,t){var r={};for(var n in e)r[n]=e[n];if(t)for(var n in t)r[n]=t[n];return r}function s(e){var t=[];return function n(e,a){for(var i=e.firstChild;i;i=i.nextSibling)3==i.nodeType?a+=i.nodeValue.length:1==i.nodeType&&(t.push({event:"start",offset:a,node:i}),a=n(i,a),r(i).match(/br|hr|img|input/)||t.push({event:"stop",offset:a,node:i}));return a}(e,0),t}function c(e,n,a){function i(){return e.length&&n.length?e[0].offset!=n[0].offset?e[0].offset<n[0].offset?e:n:"start"==n[0].event?e:n:e.length?e:n}function s(e){function n(e){return" "+e.nodeName+'="'+t(e.value)+'"'}u+="<"+r(e)+Array.prototype.map.call(e.attributes,n).join("")+">"}function c(e){u+="</"+r(e)+">"}function o(e){("start"==e.event?s:c)(e.node)}for(var l=0,u="",d=[];e.length||n.length;){var b=i();if(u+=t(a.substr(l,b[0].offset-l)),l=b[0].offset,b==e){d.reverse().forEach(c);do o(b.splice(0,1)[0]),b=i();while(b==e&&b.length&&b[0].offset==l);d.reverse().forEach(s)}else"start"==b[0].event?d.push(b[0].node):d.pop(),o(b.splice(0,1)[0])}return u+t(a.substr(l))}function o(e){function t(e){return e&&e.source||e}function r(r,n){return RegExp(t(r),"m"+(e.cI?"i":"")+(n?"g":""))}function n(a,s){if(!a.compiled){if(a.compiled=!0,a.k=a.k||a.bK,a.k){var c={},o=function(t,r){e.cI&&(r=r.toLowerCase()),r.split(" ").forEach(function(e){var r=e.split("|");c[r[0]]=[t,r[1]?Number(r[1]):1]})};"string"==typeof a.k?o("keyword",a.k):Object.keys(a.k).forEach(function(e){o(e,a.k[e])}),a.k=c}a.lR=r(a.l||/\b\w+\b/,!0),s&&(a.bK&&(a.b="\\b("+a.bK.split(" ").join("|")+")\\b"),a.b||(a.b=/\B|\b/),a.bR=r(a.b),a.e||a.eW||(a.e=/\B|\b/),a.e&&(a.eR=r(a.e)),a.tE=t(a.e)||"",a.eW&&s.tE&&(a.tE+=(a.e?"|":"")+s.tE)),a.i&&(a.iR=r(a.i)),void 0===a.r&&(a.r=1),a.c||(a.c=[]);var l=[];a.c.forEach(function(e){e.v?e.v.forEach(function(t){l.push(i(e,t))}):l.push("self"==e?a:e)}),a.c=l,a.c.forEach(function(e){n(e,a)}),a.starts&&n(a.starts,s);var u=a.c.map(function(e){return e.bK?"\\.?("+e.b+")\\.?":e.b}).concat([a.tE,a.i]).map(t).filter(Boolean);a.t=u.length?r(u.join("|"),!0):{exec:function(){return null}}}}n(e)}function l(e,r,a,i){function s(e,t){for(var r=0;r<t.c.length;r++)if(n(t.c[r].bR,e))return t.c[r]}function c(e,t){return n(e.eR,t)?e:e.eW?c(e.parent,t):void 0}function d(e,t){return!a&&n(t.iR,e)}function b(e,t){var r=w.cI?t[0].toLowerCase():t[0];return e.k.hasOwnProperty(r)&&e.k[r]}function p(e,t,r,n){var a=n?"":v.classPrefix,i='<span class="'+a,s=r?"":"</span>";return i+=e+'">',i+t+s}function f(){if(!k.k)return t(S);var e="",r=0;k.lR.lastIndex=0;for(var n=k.lR.exec(S);n;){e+=t(S.substr(r,n.index-r));var a=b(k,n);a?(I+=a[1],e+=p(a[0],t(n[0]))):e+=t(n[0]),r=k.lR.lastIndex,n=k.lR.exec(S)}return e+t(S.substr(r))}function m(){if(k.sL&&!y[k.sL])return t(S);var e=k.sL?l(k.sL,S,!0,x[k.sL]):u(S);return k.r>0&&(I+=e.r),"continuous"==k.subLanguageMode&&(x[k.sL]=e.top),p(e.language,e.value,!1,!0)}function g(){return void 0!==k.sL?m():f()}function _(e,r){var n=e.cN?p(e.cN,"",!0):"";e.rB?(M+=n,S=""):e.eB?(M+=t(r)+n,S=""):(M+=n,S=r),k=Object.create(e,{parent:{value:k}})}function h(e,r){if(S+=e,void 0===r)return M+=g(),0;var n=s(r,k);if(n)return M+=g(),_(n,r),n.rB?0:r.length;var a=c(k,r);if(a){var i=k;i.rE||i.eE||(S+=r),M+=g();do k.cN&&(M+="</span>"),I+=k.r,k=k.parent;while(k!=a.parent);return i.eE&&(M+=t(r)),S="",a.starts&&_(a.starts,""),i.rE?0:r.length}if(d(r,k))throw new Error('Illegal lexeme "'+r+'" for mode "'+(k.cN||"<unnamed>")+'"');return S+=r,r.length||1}var w=N(e);if(!w)throw new Error('Unknown language: "'+e+'"');o(w);for(var k=i||w,x={},M="",C=k;C!=w;C=C.parent)C.cN&&(M=p(C.cN,"",!0)+M);var S="",I=0;try{for(var E,B,L=0;;){if(k.t.lastIndex=L,E=k.t.exec(r),!E)break;B=h(r.substr(L,E.index-L),E[0]),L=E.index+B}h(r.substr(L));for(var C=k;C.parent;C=C.parent)C.cN&&(M+="</span>");return{r:I,value:M,language:e,top:k}}catch(z){if(-1!=z.message.indexOf("Illegal"))return{r:0,value:t(r)};throw z}}function u(e,r){r=r||v.languages||Object.keys(y);var n={r:0,value:t(e)},a=n;return r.forEach(function(t){if(N(t)){var r=l(t,e,!1);r.language=t,r.r>a.r&&(a=r),r.r>n.r&&(a=n,n=r)}}),a.language&&(n.second_best=a),n}function d(e){return v.tabReplace&&(e=e.replace(/^((<[^>]+>|\t)+)/gm,function(e,t){return t.replace(/\t/g,v.tabReplace)})),v.useBR&&(e=e.replace(/\n/g,"<br>")),e}function b(e,t,r){var n=t?w[t]:r,a=[e.trim()];return e.match(/\bhljs\b/)||a.push("hljs"),n&&a.push(n),a.join(" ").trim()}function p(e){var t=a(e);if(!/no(-?)highlight/.test(t)){var r;v.useBR?(r=document.createElementNS("http://www.w3.org/1999/xhtml","div"),r.innerHTML=e.innerHTML.replace(/\n/g,"").replace(/<br[ \/]*>/g,"\n")):r=e;var n=r.textContent,i=t?l(t,n,!0):u(n),o=s(r);if(o.length){var p=document.createElementNS("http://www.w3.org/1999/xhtml","div");p.innerHTML=i.value,i.value=c(o,s(p),n)}i.value=d(i.value),e.innerHTML=i.value,e.className=b(e.className,t,i.language),e.result={language:i.language,re:i.r},i.second_best&&(e.second_best={language:i.second_best.language,re:i.second_best.r})}}function f(e){v=i(v,e)}function m(){if(!m.called){m.called=!0;var e=document.querySelectorAll("pre code");Array.prototype.forEach.call(e,p)}}function g(){addEventListener("DOMContentLoaded",m,!1),addEventListener("load",m,!1)}function _(t,r){var n=y[t]=r(e);n.aliases&&n.aliases.forEach(function(e){w[e]=t})}function h(){return Object.keys(y)}function N(e){return y[e]||y[w[e]]}var v={classPrefix:"hljs-",tabReplace:null,useBR:!1,languages:void 0},y={},w={};return e.highlight=l,e.highlightAuto=u,e.fixMarkup=d,e.highlightBlock=p,e.configure=f,e.initHighlighting=m,e.initHighlightingOnLoad=g,e.registerLanguage=_,e.listLanguages=h,e.getLanguage=N,e.inherit=i,e.IR="[a-zA-Z]\\w*",e.UIR="[a-zA-Z_]\\w*",e.NR="\\b\\d+(\\.\\d+)?",e.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",e.BNR="\\b(0b[01]+)",e.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",e.BE={b:"\\\\[\\s\\S]",r:0},e.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[e.BE]},e.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[e.BE]},e.PWM={b:/\b(a|an|the|are|I|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such)\b/},e.CLCM={cN:"comment",b:"//",e:"$",c:[e.PWM]},e.CBCM={cN:"comment",b:"/\\*",e:"\\*/",c:[e.PWM]},e.HCM={cN:"comment",b:"#",e:"$",c:[e.PWM]},e.NM={cN:"number",b:e.NR,r:0},e.CNM={cN:"number",b:e.CNR,r:0},e.BNM={cN:"number",b:e.BNR,r:0},e.CSSNM={cN:"number",b:e.NR+"(%|em|ex|ch|rem|vw|vh|vmin|vmax|cm|mm|in|pt|pc|px|deg|grad|rad|turn|s|ms|Hz|kHz|dpi|dpcm|dppx)?",r:0},e.RM={cN:"regexp",b:/\//,e:/\/[gimuy]*/,i:/\n/,c:[e.BE,{b:/\[/,e:/\]/,r:0,c:[e.BE]}]},e.TM={cN:"title",b:e.IR,r:0},e.UTM={cN:"title",b:e.UIR,r:0},e}),hljs.registerLanguage("apache",function(e){var t={cN:"number",b:"[\\$%]\\d+"};return{aliases:["apacheconf"],cI:!0,c:[e.HCM,{cN:"tag",b:"</?",e:">"},{cN:"keyword",b:/\w+/,r:0,k:{common:"order deny allow setenv rewriterule rewriteengine rewritecond documentroot sethandler errordocument loadmodule options header listen serverroot servername"},starts:{e:/$/,r:0,k:{literal:"on off all"},c:[{cN:"sqbracket",b:"\\s\\[",e:"\\]$"},{cN:"cbracket",b:"[\\$%]\\{",e:"\\}",c:["self",t]},t,e.QSM]}}],i:/\S/}}),hljs.registerLanguage("bash",function(e){var t={cN:"variable",v:[{b:/\$[\w\d#@][\w\d_]*/},{b:/\$\{(.*?)\}/}]},r={cN:"string",b:/"/,e:/"/,c:[e.BE,t,{cN:"variable",b:/\$\(/,e:/\)/,c:[e.BE]}]},n={cN:"string",b:/'/,e:/'/};return{aliases:["sh","zsh"],l:/-?[a-z\.]+/,k:{keyword:"if then else elif fi for while in do done case esac function",literal:"true false",built_in:"break cd continue eval exec exit export getopts hash pwd readonly return shift test times trap umask unset alias bind builtin caller command declare echo enable help let local logout mapfile printf read readarray source type typeset ulimit unalias set shopt autoload bg bindkey bye cap chdir clone comparguments compcall compctl compdescribe compfiles compgroups compquote comptags comptry compvalues dirs disable disown echotc echoti emulate fc fg float functions getcap getln history integer jobs kill limit log noglob popd print pushd pushln rehash sched setcap setopt stat suspend ttyctl unfunction unhash unlimit unsetopt vared wait whence where which zcompile zformat zftp zle zmodload zparseopts zprof zpty zregexparse zsocket zstyle ztcp",operator:"-ne -eq -lt -gt -f -d -e -s -l -a"},c:[{cN:"shebang",b:/^#![^\n]+sh\s*$/,r:10},{cN:"function",b:/\w[\w\d_]*\s*\(\s*\)\s*\{/,rB:!0,c:[e.inherit(e.TM,{b:/\w[\w\d_]*/})],r:0},e.HCM,e.NM,r,n,t]}}),hljs.registerLanguage("coffeescript",function(e){var t={keyword:"in if for while finally new do return else break catch instanceof throw try this switch continue typeof delete debugger super then unless until loop of by when and or is isnt not",literal:"true false null undefined yes no on off",reserved:"case default function var void with const let enum export import native __hasProp __extends __slice __bind __indexOf",built_in:"npm require console print module global window document"},r="[A-Za-z$_][0-9A-Za-z$_]*",n={cN:"subst",b:/#\{/,e:/}/,k:t},a=[e.BNM,e.inherit(e.CNM,{starts:{e:"(\\s*/)?",r:0}}),{cN:"string",v:[{b:/'''/,e:/'''/,c:[e.BE]},{b:/'/,e:/'/,c:[e.BE]},{b:/"""/,e:/"""/,c:[e.BE,n]},{b:/"/,e:/"/,c:[e.BE,n]}]},{cN:"regexp",v:[{b:"///",e:"///",c:[n,e.HCM]},{b:"//[gim]*",r:0},{b:/\/(?![ *])(\\\/|.)*?\/[gim]*(?=\W|$)/}]},{cN:"property",b:"@"+r},{b:"`",e:"`",eB:!0,eE:!0,sL:"javascript"}];n.c=a;var i=e.inherit(e.TM,{b:r}),s="(\\(.*\\))?\\s*\\B[-=]>",c={cN:"params",b:"\\([^\\(]",rB:!0,c:[{b:/\(/,e:/\)/,k:t,c:["self"].concat(a)}]};return{aliases:["coffee","cson","iced"],k:t,i:/\/\*/,c:a.concat([{cN:"comment",b:"###",e:"###",c:[e.PWM]},e.HCM,{cN:"function",b:"^\\s*"+r+"\\s*=\\s*"+s,e:"[-=]>",rB:!0,c:[i,c]},{b:/[:\(,=]\s*/,r:0,c:[{cN:"function",b:s,e:"[-=]>",rB:!0,c:[c]}]},{cN:"class",bK:"class",e:"$",i:/[:="\[\]]/,c:[{bK:"extends",eW:!0,i:/[:="\[\]]/,c:[i]},i]},{cN:"attribute",b:r+":",e:":",rB:!0,rE:!0,r:0}])}}),hljs.registerLanguage("cpp",function(e){var t={keyword:"false int float while private char catch export virtual operator sizeof dynamic_cast|10 typedef const_cast|10 const struct for static_cast|10 union namespace unsigned long volatile static protected bool template mutable if public friend do goto auto void enum else break extern using true class asm case typeid short reinterpret_cast|10 default double register explicit signed typename try this switch continue wchar_t inline delete alignof char16_t char32_t constexpr decltype noexcept nullptr static_assert thread_local restrict _Bool complex _Complex _Imaginary intmax_t uintmax_t int8_t uint8_t int16_t uint16_t int32_t uint32_t  int64_t uint64_t int_least8_t uint_least8_t int_least16_t uint_least16_t int_least32_t uint_least32_t int_least64_t uint_least64_t int_fast8_t uint_fast8_t int_fast16_t uint_fast16_t int_fast32_t uint_fast32_t int_fast64_t uint_fast64_t intptr_t uintptr_t atomic_bool atomic_char atomic_schar atomic_uchar atomic_short atomic_ushort atomic_int atomic_uint atomic_long atomic_ulong atomic_llong atomic_ullong atomic_wchar_t atomic_char16_t atomic_char32_t atomic_intmax_t atomic_uintmax_t atomic_intptr_t atomic_uintptr_t atomic_size_t atomic_ptrdiff_t atomic_int_least8_t atomic_int_least16_t atomic_int_least32_t atomic_int_least64_t atomic_uint_least8_t atomic_uint_least16_t atomic_uint_least32_t atomic_uint_least64_t atomic_int_fast8_t atomic_int_fast16_t atomic_int_fast32_t atomic_int_fast64_t atomic_uint_fast8_t atomic_uint_fast16_t atomic_uint_fast32_t atomic_uint_fast64_t",built_in:"std string cin cout cerr clog stringstream istringstream ostringstream auto_ptr deque list queue stack vector map set bitset multiset multimap unordered_set unordered_map unordered_multiset unordered_multimap array shared_ptr abort abs acos asin atan2 atan calloc ceil cosh cos exit exp fabs floor fmod fprintf fputs free frexp fscanf isalnum isalpha iscntrl isdigit isgraph islower isprint ispunct isspace isupper isxdigit tolower toupper labs ldexp log10 log malloc memchr memcmp memcpy memset modf pow printf putchar puts scanf sinh sin snprintf sprintf sqrt sscanf strcat strchr strcmp strcpy strcspn strlen strncat strncmp strncpy strpbrk strrchr strspn strstr tanh tan vfprintf vprintf vsprintf"};return{aliases:["c","h","c++","h++"],k:t,i:"</",c:[e.CLCM,e.CBCM,e.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},e.CNM,{cN:"preprocessor",b:"#",e:"$",k:"if else elif endif define undef warning error line pragma",c:[{b:'include\\s*[<"]',e:'[>"]',k:"include",i:"\\n"},e.CLCM]},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:t,c:["self"]},{b:e.IR+"::"},{bK:"new throw return",r:0},{cN:"function",b:"("+e.IR+"\\s+)+"+e.IR+"\\s*\\(",rB:!0,e:/[{;=]/,eE:!0,k:t,c:[{b:e.IR+"\\s*\\(",rB:!0,c:[e.TM],r:0},{cN:"params",b:/\(/,e:/\)/,k:t,r:0,c:[e.CBCM]},e.CLCM,e.CBCM]}]}}),hljs.registerLanguage("cs",function(e){var t="abstract as base bool break byte case catch char checked const continue decimal default delegate do double else enum event explicit extern false finally fixed float for foreach goto if implicit in int interface internal is lock long null object operator out override params private protected public readonly ref sbyte sealed short sizeof stackalloc static string struct switch this true try typeof uint ulong unchecked unsafe ushort using virtual volatile void while async protected public private internal __aspect __autoreleasepool __mapped __selector __strong __unretained __weak ascending descending from get group into join let orderby partial select set value var where yield",r=e.IR+"(<"+e.IR+">)?";return{aliases:["hydrogene","cs","csharp"],k:t,i:/::/,c:[{cN:"comment",b:"///",e:"$",rB:!0,c:[{cN:"xmlDocTag",v:[{b:"///",r:0},{b:"<!--|-->"},{b:"</?",e:">"}]}]},e.CLCM,e.CBCM,{cN:"preprocessor",b:"#",b:"#",e:"$",c:[e.CLCM]},{cN:"string",b:'@"',e:'"',c:[{b:'""'}]},e.ASM,e.QSM,e.CNM,{bK:"class namespace interface",e:/[{;=]/,i:/[^\s:]/,c:[e.TM,e.CLCM,e.CBCM]},{bK:"new return throw await",r:0},{cN:"function",b:"("+r+"\\s+)+"+e.IR+"\\s*\\(",rB:!0,e:/[{;=]/,eE:!0,k:t,c:[{b:e.IR+"\\s*\\(",rB:!0,c:[e.TM],r:0},{cN:"params",b:/\(/,e:/\)/,k:t,r:0,c:[e.ASM,e.QSM,e.CNM,e.CBCM]},e.CLCM,e.CBCM]}]}}),hljs.registerLanguage("css",function(e){var t="[a-zA-Z-][a-zA-Z0-9_-]*",r={cN:"function",b:t+"\\(",rB:!0,eE:!0,e:"\\("};return{cI:!0,i:"[=/|']",c:[e.CBCM,{cN:"id",b:"\\#[A-Za-z0-9_-]+"},{cN:"class",b:"\\.[A-Za-z0-9_-]+",r:0},{cN:"attr_selector",b:"\\[",e:"\\]",i:"$"},{cN:"pseudo",b:":(:)?[a-zA-Z0-9\\_\\-\\+\\(\\)\\\"\\']+"},{cN:"at_rule",b:"@(font-face|page)",l:"[a-z-]+",k:"font-face page"},{cN:"at_rule",b:"@",e:"[{;]",c:[{cN:"keyword",b:/\S+/},{b:/\s/,eW:!0,eE:!0,r:0,c:[r,e.ASM,e.QSM,e.CSSNM]}]},{cN:"tag",b:t,r:0},{cN:"rules",b:"{",e:"}",i:"[^\\s]",r:0,c:[e.CBCM,{cN:"rule",b:"[^\\s]",rB:!0,e:";",eW:!0,c:[{cN:"attribute",b:"[A-Z\\_\\.\\-]+",e:":",eE:!0,i:"[^\\s]",starts:{cN:"value",eW:!0,eE:!0,c:[r,e.CSSNM,e.QSM,e.ASM,e.CBCM,{cN:"hexcolor",b:"#[0-9A-Fa-f]+"},{cN:"important",b:"!important"}]}}]}]}]}}),hljs.registerLanguage("delphi",function(e){var t="exports register file shl array record property for mod while set ally label uses raise not stored class safecall var interface or private static exit index inherited to else stdcall override shr asm far resourcestring finalization packed virtual out and protected library do xorwrite goto near function end div overload object unit begin string on inline repeat until destructor write message program with read initialization except default nil if case cdecl in downto threadvar of try pascal const external constructor type public then implementation finally published procedure",r={cN:"comment",v:[{b:/\{/,e:/\}/,r:0},{b:/\(\*/,e:/\*\)/,r:10}]},n={cN:"string",b:/'/,e:/'/,c:[{b:/''/}]},a={cN:"string",b:/(#\d+)+/},i={b:e.IR+"\\s*=\\s*class\\s*\\(",rB:!0,c:[e.TM]},s={cN:"function",bK:"function constructor destructor procedure",e:/[:;]/,k:"function constructor|10 destructor|10 procedure|10",c:[e.TM,{cN:"params",b:/\(/,e:/\)/,k:t,c:[n,a]},r]};return{cI:!0,k:t,i:/"|\$[G-Zg-z]|\/\*|<\/|\|/,c:[r,e.CLCM,n,a,e.NM,i,s]}}),hljs.registerLanguage("diff",function(){return{aliases:["patch"],c:[{cN:"chunk",r:10,v:[{b:/^\@\@ +\-\d+,\d+ +\+\d+,\d+ +\@\@$/},{b:/^\*\*\* +\d+,\d+ +\*\*\*\*$/},{b:/^\-\-\- +\d+,\d+ +\-\-\-\-$/}]},{cN:"header",v:[{b:/Index: /,e:/$/},{b:/=====/,e:/=====$/},{b:/^\-\-\-/,e:/$/},{b:/^\*{3} /,e:/$/},{b:/^\+\+\+/,e:/$/},{b:/\*{5}/,e:/\*{5}$/}]},{cN:"addition",b:"^\\+",e:"$"},{cN:"deletion",b:"^\\-",e:"$"},{cN:"change",b:"^\\!",e:"$"}]}}),hljs.registerLanguage("fsharp",function(e){var t={b:"<",e:">",c:[e.inherit(e.TM,{b:/'[a-zA-Z0-9_]+/})]};return{aliases:["fs"],k:"yield! return! let! do!abstract and as assert base begin class default delegate do done downcast downto elif else end exception extern false finally for fun function global if in inherit inline interface internal lazy let match member module mutable namespace new null of open or override private public rec return sig static struct then to true try type upcast use val void when while with yield",c:[{cN:"string",b:'@"',e:'"',c:[{b:'""'}]},{cN:"string",b:'"""',e:'"""'},{cN:"comment",b:"\\(\\*",e:"\\*\\)"},{cN:"class",bK:"type",e:"\\(|=|$",eE:!0,c:[e.UTM,t]},{cN:"annotation",b:"\\[<",e:">\\]",r:10},{cN:"attribute",b:"\\B('[A-Za-z])\\b",c:[e.BE]},e.CLCM,e.inherit(e.QSM,{i:null}),e.CNM]}}),hljs.registerLanguage("http",function(){return{i:"\\S",c:[{cN:"status",b:"^HTTP/[0-9\\.]+",e:"$",c:[{cN:"number",b:"\\b\\d{3}\\b"}]},{cN:"request",b:"^[A-Z]+ (.*?) HTTP/[0-9\\.]+$",rB:!0,e:"$",c:[{cN:"string",b:" ",e:" ",eB:!0,eE:!0}]},{cN:"attribute",b:"^\\w",e:": ",eE:!0,i:"\\n|\\s|=",starts:{cN:"string",e:"$"}},{b:"\\n\\n",starts:{sL:"",eW:!0}}]}}),hljs.registerLanguage("ini",function(e){return{cI:!0,i:/\S/,c:[{cN:"comment",b:";",e:"$"},{cN:"title",b:"^\\[",e:"\\]"},{cN:"setting",b:"^[a-z0-9\\[\\]_-]+[ \\t]*=[ \\t]*",e:"$",c:[{cN:"value",eW:!0,k:"on off true false yes no",c:[e.QSM,e.NM],r:0}]}]}}),hljs.registerLanguage("java",function(e){var t=e.UIR+"(<"+e.UIR+">)?",r="false synchronized int abstract float private char boolean static null if const for true while long strictfp finally protected import native final void enum else break transient catch instanceof byte super volatile case assert short package default double public try this switch continue throws protected public private",n="(\\b(0b[01_]+)|\\b0[xX][a-fA-F0-9_]+|(\\b[\\d_]+(\\.[\\d_]*)?|\\.[\\d_]+)([eE][-+]?\\d+)?)[lLfF]?",a={cN:"number",b:n,r:0};return{aliases:["jsp"],k:r,i:/<\//,c:[{cN:"javadoc",b:"/\\*\\*",e:"\\*/",r:0,c:[{cN:"javadoctag",b:"(^|\\s)@[A-Za-z]+"}]},e.CLCM,e.CBCM,e.ASM,e.QSM,{cN:"class",bK:"class interface",e:/[{;=]/,eE:!0,k:"class interface",i:/[:"\[\]]/,c:[{bK:"extends implements"},e.UTM]},{bK:"new throw return",r:0},{cN:"function",b:"("+t+"\\s+)+"+e.UIR+"\\s*\\(",rB:!0,e:/[{;=]/,eE:!0,k:r,c:[{b:e.UIR+"\\s*\\(",rB:!0,r:0,c:[e.UTM]},{cN:"params",b:/\(/,e:/\)/,k:r,r:0,c:[e.ASM,e.QSM,e.CNM,e.CBCM]},e.CLCM,e.CBCM]},a,{cN:"annotation",b:"@[A-Za-z]+"}]}}),hljs.registerLanguage("javascript",function(e){return{aliases:["js"],k:{keyword:"in if for while finally var new function do return void else break catch instanceof with throw case default try this switch continue typeof delete let yield const class",literal:"true false null undefined NaN Infinity",built_in:"eval isFinite isNaN parseFloat parseInt decodeURI decodeURIComponent encodeURI encodeURIComponent escape unescape Object Function Boolean Error EvalError InternalError RangeError ReferenceError StopIteration SyntaxError TypeError URIError Number Math Date String RegExp Array Float32Array Float64Array Int16Array Int32Array Int8Array Uint16Array Uint32Array Uint8Array Uint8ClampedArray ArrayBuffer DataView JSON Intl arguments require module console window document"},c:[{cN:"pi",r:10,v:[{b:/^\s*('|")use strict('|")/},{b:/^\s*('|")use asm('|")/}]},e.ASM,e.QSM,e.CLCM,e.CBCM,e.CNM,{b:"("+e.RSR+"|\\b(case|return|throw)\\b)\\s*",k:"return throw case",c:[e.CLCM,e.CBCM,e.RM,{b:/</,e:/>;/,r:0,sL:"xml"}],r:0},{cN:"function",bK:"function",e:/\{/,eE:!0,c:[e.inherit(e.TM,{b:/[A-Za-z$_][0-9A-Za-z$_]*/}),{cN:"params",b:/\(/,e:/\)/,c:[e.CLCM,e.CBCM],i:/["'\(]/}],i:/\[|%/},{b:/\$[(.]/},{b:"\\."+e.IR,r:0}]}}),hljs.registerLanguage("json",function(e){var t={literal:"true false null"},r=[e.QSM,e.CNM],n={cN:"value",e:",",eW:!0,eE:!0,c:r,k:t},a={b:"{",e:"}",c:[{cN:"attribute",b:'\\s*"',e:'"\\s*:\\s*',eB:!0,eE:!0,c:[e.BE],i:"\\n",starts:n}],i:"\\S"},i={b:"\\[",e:"\\]",c:[e.inherit(n,{cN:null})],i:"\\S"};return r.splice(r.length,0,a,i),{c:r,k:t,i:"\\S"}}),hljs.registerLanguage("makefile",function(e){var t={cN:"variable",b:/\$\(/,e:/\)/,c:[e.BE]};return{aliases:["mk","mak"],c:[e.HCM,{b:/^\w+\s*\W*=/,rB:!0,r:0,starts:{cN:"constant",e:/\s*\W*=/,eE:!0,starts:{e:/$/,r:0,c:[t]}}},{cN:"title",b:/^[\w]+:\s*$/},{cN:"phony",b:/^\.PHONY:/,e:/$/,k:".PHONY",l:/[\.\w]+/},{b:/^\t+/,e:/$/,r:0,c:[e.QSM,t]}]}}),hljs.registerLanguage("xml",function(){var e="[A-Za-z0-9\\._:-]+",t={b:/<\?(php)?(?!\w)/,e:/\?>/,sL:"php",subLanguageMode:"continuous"},r={eW:!0,i:/</,r:0,c:[t,{cN:"attribute",b:e,r:0},{b:"=",r:0,c:[{cN:"value",c:[t],v:[{b:/"/,e:/"/},{b:/'/,e:/'/},{b:/[^\s\/>]+/}]}]}]};return{aliases:["html","xhtml","rss","atom","xsl","plist"],cI:!0,c:[{cN:"doctype",b:"<!DOCTYPE",e:">",r:10,c:[{b:"\\[",e:"\\]"}]},{cN:"comment",b:"<!--",e:"-->",r:10},{cN:"cdata",b:"<\\!\\[CDATA\\[",e:"\\]\\]>",r:10},{cN:"tag",b:"<style(?=\\s|>|$)",e:">",k:{title:"style"},c:[r],starts:{e:"</style>",rE:!0,sL:"css"}},{cN:"tag",b:"<script(?=\\s|>|$)",e:">",k:{title:"script"},c:[r],starts:{e:"</script>",rE:!0,sL:"javascript"}},t,{cN:"pi",b:/<\?\w+/,e:/\?>/,r:10},{cN:"tag",b:"</?",e:"/?>",c:[{cN:"title",b:/[^ \/><\n\t]+/,r:0},r]}]}}),hljs.registerLanguage("markdown",function(){return{aliases:["md","mkdown","mkd"],c:[{cN:"header",v:[{b:"^#{1,6}",e:"$"},{b:"^.+?\\n[=-]{2,}$"}]},{b:"<",e:">",sL:"xml",r:0},{cN:"bullet",b:"^([*+-]|(\\d+\\.))\\s+"},{cN:"strong",b:"[*_]{2}.+?[*_]{2}"},{cN:"emphasis",v:[{b:"\\*.+?\\*"},{b:"_.+?_",r:0}]},{cN:"blockquote",b:"^>\\s+",e:"$"},{cN:"code",v:[{b:"`.+?`"},{b:"^( {4}|	)",e:"$",r:0}]},{cN:"horizontal_rule",b:"^[-\\*]{3,}",e:"$"},{b:"\\[.+?\\][\\(\\[].*?[\\)\\]]",rB:!0,c:[{cN:"link_label",b:"\\[",e:"\\]",eB:!0,rE:!0,r:0},{cN:"link_url",b:"\\]\\(",e:"\\)",eB:!0,eE:!0},{cN:"link_reference",b:"\\]\\[",e:"\\]",eB:!0,eE:!0}],r:10},{b:"^\\[.+\\]:",rB:!0,c:[{cN:"link_reference",b:"\\[",e:"\\]:",eB:!0,eE:!0,starts:{cN:"link_url",e:"$"}}]}]}}),hljs.registerLanguage("nginx",function(e){var t={cN:"variable",v:[{b:/\$\d+/},{b:/\$\{/,e:/}/},{b:"[\\$\\@]"+e.UIR}]},r={eW:!0,l:"[a-z/_]+",k:{built_in:"on off yes no true false none blocked debug info notice warn error crit select break last permanent redirect kqueue rtsig epoll poll /dev/poll"},r:0,i:"=>",c:[e.HCM,{cN:"string",c:[e.BE,t],v:[{b:/"/,e:/"/},{b:/'/,e:/'/}]},{cN:"url",b:"([a-z]+):/",e:"\\s",eW:!0,eE:!0,c:[t]},{cN:"regexp",c:[e.BE,t],v:[{b:"\\s\\^",e:"\\s|{|;",rE:!0},{b:"~\\*?\\s+",e:"\\s|{|;",rE:!0},{b:"\\*(\\.[a-z\\-]+)+"},{b:"([a-z\\-]+\\.)+\\*"}]},{cN:"number",b:"\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d{1,5})?\\b"},{cN:"number",b:"\\b\\d+[kKmMgGdshdwy]*\\b",r:0},t]};return{aliases:["nginxconf"],c:[e.HCM,{b:e.UIR+"\\s",e:";|{",rB:!0,c:[{cN:"title",b:e.UIR,starts:r}],r:0}],i:"[^\\s\\}]"}}),hljs.registerLanguage("objectivec",function(e){var t={keyword:"int float while char export sizeof typedef const struct for union unsigned long volatile static bool mutable if do return goto void enum else break extern asm case short default double register explicit signed typename this switch continue wchar_t inline readonly assign readwrite self @synchronized id typeof nonatomic super unichar IBOutlet IBAction strong weak copy in out inout bycopy byref oneway __strong __weak __block __autoreleasing @private @protected @public @try @property @end @throw @catch @finally @autoreleasepool @synthesize @dynamic @selector @optional @required",literal:"false true FALSE TRUE nil YES NO NULL",built_in:"NSString NSData NSDictionary CGRect CGPoint UIButton UILabel UITextView UIWebView MKMapView NSView NSViewController NSWindow NSWindowController NSSet NSUUID NSIndexSet UISegmentedControl NSObject UITableViewDelegate UITableViewDataSource NSThread UIActivityIndicator UITabbar UIToolBar UIBarButtonItem UIImageView NSAutoreleasePool UITableView BOOL NSInteger CGFloat NSException NSLog NSMutableString NSMutableArray NSMutableDictionary NSURL NSIndexPath CGSize UITableViewCell UIView UIViewController UINavigationBar UINavigationController UITabBarController UIPopoverController UIPopoverControllerDelegate UIImage NSNumber UISearchBar NSFetchedResultsController NSFetchedResultsChangeType UIScrollView UIScrollViewDelegate UIEdgeInsets UIColor UIFont UIApplication NSNotFound NSNotificationCenter NSNotification UILocalNotification NSBundle NSFileManager NSTimeInterval NSDate NSCalendar NSUserDefaults UIWindow NSRange NSArray NSError NSURLRequest NSURLConnection NSURLSession NSURLSessionDataTask NSURLSessionDownloadTask NSURLSessionUploadTask NSURLResponseUIInterfaceOrientation MPMoviePlayerController dispatch_once_t dispatch_queue_t dispatch_sync dispatch_async dispatch_once"},r=/[a-zA-Z@][a-zA-Z0-9_]*/,n="@interface @class @protocol @implementation";return{aliases:["m","mm","objc","obj-c"],k:t,l:r,i:"</",c:[e.CLCM,e.CBCM,e.CNM,e.QSM,{cN:"string",v:[{b:'@"',e:'"',i:"\\n",c:[e.BE]},{b:"'",e:"[^\\\\]'",i:"[^\\\\][^']"}]},{cN:"preprocessor",b:"#",e:"$",c:[{cN:"title",v:[{b:'"',e:'"'},{b:"<",e:">"}]}]},{cN:"class",b:"("+n.split(" ").join("|")+")\\b",e:"({|$)",eE:!0,k:n,l:r,c:[e.UTM]},{cN:"variable",b:"\\."+e.UIR,r:0}]}}),hljs.registerLanguage("oxygene",function(e){var t="abstract add and array as asc aspect assembly async begin break block by case class concat const copy constructor continue create default delegate desc distinct div do downto dynamic each else empty end ensure enum equals event except exit extension external false final finalize finalizer finally flags for forward from function future global group has if implementation implements implies in index inherited inline interface into invariants is iterator join locked locking loop matching method mod module namespace nested new nil not notify nullable of old on operator or order out override parallel params partial pinned private procedure property protected public queryable raise read readonly record reintroduce remove repeat require result reverse sealed select self sequence set shl shr skip static step soft take then to true try tuple type union unit unsafe until uses using var virtual raises volatile where while with write xor yield await mapped deprecated stdcall cdecl pascal register safecall overload library platform reference packed strict published autoreleasepool selector strong weak unretained",r={cN:"preprocessor",b:"{$",e:"}",r:0},n={cN:"comment",b:"{",e:"}",r:4},a={cN:"comment",b:"\\(\\*",e:"\\*\\)",r:10},i={cN:"string",b:"'",e:"'",c:[{b:"''"}]},s={cN:"string",b:"(#\\d+)+"},c={cN:"function",bK:"function constructor destructor procedure method",e:"[:;]",k:"function constructor|10 destructor|10 procedure|10 method|10",c:[e.TM,{cN:"params",b:"\\(",e:"\\)",k:t,c:[i,s]},n,a]};return{cI:!0,k:t,i:'("|\\$[G-Zg-z]|\\/\\*|</|=>|->)',c:[r,n,a,e.CLCM,i,s,e.QSM,e.NM,c,{cN:"class",b:"=\\bclass\\b",e:"end;",k:t,c:[i,s,n,a,e.CLCM,c]}]}}),hljs.registerLanguage("perl",function(e){var t="getpwent getservent quotemeta msgrcv scalar kill dbmclose undef lc ma syswrite tr send umask sysopen shmwrite vec qx utime local oct semctl localtime readpipe do return format read sprintf dbmopen pop getpgrp not getpwnam rewinddir qqfileno qw endprotoent wait sethostent bless s|0 opendir continue each sleep endgrent shutdown dump chomp connect getsockname die socketpair close flock exists index shmgetsub for endpwent redo lstat msgctl setpgrp abs exit select print ref gethostbyaddr unshift fcntl syscall goto getnetbyaddr join gmtime symlink semget splice x|0 getpeername recv log setsockopt cos last reverse gethostbyname getgrnam study formline endhostent times chop length gethostent getnetent pack getprotoent getservbyname rand mkdir pos chmod y|0 substr endnetent printf next open msgsnd readdir use unlink getsockopt getpriority rindex wantarray hex system getservbyport endservent int chr untie rmdir prototype tell listen fork shmread ucfirst setprotoent else sysseek link getgrgid shmctl waitpid unpack getnetbyname reset chdir grep split require caller lcfirst until warn while values shift telldir getpwuid my getprotobynumber delete and sort uc defined srand accept package seekdir getprotobyname semop our rename seek if q|0 chroot sysread setpwent no crypt getc chown sqrt write setnetent setpriority foreach tie sin msgget map stat getlogin unless elsif truncate exec keys glob tied closedirioctl socket readlink eval xor readline binmode setservent eof ord bind alarm pipe atan2 getgrent exp time push setgrent gt lt or ne m|0 break given say state when",r={cN:"subst",b:"[$@]\\{",e:"\\}",k:t},n={b:"->{",e:"}"},a={cN:"variable",v:[{b:/\$\d/},{b:/[\$\%\@](\^\w\b|#\w+(\:\:\w+)*|{\w+}|\w+(\:\:\w*)*)/},{b:/[\$\%\@][^\s\w{]/,r:0}]},i={cN:"comment",b:"^(__END__|__DATA__)",e:"\\n$",r:5},s=[e.BE,r,a],c=[a,e.HCM,i,{cN:"comment",b:"^\\=\\w",e:"\\=cut",eW:!0},n,{cN:"string",c:s,v:[{b:"q[qwxr]?\\s*\\(",e:"\\)",r:5},{b:"q[qwxr]?\\s*\\[",e:"\\]",r:5},{b:"q[qwxr]?\\s*\\{",e:"\\}",r:5},{b:"q[qwxr]?\\s*\\|",e:"\\|",r:5},{b:"q[qwxr]?\\s*\\<",e:"\\>",r:5},{b:"qw\\s+q",e:"q",r:5},{b:"'",e:"'",c:[e.BE]},{b:'"',e:'"'},{b:"`",e:"`",c:[e.BE]},{b:"{\\w+}",c:[],r:0},{b:"-?\\w+\\s*\\=\\>",c:[],r:0}]},{cN:"number",b:"(\\b0[0-7_]+)|(\\b0x[0-9a-fA-F_]+)|(\\b[1-9][0-9_]*(\\.[0-9_]+)?)|[0_]\\b",r:0},{b:"(\\/\\/|"+e.RSR+"|\\b(split|return|print|reverse|grep)\\b)\\s*",k:"split return print reverse grep",r:0,c:[e.HCM,i,{cN:"regexp",b:"(s|tr|y)/(\\\\.|[^/])*/(\\\\.|[^/])*/[a-z]*",r:10},{cN:"regexp",b:"(m|qr)?/",e:"/[a-z]*",c:[e.BE],r:0}]},{cN:"sub",bK:"sub",e:"(\\s*\\(.*?\\))?[;{]",r:5},{cN:"operator",b:"-\\w\\b",r:0}];return r.c=c,n.c=c,{aliases:["pl"],k:t,c:c}}),hljs.registerLanguage("php",function(e){var t={cN:"variable",b:"\\$+[a-zA-Z_-ÿ][a-zA-Z0-9_-ÿ]*"},r={cN:"preprocessor",b:/<\?(php)?|\?>/},n={cN:"string",c:[e.BE,r],v:[{b:'b"',e:'"'},{b:"b'",e:"'"},e.inherit(e.ASM,{i:null}),e.inherit(e.QSM,{i:null})]},a={v:[e.BNM,e.CNM]};return{aliases:["php3","php4","php5","php6"],cI:!0,k:"and include_once list abstract global private echo interface as static endswitch array null if endwhile or const for endforeach self var while isset public protected exit foreach throw elseif include __FILE__ empty require_once do xor return parent clone use __CLASS__ __LINE__ else break print eval new catch __METHOD__ case exception default die require __FUNCTION__ enddeclare final try switch continue endfor endif declare unset true false trait goto instanceof insteadof __DIR__ __NAMESPACE__ yield finally",c:[e.CLCM,e.HCM,{cN:"comment",b:"/\\*",e:"\\*/",c:[{cN:"phpdoc",b:"\\s@[A-Za-z]+"},r]},{cN:"comment",b:"__halt_compiler.+?;",eW:!0,k:"__halt_compiler",l:e.UIR},{cN:"string",b:"<<<['\"]?\\w+['\"]?$",e:"^\\w+;",c:[e.BE]},r,t,{b:/->+[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/},{cN:"function",bK:"function",e:/[;{]/,eE:!0,i:"\\$|\\[|%",c:[e.UTM,{cN:"params",b:"\\(",e:"\\)",c:["self",t,e.CBCM,n,a]}]},{cN:"class",bK:"class interface",e:"{",eE:!0,i:/[:\(\$"]/,c:[{bK:"extends implements"},e.UTM]},{bK:"namespace",e:";",i:/[\.']/,c:[e.UTM]},{bK:"use",e:";",c:[e.UTM]},{b:"=>"},n,a]}
-}),hljs.registerLanguage("python",function(e){var t={cN:"prompt",b:/^(>>>|\.\.\.) /},r={cN:"string",c:[e.BE],v:[{b:/(u|b)?r?'''/,e:/'''/,c:[t],r:10},{b:/(u|b)?r?"""/,e:/"""/,c:[t],r:10},{b:/(u|r|ur)'/,e:/'/,r:10},{b:/(u|r|ur)"/,e:/"/,r:10},{b:/(b|br)'/,e:/'/},{b:/(b|br)"/,e:/"/},e.ASM,e.QSM]},n={cN:"number",r:0,v:[{b:e.BNR+"[lLjJ]?"},{b:"\\b(0o[0-7]+)[lLjJ]?"},{b:e.CNR+"[lLjJ]?"}]},a={cN:"params",b:/\(/,e:/\)/,c:["self",t,n,r]};return{aliases:["py","gyp"],k:{keyword:"and elif is global as in if from raise for except finally print import pass return exec else break not with class assert yield try while continue del or def lambda nonlocal|10 None True False",built_in:"Ellipsis NotImplemented"},i:/(<\/|->|\?)/,c:[t,n,r,e.HCM,{v:[{cN:"function",bK:"def",r:10},{cN:"class",bK:"class"}],e:/:/,i:/[${=;\n]/,c:[e.UTM,a]},{cN:"decorator",b:/@/,e:/$/},{b:/\b(print|exec)\(/}]}}),hljs.registerLanguage("ruby",function(e){var t="[a-zA-Z_]\\w*[!?=]?|[-+~]\\@|<<|>>|=~|===?|<=>|[<>]=?|\\*\\*|[-/+%^&*~`|]|\\[\\]=?",r="and false then defined module in return redo if BEGIN retry end for true self when next until do begin unless END rescue nil else break undef not super class case require yield alias while ensure elsif or include attr_reader attr_writer attr_accessor",n={cN:"yardoctag",b:"@[A-Za-z]+"},a={cN:"value",b:"#<",e:">"},i={cN:"comment",v:[{b:"#",e:"$",c:[n]},{b:"^\\=begin",e:"^\\=end",c:[n],r:10},{b:"^__END__",e:"\\n$"}]},s={cN:"subst",b:"#\\{",e:"}",k:r},c={cN:"string",c:[e.BE,s],v:[{b:/'/,e:/'/},{b:/"/,e:/"/},{b:/`/,e:/`/},{b:"%[qQwWx]?\\(",e:"\\)"},{b:"%[qQwWx]?\\[",e:"\\]"},{b:"%[qQwWx]?{",e:"}"},{b:"%[qQwWx]?<",e:">"},{b:"%[qQwWx]?/",e:"/"},{b:"%[qQwWx]?%",e:"%"},{b:"%[qQwWx]?-",e:"-"},{b:"%[qQwWx]?\\|",e:"\\|"},{b:/\B\?(\\\d{1,3}|\\x[A-Fa-f0-9]{1,2}|\\u[A-Fa-f0-9]{4}|\\?\S)\b/}]},o={cN:"params",b:"\\(",e:"\\)",k:r},l=[c,a,i,{cN:"class",bK:"class module",e:"$|;",i:/=/,c:[e.inherit(e.TM,{b:"[A-Za-z_]\\w*(::\\w+)*(\\?|\\!)?"}),{cN:"inheritance",b:"<\\s*",c:[{cN:"parent",b:"("+e.IR+"::)?"+e.IR}]},i]},{cN:"function",bK:"def",e:" |$|;",r:0,c:[e.inherit(e.TM,{b:t}),o,i]},{cN:"constant",b:"(::)?(\\b[A-Z]\\w*(::)?)+",r:0},{cN:"symbol",b:e.UIR+"(\\!|\\?)?:",r:0},{cN:"symbol",b:":",c:[c,{b:t}],r:0},{cN:"number",b:"(\\b0[0-7_]+)|(\\b0x[0-9a-fA-F_]+)|(\\b[1-9][0-9_]*(\\.[0-9_]+)?)|[0_]\\b",r:0},{cN:"variable",b:"(\\$\\W)|((\\$|\\@\\@?)(\\w+))"},{b:"("+e.RSR+")\\s*",c:[a,i,{cN:"regexp",c:[e.BE,s],i:/\n/,v:[{b:"/",e:"/[a-z]*"},{b:"%r{",e:"}[a-z]*"},{b:"%r\\(",e:"\\)[a-z]*"},{b:"%r!",e:"![a-z]*"},{b:"%r\\[",e:"\\][a-z]*"}]}],r:0}];s.c=l,o.c=l;var u="[>?]>",d="[\\w#]+\\(\\w+\\):\\d+:\\d+>",b="(\\w+-)?\\d+\\.\\d+\\.\\d(p\\d+)?[^>]+>",p=[{b:/^\s*=>/,cN:"status",starts:{e:"$",c:l}},{cN:"prompt",b:"^("+u+"|"+d+"|"+b+")",starts:{e:"$",c:l}}];return{aliases:["rb","gemspec","podspec","thor","irb"],k:r,c:[i].concat(p).concat(l)}}),hljs.registerLanguage("sql",function(e){var t={cN:"comment",b:"--",e:"$"};return{cI:!0,i:/[<>]/,c:[{cN:"operator",bK:"begin end start commit rollback savepoint lock alter create drop rename call delete do handler insert load replace select truncate update set show pragma grant merge describe use explain help declare prepare execute deallocate savepoint release unlock purge reset change stop analyze cache flush optimize repair kill install uninstall checksum restore check backup",e:/;/,eW:!0,k:{keyword:"abs absolute acos action add adddate addtime aes_decrypt aes_encrypt after aggregate all allocate alter analyze and any are as asc ascii asin assertion at atan atan2 atn2 authorization authors avg backup before begin benchmark between bin binlog bit_and bit_count bit_length bit_or bit_xor both by cache call cascade cascaded case cast catalog ceil ceiling chain change changed char_length character_length charindex charset check checksum checksum_agg choose close coalesce coercibility collate collation collationproperty column columns columns_updated commit compress concat concat_ws concurrent connect connection connection_id consistent constraint constraints continue contributors conv convert convert_tz corresponding cos cot count count_big crc32 create cross cume_dist curdate current current_date current_time current_timestamp current_user cursor curtime data database databases datalength date_add date_format date_sub dateadd datediff datefromparts datename datepart datetime2fromparts datetimeoffsetfromparts day dayname dayofmonth dayofweek dayofyear deallocate declare decode default deferrable deferred degrees delayed delete des_decrypt des_encrypt des_key_file desc describe descriptor diagnostics difference disconnect distinct distinctrow div do domain double drop dumpfile each else elt enclosed encode encrypt end end-exec engine engines eomonth errors escape escaped event eventdata events except exception exec execute exists exp explain export_set extended external extract fast fetch field fields find_in_set first first_value floor flush for force foreign format found found_rows from from_base64 from_days from_unixtime full function get get_format get_lock getdate getutcdate global go goto grant grants greatest group group_concat grouping grouping_id gtid_subset gtid_subtract handler having help hex high_priority hosts hour ident_current ident_incr ident_seed identified identity if ifnull ignore iif ilike immediate in index indicator inet6_aton inet6_ntoa inet_aton inet_ntoa infile initially inner innodb input insert install instr intersect into is is_free_lock is_ipv4 is_ipv4_compat is_ipv4_mapped is_not is_not_null is_used_lock isdate isnull isolation join key kill language last last_day last_insert_id last_value lcase lead leading least leaves left len lenght level like limit lines ln load load_file local localtime localtimestamp locate lock log log10 log2 logfile logs low_priority lower lpad ltrim make_set makedate maketime master master_pos_wait match matched max md5 medium merge microsecond mid min minute mod mode module month monthname mutex name_const names national natural nchar next no no_write_to_binlog not now nullif nvarchar oct octet_length of old_password on only open optimize option optionally or ord order outer outfile output pad parse partial partition password patindex percent_rank percentile_cont percentile_disc period_add period_diff pi plugin position pow power pragma precision prepare preserve primary prior privileges procedure procedure_analyze processlist profile profiles public publishingservername purge quarter query quick quote quotename radians rand read references regexp relative relaylog release release_lock rename repair repeat replace replicate reset restore restrict return returns reverse revoke right rlike rollback rollup round row row_count rows rpad rtrim savepoint schema scroll sec_to_time second section select serializable server session session_user set sha sha1 sha2 share show sign sin size slave sleep smalldatetimefromparts snapshot some soname soundex sounds_like space sql sql_big_result sql_buffer_result sql_cache sql_calc_found_rows sql_no_cache sql_small_result sql_variant_property sqlstate sqrt square start starting status std stddev stddev_pop stddev_samp stdev stdevp stop str str_to_date straight_join strcmp string stuff subdate substr substring subtime subtring_index sum switchoffset sysdate sysdatetime sysdatetimeoffset system_user sysutcdatetime table tables tablespace tan temporary terminated tertiary_weights then time time_format time_to_sec timediff timefromparts timestamp timestampadd timestampdiff timezone_hour timezone_minute to to_base64 to_days to_seconds todatetimeoffset trailing transaction translation trigger trigger_nestlevel triggers trim truncate try_cast try_convert try_parse ucase uncompress uncompressed_length unhex unicode uninstall union unique unix_timestamp unknown unlock update upgrade upped upper usage use user user_resources using utc_date utc_time utc_timestamp uuid uuid_short validate_password_strength value values var var_pop var_samp variables variance varp version view warnings week weekday weekofyear weight_string when whenever where with work write xml xor year yearweek zon",literal:"true false null",built_in:"array bigint binary bit blob boolean char character date dec decimal float int integer interval number numeric real serial smallint varchar varying int8 serial8 text"},c:[{cN:"string",b:"'",e:"'",c:[e.BE,{b:"''"}]},{cN:"string",b:'"',e:'"',c:[e.BE,{b:'""'}]},{cN:"string",b:"`",e:"`",c:[e.BE]},e.CNM,e.CBCM,t]},e.CBCM,t]}}),hljs.registerLanguage("swift",function(e){var t={keyword:"__await __catch __COLUMN__ __event __FILE__ __finally __FUNCTION__ __inline __LINE__ __mapped __out __partial __throw __try __yield as associativity break case class ConstUnsafePointer continue default deinit didSet do dynamicType else enum extension fallthrough false final for func get if import in infix init inout internal is lazy left let mutating nil none nonmutating operator optional out override postfix precedence prefix private protocol public required return right safe self Self_ set static struct subscript super switch true Type typealias unowned unsafe UnsafePointer var weak where while willSet",literal:"true false nil"},r={cN:"comment",b:"/\\*",e:"\\*/",c:[e.PWM,"self"]},n={cN:"subst",b:/\\\(/,e:"\\)",k:t,c:[]},a={cN:"number",b:"\\b([\\d_]+(\\.[\\deE_]+)?|0x[a-fA-F0-9_]+(\\.[a-fA-F0-9p_]+)?|0b[01_]+|0o[0-7_]+)\\b",r:0},i=e.inherit(e.QSM,{c:[n,e.BE]});return n.c=[a],{k:t,aliases:["silver","swift"],c:[i,e.CLCM,{cN:"preprocessor",b:"#",b:"#",e:"$",c:[e.CLCM]},r,a,{cN:"func",bK:"func",e:"{",eE:!0,c:[e.inherit(e.TM,{b:/[A-Za-z$_][0-9A-Za-z$_]*/,i:/\(/}),{cN:"generics",b:/\</,e:/\>/,i:/\>/},{cN:"params",b:/\(/,e:/\)/,k:t,c:["self",a,i,e.CBCM,{b:":"}],i:/["']/}],i:/\[|%/},{cN:"class",k:"struct protocol class extension enum",b:"(struct|protocol|class(?! (func|var))|extension|enum)",e:"\\{",eE:!0,c:[e.inherit(e.TM,{b:/[A-Za-z$_][0-9A-Za-z$_]*/})]},{cN:"preprocessor",b:"(@assignment|@class_protocol|@exported|@final|@lazy|@noreturn|@NSCopying|@NSManaged|@objc|@optional|@required|@auto_closure|@noreturn|@IBAction|@IBDesignable|@IBInspectable|@IBOutlet|@infix|@prefix|@postfix)"}]}}),hljs.registerLanguage("vbnet",function(e){return{aliases:["vb"],cI:!0,k:{keyword:"addhandler addressof alias and andalso aggregate ansi as assembly auto binary by byref byval call case catch class compare const continue custom declare default delegate dim distinct do each equals else elseif end enum erase error event exit explicit finally for friend from function get global goto group handles if implements imports in inherits interface into is isfalse isnot istrue join key let lib like loop me mid mod module mustinherit mustoverride mybase myclass namespace narrowing new next not notinheritable notoverridable of off on operator option optional or order orelse overloads overridable overrides paramarray partial preserve private property protected public raiseevent readonly redim rem removehandler resume return select set shadows shared skip static step stop structure strict sub synclock take text then throw to try unicode until using when where while widening with withevents writeonly xor",built_in:"boolean byte cbool cbyte cchar cdate cdec cdbl char cint clng cobj csbyte cshort csng cstr ctype date decimal directcast double gettype getxmlnamespace iif integer long object sbyte short single string trycast typeof uinteger ulong ushort",literal:"true false nothing"},i:"//|{|}|endif|gosub|variant|wend",c:[e.inherit(e.QSM,{c:[{b:'""'}]}),{cN:"comment",b:"'",e:"$",rB:!0,c:[{cN:"xmlDocTag",b:"'''|<!--|-->"},{cN:"xmlDocTag",b:"</?",e:">"}]},e.CNM,{cN:"preprocessor",b:"#",e:"$",k:"if else elseif end region externalsource"}]}}),hljs.registerLanguage("silver",function(e){var t={keyword:"__await __catch __COLUMN__ __event __FILE__ __finally __FUNCTION__ __inline __LINE__ __mapped __out __partial __throw __try __yield as associativity break case class ConstUnsafePointer continue default deinit didSet do dynamicType else enum extension fallthrough false final for func get if import in infix init inout internal is lazy left let mutating nil none nonmutating operator optional out override postfix precedence prefix private protocol public required return right safe self Self_ set static struct subscript super switch true Type typealias unowned unsafe UnsafePointer var weak where while willSet",literal:"true false nil"},r={cN:"type",b:"\\b[A-Z][\\w']*",r:0},n={cN:"comment",b:"/\\*",e:"\\*/",c:[e.PWM,"self"]},a={cN:"subst",b:/\\\(/,e:"\\)",k:t,c:[]},i={cN:"number",b:"\\b([\\d_]+(\\.[\\deE_]+)?|0x[a-fA-F0-9_]+(\\.[a-fA-F0-9p_]+)?|0b[01_]+|0o[0-7_]+)\\b",r:0},s=e.inherit(e.QSM,{c:[a,e.BE]});return a.c=[i],{k:t,c:[s,e.CLCM,n,r,i,{cN:"func",bK:"func",e:"{",eE:!0,c:[e.inherit(e.TM,{b:/[A-Za-z$_][0-9A-Za-z$_]*/,i:/\(/}),{cN:"generics",b:/\</,e:/\>/,i:/\>/},{cN:"preprocessor",b:"#",e:"$",k:"if else elif endif define undef warning error line region endregion pragma checksum"},{cN:"params",b:/\(/,e:/\)/,k:t,c:["self",i,s,e.CBCM,{b:":"}],i:/["']/}],i:/\[|%/},{cN:"class",k:"struct protocol class extension enum",b:"(struct|protocol|class(?! (func|var))|extension|enum)",e:"\\{",eE:!0,c:[e.inherit(e.TM,{b:/[A-Za-z$_][0-9A-Za-z$_]*/})]},{cN:"preprocessor",b:"(@assignment|@class_protocol|@exported|@final|@lazy|@noreturn|@NSCopying|@NSManaged|@objc|@optional|@required|@auto_closure|@noreturn|@IBAction|@IBDesignable|@IBInspectable|@IBOutlet|@infix|@prefix|@postfix)"}]}});
+/*!
+  Highlight.js v11.11.1 (git: f0d4daedf2)
+  (c) 2006-2026 Josh Goebel <hello@joshgoebel.com> and other contributors
+  License: BSD-3-Clause
+ */
+var hljs=function(){"use strict";function e(n){
+return n instanceof Map?n.clear=n.delete=n.set=()=>{
+throw Error("map is read-only")}:n instanceof Set&&(n.add=n.clear=n.delete=()=>{
+throw Error("set is read-only")
+}),Object.freeze(n),Object.getOwnPropertyNames(n).forEach((t=>{
+const a=n[t],i=typeof a;"object"!==i&&"function"!==i||Object.isFrozen(a)||e(a)
+})),n}class n{constructor(e){
+void 0===e.data&&(e.data={}),this.data=e.data,this.isMatchIgnored=!1}
+ignoreMatch(){this.isMatchIgnored=!0}}function t(e){
+return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;")
+}function a(e,...n){const t=Object.create(null);for(const n in e)t[n]=e[n]
+;return n.forEach((e=>{for(const n in e)t[n]=e[n]})),t}const i=e=>!!e.scope
+;class r{constructor(e,n){
+this.buffer="",this.classPrefix=n.classPrefix,e.walk(this)}addText(e){
+this.buffer+=t(e)}openNode(e){if(!i(e))return;const n=((e,{prefix:n})=>{
+if(e.startsWith("language:"))return e.replace("language:","language-")
+;if(e.includes(".")){const t=e.split(".")
+;return[`${n}${t.shift()}`,...t.map(((e,n)=>`${e}${"_".repeat(n+1)}`))].join(" ")
+}return`${n}${e}`})(e.scope,{prefix:this.classPrefix});this.span(n)}
+closeNode(e){i(e)&&(this.buffer+="</span>")}value(){return this.buffer}span(e){
+this.buffer+=`<span class="${e}">`}}const s=(e={})=>{const n={children:[]}
+;return Object.assign(n,e),n};class o{constructor(){
+this.rootNode=s(),this.stack=[this.rootNode]}get top(){
+return this.stack[this.stack.length-1]}get root(){return this.rootNode}add(e){
+this.top.children.push(e)}openNode(e){const n=s({scope:e})
+;this.add(n),this.stack.push(n)}closeNode(){
+if(this.stack.length>1)return this.stack.pop()}closeAllNodes(){
+for(;this.closeNode(););}toJSON(){return JSON.stringify(this.rootNode,null,4)}
+walk(e){return this.constructor._walk(e,this.rootNode)}static _walk(e,n){
+return"string"==typeof n?e.addText(n):n.children&&(e.openNode(n),
+n.children.forEach((n=>this._walk(e,n))),e.closeNode(n)),e}static _collapse(e){
+"string"!=typeof e&&e.children&&(e.children.every((e=>"string"==typeof e))?e.children=[e.children.join("")]:e.children.forEach((e=>{
+o._collapse(e)})))}}class c extends o{constructor(e){super(),this.options=e}
+addText(e){""!==e&&this.add(e)}startScope(e){this.openNode(e)}endScope(){
+this.closeNode()}__addSublanguage(e,n){const t=e.root
+;n&&(t.scope="language:"+n),this.add(t)}toHTML(){
+return new r(this,this.options).value()}finalize(){
+return this.closeAllNodes(),!0}}function l(e){
+return RegExp(e.replace(/[-/\\^$*+?.()|[\]{}]/g,"\\$&"),"m")}function d(e){
+return e?"string"==typeof e?e:e.source:null}function g(e){return m("(?=",e,")")}
+function u(e){return m("(?:",e,")*")}function b(e){return m("(?:",e,")?")}
+function m(...e){return e.map((e=>d(e))).join("")}function p(...e){const n=(e=>{
+const n=e[e.length-1]
+;return"object"==typeof n&&n.constructor===Object?(e.splice(e.length-1,1),n):{}
+})(e);return"("+(n.capture?"":"?:")+e.map((e=>d(e))).join("|")+")"}
+function _(e){return RegExp(e.toString()+"|").exec("").length-1}
+const h=/\[(?:[^\\\]]|\\.)*\]|\(\??|\\([1-9][0-9]*)|\\./
+;function f(e,{joinWith:n}){let t=0;return e.map((e=>{t+=1;const n=t
+;let a=d(e),i="";for(;a.length>0;){const e=h.exec(a);if(!e){i+=a;break}
+i+=a.substring(0,e.index),
+a=a.substring(e.index+e[0].length),"\\"===e[0][0]&&e[1]?i+="\\"+(Number(e[1])+n):(i+=e[0],
+"("===e[0]&&t++)}return i})).map((e=>`(${e})`)).join(n)}
+const E="[a-zA-Z]\\w*",y="[a-zA-Z_]\\w*",v="\\b\\d+(\\.\\d+)?",w="(-?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)",N="\\b(0b[01]+)",k={
+begin:"\\\\[\\s\\S]",relevance:0},O={scope:"string",begin:"'",end:"'",
+illegal:"\\n",contains:[k]},M={scope:"string",begin:'"',end:'"',illegal:"\\n",
+contains:[k]},x=(e,n,t={})=>{const i=a({scope:"comment",begin:e,end:n,
+contains:[]},t);i.contains.push({scope:"doctag",
+begin:"[ ]*(?=(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):)",
+end:/(TODO|FIXME|NOTE|BUG|OPTIMIZE|HACK|XXX):/,excludeBegin:!0,relevance:0})
+;const r=p("I","a","is","so","us","to","at","if","in","it","on",/[A-Za-z]+['](d|ve|re|ll|t|s|n)/,/[A-Za-z]+[-][a-z]+/,/[A-Za-z][a-z]{2,}/)
+;return i.contains.push({begin:m(/[ ]+/,"(",r,/[.]?[:]?([.][ ]|[ ])/,"){3}")}),i
+},A=x("//","$"),C=x("/\\*","\\*/"),S=x("#","$");var T=Object.freeze({
+__proto__:null,APOS_STRING_MODE:O,BACKSLASH_ESCAPE:k,BINARY_NUMBER_MODE:{
+scope:"number",begin:N,relevance:0},BINARY_NUMBER_RE:N,COMMENT:x,
+C_BLOCK_COMMENT_MODE:C,C_LINE_COMMENT_MODE:A,C_NUMBER_MODE:{scope:"number",
+begin:w,relevance:0},C_NUMBER_RE:w,END_SAME_AS_BEGIN:e=>Object.assign(e,{
+"on:begin":(e,n)=>{n.data._beginMatch=e[1]},"on:end":(e,n)=>{
+n.data._beginMatch!==e[1]&&n.ignoreMatch()}}),HASH_COMMENT_MODE:S,IDENT_RE:E,
+MATCH_NOTHING_RE:/\b\B/,METHOD_GUARD:{begin:"\\.\\s*"+y,relevance:0},
+NUMBER_MODE:{scope:"number",begin:v,relevance:0},NUMBER_RE:v,
+PHRASAL_WORDS_MODE:{
+begin:/\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|they|like|more)\b/
+},QUOTE_STRING_MODE:M,REGEXP_MODE:{scope:"regexp",begin:/\/(?=[^/\n]*\/)/,
+end:/\/[gimuy]*/,contains:[k,{begin:/\[/,end:/\]/,relevance:0,contains:[k]}]},
+RE_STARTERS_RE:"!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|-|-=|/=|/|:|;|<<|<<=|<=|<|===|==|=|>>>=|>>=|>=|>>>|>>|>|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~",
+SHEBANG:(e={})=>{const n=/^#![ ]*\//
+;return e.binary&&(e.begin=m(n,/.*\b/,e.binary,/\b.*/)),a({scope:"meta",begin:n,
+end:/$/,relevance:0,"on:begin":(e,n)=>{0!==e.index&&n.ignoreMatch()}},e)},
+TITLE_MODE:{scope:"title",begin:E,relevance:0},UNDERSCORE_IDENT_RE:y,
+UNDERSCORE_TITLE_MODE:{scope:"title",begin:y,relevance:0}});function I(e,n){
+"."===e.input[e.index-1]&&n.ignoreMatch()}function D(e,n){
+void 0!==e.className&&(e.scope=e.className,delete e.className)}function R(e,n){
+n&&e.beginKeywords&&(e.begin="\\b("+e.beginKeywords.split(" ").join("|")+")(?!\\.)(?=\\b|\\s)",
+e.__beforeBegin=I,e.keywords=e.keywords||e.beginKeywords,delete e.beginKeywords,
+void 0===e.relevance&&(e.relevance=0))}function L(e,n){
+Array.isArray(e.illegal)&&(e.illegal=p(...e.illegal))}function B(e,n){
+if(e.match){
+if(e.begin||e.end)throw Error("begin & end are not supported with match")
+;e.begin=e.match,delete e.match}}function $(e,n){
+void 0===e.relevance&&(e.relevance=1)}const F=(e,n)=>{if(!e.beforeMatch)return
+;if(e.starts)throw Error("beforeMatch cannot be used with starts")
+;const t=Object.assign({},e);Object.keys(e).forEach((n=>{delete e[n]
+})),e.keywords=t.keywords,e.begin=m(t.beforeMatch,g(t.begin)),e.starts={
+relevance:0,contains:[Object.assign(t,{endsParent:!0})]
+},e.relevance=0,delete t.beforeMatch
+},z=["of","and","for","in","not","or","if","then","parent","list","value"]
+;function j(e,n,t="keyword"){const a=Object.create(null)
+;return"string"==typeof e?i(t,e.split(" ")):Array.isArray(e)?i(t,e):Object.keys(e).forEach((t=>{
+Object.assign(a,j(e[t],n,t))})),a;function i(e,t){
+n&&(t=t.map((e=>e.toLowerCase()))),t.forEach((n=>{const t=n.split("|")
+;a[t[0]]=[e,U(t[0],t[1])]}))}}function U(e,n){
+return n?Number(n):(e=>z.includes(e.toLowerCase()))(e)?0:1}const P={},K=e=>{
+console.error(e)},H=(e,...n)=>{console.log("WARN: "+e,...n)},q=(e,n)=>{
+P[`${e}/${n}`]||(console.log(`Deprecated as of ${e}. ${n}`),P[`${e}/${n}`]=!0)
+},G=Error();function Z(e,n,{key:t}){let a=0;const i=e[t],r={},s={}
+;for(let e=1;e<=n.length;e++)s[e+a]=i[e],r[e+a]=!0,a+=_(n[e-1])
+;e[t]=s,e[t]._emit=r,e[t]._multi=!0}function W(e){(e=>{
+e.scope&&"object"==typeof e.scope&&null!==e.scope&&(e.beginScope=e.scope,
+delete e.scope)})(e),"string"==typeof e.beginScope&&(e.beginScope={
+_wrap:e.beginScope}),"string"==typeof e.endScope&&(e.endScope={_wrap:e.endScope
+}),(e=>{if(Array.isArray(e.begin)){
+if(e.skip||e.excludeBegin||e.returnBegin)throw K("skip, excludeBegin, returnBegin not compatible with beginScope: {}"),
+G
+;if("object"!=typeof e.beginScope||null===e.beginScope)throw K("beginScope must be object"),
+G;Z(e,e.begin,{key:"beginScope"}),e.begin=f(e.begin,{joinWith:""})}})(e),(e=>{
+if(Array.isArray(e.end)){
+if(e.skip||e.excludeEnd||e.returnEnd)throw K("skip, excludeEnd, returnEnd not compatible with endScope: {}"),
+G
+;if("object"!=typeof e.endScope||null===e.endScope)throw K("endScope must be object"),
+G;Z(e,e.end,{key:"endScope"}),e.end=f(e.end,{joinWith:""})}})(e)}function Q(e){
+function n(n,t){
+return RegExp(d(n),"m"+(e.case_insensitive?"i":"")+(e.unicodeRegex?"u":"")+(t?"g":""))
+}class t{constructor(){
+this.matchIndexes={},this.regexes=[],this.matchAt=1,this.position=0}
+addRule(e,n){
+n.position=this.position++,this.matchIndexes[this.matchAt]=n,this.regexes.push([n,e]),
+this.matchAt+=_(e)+1}compile(){0===this.regexes.length&&(this.exec=()=>null)
+;const e=this.regexes.map((e=>e[1]));this.matcherRe=n(f(e,{joinWith:"|"
+}),!0),this.lastIndex=0}exec(e){this.matcherRe.lastIndex=this.lastIndex
+;const n=this.matcherRe.exec(e);if(!n)return null
+;const t=n.findIndex(((e,n)=>n>0&&void 0!==e)),a=this.matchIndexes[t]
+;return n.splice(0,t),Object.assign(n,a)}}class i{constructor(){
+this.rules=[],this.multiRegexes=[],
+this.count=0,this.lastIndex=0,this.regexIndex=0}getMatcher(e){
+if(this.multiRegexes[e])return this.multiRegexes[e];const n=new t
+;return this.rules.slice(e).forEach((([e,t])=>n.addRule(e,t))),
+n.compile(),this.multiRegexes[e]=n,n}resumingScanAtSamePosition(){
+return 0!==this.regexIndex}considerAll(){this.regexIndex=0}addRule(e,n){
+this.rules.push([e,n]),"begin"===n.type&&this.count++}exec(e){
+const n=this.getMatcher(this.regexIndex);n.lastIndex=this.lastIndex
+;let t=n.exec(e)
+;if(this.resumingScanAtSamePosition())if(t&&t.index===this.lastIndex);else{
+const n=this.getMatcher(0);n.lastIndex=this.lastIndex+1,t=n.exec(e)}
+return t&&(this.regexIndex+=t.position+1,
+this.regexIndex===this.count&&this.considerAll()),t}}
+if(e.compilerExtensions||(e.compilerExtensions=[]),
+e.contains&&e.contains.includes("self"))throw Error("ERR: contains `self` is not supported at the top-level of a language.  See documentation.")
+;return e.classNameAliases=a(e.classNameAliases||{}),function t(r,s){const o=r
+;if(r.isCompiled)return o
+;[D,B,W,F].forEach((e=>e(r,s))),e.compilerExtensions.forEach((e=>e(r,s))),
+r.__beforeBegin=null,[R,L,$].forEach((e=>e(r,s))),r.isCompiled=!0;let c=null
+;return"object"==typeof r.keywords&&r.keywords.$pattern&&(r.keywords=Object.assign({},r.keywords),
+c=r.keywords.$pattern,
+delete r.keywords.$pattern),c=c||/\w+/,r.keywords&&(r.keywords=j(r.keywords,e.case_insensitive)),
+o.keywordPatternRe=n(c,!0),
+s&&(r.begin||(r.begin=/\B|\b/),o.beginRe=n(o.begin),r.end||r.endsWithParent||(r.end=/\B|\b/),
+r.end&&(o.endRe=n(o.end)),
+o.terminatorEnd=d(o.end)||"",r.endsWithParent&&s.terminatorEnd&&(o.terminatorEnd+=(r.end?"|":"")+s.terminatorEnd)),
+r.illegal&&(o.illegalRe=n(r.illegal)),
+r.contains||(r.contains=[]),r.contains=[].concat(...r.contains.map((e=>(e=>(e.variants&&!e.cachedVariants&&(e.cachedVariants=e.variants.map((n=>a(e,{
+variants:null},n)))),e.cachedVariants?e.cachedVariants:X(e)?a(e,{
+starts:e.starts?a(e.starts):null
+}):Object.isFrozen(e)?a(e):e))("self"===e?r:e)))),r.contains.forEach((e=>{t(e,o)
+})),r.starts&&t(r.starts,s),o.matcher=(e=>{const n=new i
+;return e.contains.forEach((e=>n.addRule(e.begin,{rule:e,type:"begin"
+}))),e.terminatorEnd&&n.addRule(e.terminatorEnd,{type:"end"
+}),e.illegal&&n.addRule(e.illegal,{type:"illegal"}),n})(o),o}(e)}function X(e){
+return!!e&&(e.endsWithParent||X(e.starts))}class V extends Error{
+constructor(e,n){super(e),this.name="HTMLInjectionError",this.html=n}}
+const J=t,Y=a,ee=Symbol("nomatch"),ne=t=>{
+const a=Object.create(null),i=Object.create(null),r=[];let s=!0
+;const o="Could not find the language '{}', did you forget to load/include a language module?",l={
+disableAutodetect:!0,name:"Plain text",contains:[]};let d={
+ignoreUnescapedHTML:!1,throwUnescapedHTML:!1,noHighlightRe:/^(no-?highlight)$/i,
+languageDetectRe:/\blang(?:uage)?-([\w-]+)\b/i,classPrefix:"hljs-",
+cssSelector:"pre code",languages:null,__emitter:c};function _(e){
+return d.noHighlightRe.test(e)}function h(e,n,t){let a="",i=""
+;"object"==typeof n?(a=e,
+t=n.ignoreIllegals,i=n.language):(q("10.7.0","highlight(lang, code, ...args) has been deprecated."),
+q("10.7.0","Please use highlight(code, options) instead.\nhttps://github.com/highlightjs/highlight.js/issues/2277"),
+i=e,a=n),void 0===t&&(t=!0);const r={code:a,language:i};M("before:highlight",r)
+;const s=r.result?r.result:f(r.language,r.code,t)
+;return s.code=r.code,M("after:highlight",s),s}function f(e,t,i,r){
+const c=Object.create(null);function l(){if(!M.keywords)return void A.addText(C)
+;let e=0;M.keywordPatternRe.lastIndex=0;let n=M.keywordPatternRe.exec(C),t=""
+;for(;n;){t+=C.substring(e,n.index)
+;const i=w.case_insensitive?n[0].toLowerCase():n[0],r=(a=i,M.keywords[a]);if(r){
+const[e,a]=r
+;if(A.addText(t),t="",c[i]=(c[i]||0)+1,c[i]<=7&&(S+=a),e.startsWith("_"))t+=n[0];else{
+const t=w.classNameAliases[e]||e;u(n[0],t)}}else t+=n[0]
+;e=M.keywordPatternRe.lastIndex,n=M.keywordPatternRe.exec(C)}var a
+;t+=C.substring(e),A.addText(t)}function g(){null!=M.subLanguage?(()=>{
+if(""===C)return;let e=null;if("string"==typeof M.subLanguage){
+if(!a[M.subLanguage])return void A.addText(C)
+;e=f(M.subLanguage,C,!0,x[M.subLanguage]),x[M.subLanguage]=e._top
+}else e=E(C,M.subLanguage.length?M.subLanguage:null)
+;M.relevance>0&&(S+=e.relevance),A.__addSublanguage(e._emitter,e.language)
+})():l(),C=""}function u(e,n){
+""!==e&&(A.startScope(n),A.addText(e),A.endScope())}function b(e,n){let t=1
+;const a=n.length-1;for(;t<=a;){if(!e._emit[t]){t++;continue}
+const a=w.classNameAliases[e[t]]||e[t],i=n[t];a?u(i,a):(C=i,l(),C=""),t++}}
+function m(e,n){
+return e.scope&&"string"==typeof e.scope&&A.openNode(w.classNameAliases[e.scope]||e.scope),
+e.beginScope&&(e.beginScope._wrap?(u(C,w.classNameAliases[e.beginScope._wrap]||e.beginScope._wrap),
+C=""):e.beginScope._multi&&(b(e.beginScope,n),C="")),M=Object.create(e,{parent:{
+value:M}}),M}function p(e,t,a){let i=((e,n)=>{const t=e&&e.exec(n)
+;return t&&0===t.index})(e.endRe,a);if(i){if(e["on:end"]){const a=new n(e)
+;e["on:end"](t,a),a.isMatchIgnored&&(i=!1)}if(i){
+for(;e.endsParent&&e.parent;)e=e.parent;return e}}
+if(e.endsWithParent)return p(e.parent,t,a)}function _(e){
+return 0===M.matcher.regexIndex?(C+=e[0],1):(D=!0,0)}function h(e){
+const n=e[0],a=t.substring(e.index),i=p(M,e,a);if(!i)return ee;const r=M
+;M.endScope&&M.endScope._wrap?(g(),
+u(n,M.endScope._wrap)):M.endScope&&M.endScope._multi?(g(),
+b(M.endScope,e)):r.skip?C+=n:(r.returnEnd||r.excludeEnd||(C+=n),
+g(),r.excludeEnd&&(C=n));do{
+M.scope&&A.closeNode(),M.skip||M.subLanguage||(S+=M.relevance),M=M.parent
+}while(M!==i.parent);return i.starts&&m(i.starts,e),r.returnEnd?0:n.length}
+let y={};function v(a,r){const o=r&&r[0];if(C+=a,null==o)return g(),0
+;if("begin"===y.type&&"end"===r.type&&y.index===r.index&&""===o){
+if(C+=t.slice(r.index,r.index+1),!s){const n=Error(`0 width match regex (${e})`)
+;throw n.languageName=e,n.badRule=y.rule,n}return 1}
+if(y=r,"begin"===r.type)return(e=>{
+const t=e[0],a=e.rule,i=new n(a),r=[a.__beforeBegin,a["on:begin"]]
+;for(const n of r)if(n&&(n(e,i),i.isMatchIgnored))return _(t)
+;return a.skip?C+=t:(a.excludeBegin&&(C+=t),
+g(),a.returnBegin||a.excludeBegin||(C=t)),m(a,e),a.returnBegin?0:t.length})(r)
+;if("illegal"===r.type&&!i){
+const e=Error('Illegal lexeme "'+o+'" for mode "'+(M.scope||"<unnamed>")+'"')
+;throw e.mode=M,e}if("end"===r.type){const e=h(r);if(e!==ee)return e}
+if("illegal"===r.type&&""===o)return r.index===t.length||(C+="\n"),1
+;if(I>1e5&&I>3*r.index)throw Error("potential infinite loop, way more iterations than matches")
+;return C+=o,o.length}const w=N(e)
+;if(!w)throw K(o.replace("{}",e)),Error('Unknown language: "'+e+'"')
+;const k=Q(w);let O="",M=r||k;const x={},A=new d.__emitter(d);(()=>{const e=[]
+;for(let n=M;n!==w;n=n.parent)n.scope&&e.unshift(n.scope)
+;e.forEach((e=>A.openNode(e)))})();let C="",S=0,T=0,I=0,D=!1;try{
+if(w.__emitTokens)w.__emitTokens(t,A);else{for(M.matcher.considerAll();;){
+I++,D?D=!1:M.matcher.considerAll(),M.matcher.lastIndex=T
+;const e=M.matcher.exec(t);if(!e)break;const n=v(t.substring(T,e.index),e)
+;T=e.index+n}v(t.substring(T))}return A.finalize(),O=A.toHTML(),{language:e,
+value:O,relevance:S,illegal:!1,_emitter:A,_top:M}}catch(n){
+if(n.message&&n.message.includes("Illegal"))return{language:e,value:J(t),
+illegal:!0,relevance:0,_illegalBy:{message:n.message,index:T,
+context:t.slice(T-100,T+100),mode:n.mode,resultSoFar:O},_emitter:A};if(s)return{
+language:e,value:J(t),illegal:!1,relevance:0,errorRaised:n,_emitter:A,_top:M}
+;throw n}}function E(e,n){n=n||d.languages||Object.keys(a);const t=(e=>{
+const n={value:J(e),illegal:!1,relevance:0,_top:l,_emitter:new d.__emitter(d)}
+;return n._emitter.addText(e),n})(e),i=n.filter(N).filter(O).map((n=>f(n,e,!1)))
+;i.unshift(t);const r=i.sort(((e,n)=>{
+if(e.relevance!==n.relevance)return n.relevance-e.relevance
+;if(e.language&&n.language){if(N(e.language).supersetOf===n.language)return 1
+;if(N(n.language).supersetOf===e.language)return-1}return 0})),[s,o]=r,c=s
+;return c.secondBest=o,c}function y(e){let n=null;const t=(e=>{
+let n=e.className+" ";n+=e.parentNode?e.parentNode.className:""
+;const t=d.languageDetectRe.exec(n);if(t){const n=N(t[1])
+;return n||(H(o.replace("{}",t[1])),
+H("Falling back to no-highlight mode for this block.",e)),n?t[1]:"no-highlight"}
+return n.split(/\s+/).find((e=>_(e)||N(e)))})(e);if(_(t))return
+;if(M("before:highlightElement",{el:e,language:t
+}),e.dataset.highlighted)return void console.log("Element previously highlighted. To highlight again, first unset `dataset.highlighted`.",e)
+;if(e.children.length>0&&(d.ignoreUnescapedHTML||(console.warn("One of your code blocks includes unescaped HTML. This is a potentially serious security risk."),
+console.warn("https://github.com/highlightjs/highlight.js/wiki/security"),
+console.warn("The element with unescaped HTML:"),
+console.warn(e)),d.throwUnescapedHTML))throw new V("One of your code blocks includes unescaped HTML.",e.innerHTML)
+;n=e;const a=n.textContent,r=t?h(a,{language:t,ignoreIllegals:!0}):E(a)
+;e.innerHTML=r.value,e.dataset.highlighted="yes",((e,n,t)=>{const a=n&&i[n]||t
+;e.classList.add("hljs"),e.classList.add("language-"+a)
+})(e,t,r.language),e.result={language:r.language,re:r.relevance,
+relevance:r.relevance},r.secondBest&&(e.secondBest={
+language:r.secondBest.language,relevance:r.secondBest.relevance
+}),M("after:highlightElement",{el:e,result:r,text:a})}let v=!1;function w(){
+if("loading"===document.readyState)return v||window.addEventListener("DOMContentLoaded",(()=>{
+w()}),!1),void(v=!0);document.querySelectorAll(d.cssSelector).forEach(y)}
+function N(e){return e=(e||"").toLowerCase(),a[e]||a[i[e]]}
+function k(e,{languageName:n}){"string"==typeof e&&(e=[e]),e.forEach((e=>{
+i[e.toLowerCase()]=n}))}function O(e){const n=N(e)
+;return n&&!n.disableAutodetect}function M(e,n){const t=e;r.forEach((e=>{
+e[t]&&e[t](n)}))}Object.assign(t,{highlight:h,highlightAuto:E,highlightAll:w,
+highlightElement:y,
+highlightBlock:e=>(q("10.7.0","highlightBlock will be removed entirely in v12.0"),
+q("10.7.0","Please use highlightElement now."),y(e)),configure:e=>{d=Y(d,e)},
+initHighlighting:()=>{
+w(),q("10.6.0","initHighlighting() deprecated.  Use highlightAll() now.")},
+initHighlightingOnLoad:()=>{
+w(),q("10.6.0","initHighlightingOnLoad() deprecated.  Use highlightAll() now.")
+},registerLanguage:(e,n)=>{let i=null;try{i=n(t)}catch(n){
+if(K("Language definition for '{}' could not be registered.".replace("{}",e)),
+!s)throw n;K(n),i=l}
+i.name||(i.name=e),a[e]=i,i.rawDefinition=n.bind(null,t),i.aliases&&k(i.aliases,{
+languageName:e})},unregisterLanguage:e=>{delete a[e]
+;for(const n of Object.keys(i))i[n]===e&&delete i[n]},
+listLanguages:()=>Object.keys(a),getLanguage:N,registerAliases:k,
+autoDetection:O,inherit:Y,addPlugin:e=>{(e=>{
+e["before:highlightBlock"]&&!e["before:highlightElement"]&&(e["before:highlightElement"]=n=>{
+e["before:highlightBlock"](Object.assign({block:n.el},n))
+}),e["after:highlightBlock"]&&!e["after:highlightElement"]&&(e["after:highlightElement"]=n=>{
+e["after:highlightBlock"](Object.assign({block:n.el},n))})})(e),r.push(e)},
+removePlugin:e=>{const n=r.indexOf(e);-1!==n&&r.splice(n,1)}}),t.debugMode=()=>{
+s=!1},t.safeMode=()=>{s=!0},t.versionString="11.11.1",t.regex={concat:m,
+lookahead:g,either:p,optional:b,anyNumberOfTimes:u}
+;for(const n in T)"object"==typeof T[n]&&e(T[n]);return Object.assign(t,T),t
+},te=ne({});te.newInstance=()=>ne({});const ae="[A-Za-z$_][0-9A-Za-z$_]*",ie={
+scope:"number",
+match:"([-+]?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)|NaN|[-+]?Infinity",
+relevance:0
+},re=["as","in","of","if","for","while","finally","var","new","function","do","return","void","else","break","catch","instanceof","with","throw","case","default","try","switch","continue","typeof","delete","let","yield","const","class","debugger","async","await","static","import","from","export","extends","using"],se=["true","false","null","undefined","NaN","Infinity"],oe=["Object","Function","Boolean","Symbol","Math","Date","Number","BigInt","String","RegExp","Array","Float32Array","Float64Array","Int8Array","Uint8Array","Uint8ClampedArray","Int16Array","Int32Array","Uint16Array","Uint32Array","BigInt64Array","BigUint64Array","Set","Map","WeakSet","WeakMap","ArrayBuffer","SharedArrayBuffer","Atomics","DataView","JSON","Promise","Generator","GeneratorFunction","AsyncFunction","Reflect","Proxy","Intl","WebAssembly"],ce=["Error","EvalError","InternalError","RangeError","ReferenceError","SyntaxError","TypeError","URIError"],le=["setInterval","setTimeout","clearInterval","clearTimeout","require","exports","eval","isFinite","isNaN","parseFloat","parseInt","decodeURI","decodeURIComponent","encodeURI","encodeURIComponent","escape","unescape"],de=["arguments","this","super","console","window","document","localStorage","sessionStorage","module","global"],ge=[].concat(le,oe,ce),ue=["a","abbr","address","article","aside","audio","b","blockquote","body","button","canvas","caption","cite","code","dd","del","details","dfn","div","dl","dt","em","fieldset","figcaption","figure","footer","form","h1","h2","h3","h4","h5","h6","header","hgroup","html","i","iframe","img","input","ins","kbd","label","legend","li","main","mark","menu","nav","object","ol","optgroup","option","p","picture","q","quote","samp","section","select","source","span","strong","summary","sup","table","tbody","td","textarea","tfoot","th","thead","time","tr","ul","var","video","defs","g","marker","mask","pattern","svg","switch","symbol","feBlend","feColorMatrix","feComponentTransfer","feComposite","feConvolveMatrix","feDiffuseLighting","feDisplacementMap","feFlood","feGaussianBlur","feImage","feMerge","feMorphology","feOffset","feSpecularLighting","feTile","feTurbulence","linearGradient","radialGradient","stop","circle","ellipse","image","line","path","polygon","polyline","rect","text","use","textPath","tspan","foreignObject","clipPath"],be=["any-hover","any-pointer","aspect-ratio","color","color-gamut","color-index","device-aspect-ratio","device-height","device-width","display-mode","forced-colors","grid","height","hover","inverted-colors","monochrome","orientation","overflow-block","overflow-inline","pointer","prefers-color-scheme","prefers-contrast","prefers-reduced-motion","prefers-reduced-transparency","resolution","scan","scripting","update","width","min-width","max-width","min-height","max-height"].sort().reverse(),me=["active","any-link","blank","checked","current","default","defined","dir","disabled","drop","empty","enabled","first","first-child","first-of-type","fullscreen","future","focus","focus-visible","focus-within","has","host","host-context","hover","indeterminate","in-range","invalid","is","lang","last-child","last-of-type","left","link","local-link","not","nth-child","nth-col","nth-last-child","nth-last-col","nth-last-of-type","nth-of-type","only-child","only-of-type","optional","out-of-range","past","placeholder-shown","read-only","read-write","required","right","root","scope","target","target-within","user-invalid","valid","visited","where"].sort().reverse(),pe=["after","backdrop","before","cue","cue-region","first-letter","first-line","grammar-error","marker","part","placeholder","selection","slotted","spelling-error"].sort().reverse(),_e=["accent-color","align-content","align-items","align-self","alignment-baseline","all","anchor-name","animation","animation-composition","animation-delay","animation-direction","animation-duration","animation-fill-mode","animation-iteration-count","animation-name","animation-play-state","animation-range","animation-range-end","animation-range-start","animation-timeline","animation-timing-function","appearance","aspect-ratio","backdrop-filter","backface-visibility","background","background-attachment","background-blend-mode","background-clip","background-color","background-image","background-origin","background-position","background-position-x","background-position-y","background-repeat","background-size","baseline-shift","block-size","border","border-block","border-block-color","border-block-end","border-block-end-color","border-block-end-style","border-block-end-width","border-block-start","border-block-start-color","border-block-start-style","border-block-start-width","border-block-style","border-block-width","border-bottom","border-bottom-color","border-bottom-left-radius","border-bottom-right-radius","border-bottom-style","border-bottom-width","border-collapse","border-color","border-end-end-radius","border-end-start-radius","border-image","border-image-outset","border-image-repeat","border-image-slice","border-image-source","border-image-width","border-inline","border-inline-color","border-inline-end","border-inline-end-color","border-inline-end-style","border-inline-end-width","border-inline-start","border-inline-start-color","border-inline-start-style","border-inline-start-width","border-inline-style","border-inline-width","border-left","border-left-color","border-left-style","border-left-width","border-radius","border-right","border-right-color","border-right-style","border-right-width","border-spacing","border-start-end-radius","border-start-start-radius","border-style","border-top","border-top-color","border-top-left-radius","border-top-right-radius","border-top-style","border-top-width","border-width","bottom","box-align","box-decoration-break","box-direction","box-flex","box-flex-group","box-lines","box-ordinal-group","box-orient","box-pack","box-shadow","box-sizing","break-after","break-before","break-inside","caption-side","caret-color","clear","clip","clip-path","clip-rule","color","color-interpolation","color-interpolation-filters","color-profile","color-rendering","color-scheme","column-count","column-fill","column-gap","column-rule","column-rule-color","column-rule-style","column-rule-width","column-span","column-width","columns","contain","contain-intrinsic-block-size","contain-intrinsic-height","contain-intrinsic-inline-size","contain-intrinsic-size","contain-intrinsic-width","container","container-name","container-type","content","content-visibility","counter-increment","counter-reset","counter-set","cue","cue-after","cue-before","cursor","cx","cy","direction","display","dominant-baseline","empty-cells","enable-background","field-sizing","fill","fill-opacity","fill-rule","filter","flex","flex-basis","flex-direction","flex-flow","flex-grow","flex-shrink","flex-wrap","float","flood-color","flood-opacity","flow","font","font-display","font-family","font-feature-settings","font-kerning","font-language-override","font-optical-sizing","font-palette","font-size","font-size-adjust","font-smooth","font-smoothing","font-stretch","font-style","font-synthesis","font-synthesis-position","font-synthesis-small-caps","font-synthesis-style","font-synthesis-weight","font-variant","font-variant-alternates","font-variant-caps","font-variant-east-asian","font-variant-emoji","font-variant-ligatures","font-variant-numeric","font-variant-position","font-variation-settings","font-weight","forced-color-adjust","gap","glyph-orientation-horizontal","glyph-orientation-vertical","grid","grid-area","grid-auto-columns","grid-auto-flow","grid-auto-rows","grid-column","grid-column-end","grid-column-start","grid-gap","grid-row","grid-row-end","grid-row-start","grid-template","grid-template-areas","grid-template-columns","grid-template-rows","hanging-punctuation","height","hyphenate-character","hyphenate-limit-chars","hyphens","icon","image-orientation","image-rendering","image-resolution","ime-mode","initial-letter","initial-letter-align","inline-size","inset","inset-area","inset-block","inset-block-end","inset-block-start","inset-inline","inset-inline-end","inset-inline-start","isolation","justify-content","justify-items","justify-self","kerning","left","letter-spacing","lighting-color","line-break","line-height","line-height-step","list-style","list-style-image","list-style-position","list-style-type","margin","margin-block","margin-block-end","margin-block-start","margin-bottom","margin-inline","margin-inline-end","margin-inline-start","margin-left","margin-right","margin-top","margin-trim","marker","marker-end","marker-mid","marker-start","marks","mask","mask-border","mask-border-mode","mask-border-outset","mask-border-repeat","mask-border-slice","mask-border-source","mask-border-width","mask-clip","mask-composite","mask-image","mask-mode","mask-origin","mask-position","mask-repeat","mask-size","mask-type","masonry-auto-flow","math-depth","math-shift","math-style","max-block-size","max-height","max-inline-size","max-width","min-block-size","min-height","min-inline-size","min-width","mix-blend-mode","nav-down","nav-index","nav-left","nav-right","nav-up","none","normal","object-fit","object-position","offset","offset-anchor","offset-distance","offset-path","offset-position","offset-rotate","opacity","order","orphans","outline","outline-color","outline-offset","outline-style","outline-width","overflow","overflow-anchor","overflow-block","overflow-clip-margin","overflow-inline","overflow-wrap","overflow-x","overflow-y","overlay","overscroll-behavior","overscroll-behavior-block","overscroll-behavior-inline","overscroll-behavior-x","overscroll-behavior-y","padding","padding-block","padding-block-end","padding-block-start","padding-bottom","padding-inline","padding-inline-end","padding-inline-start","padding-left","padding-right","padding-top","page","page-break-after","page-break-before","page-break-inside","paint-order","pause","pause-after","pause-before","perspective","perspective-origin","place-content","place-items","place-self","pointer-events","position","position-anchor","position-visibility","print-color-adjust","quotes","r","resize","rest","rest-after","rest-before","right","rotate","row-gap","ruby-align","ruby-position","scale","scroll-behavior","scroll-margin","scroll-margin-block","scroll-margin-block-end","scroll-margin-block-start","scroll-margin-bottom","scroll-margin-inline","scroll-margin-inline-end","scroll-margin-inline-start","scroll-margin-left","scroll-margin-right","scroll-margin-top","scroll-padding","scroll-padding-block","scroll-padding-block-end","scroll-padding-block-start","scroll-padding-bottom","scroll-padding-inline","scroll-padding-inline-end","scroll-padding-inline-start","scroll-padding-left","scroll-padding-right","scroll-padding-top","scroll-snap-align","scroll-snap-stop","scroll-snap-type","scroll-timeline","scroll-timeline-axis","scroll-timeline-name","scrollbar-color","scrollbar-gutter","scrollbar-width","shape-image-threshold","shape-margin","shape-outside","shape-rendering","speak","speak-as","src","stop-color","stop-opacity","stroke","stroke-dasharray","stroke-dashoffset","stroke-linecap","stroke-linejoin","stroke-miterlimit","stroke-opacity","stroke-width","tab-size","table-layout","text-align","text-align-all","text-align-last","text-anchor","text-combine-upright","text-decoration","text-decoration-color","text-decoration-line","text-decoration-skip","text-decoration-skip-ink","text-decoration-style","text-decoration-thickness","text-emphasis","text-emphasis-color","text-emphasis-position","text-emphasis-style","text-indent","text-justify","text-orientation","text-overflow","text-rendering","text-shadow","text-size-adjust","text-transform","text-underline-offset","text-underline-position","text-wrap","text-wrap-mode","text-wrap-style","timeline-scope","top","touch-action","transform","transform-box","transform-origin","transform-style","transition","transition-behavior","transition-delay","transition-duration","transition-property","transition-timing-function","translate","unicode-bidi","unicode-range","user-modify","user-select","vector-effect","vertical-align","view-timeline","view-timeline-axis","view-timeline-inset","view-timeline-name","view-transition-name","visibility","voice-balance","voice-duration","voice-family","voice-pitch","voice-range","voice-rate","voice-stress","voice-volume","white-space","white-space-collapse","widows","width","will-change","word-break","word-spacing","word-wrap","writing-mode","x","y","z-index","zoom"].sort().reverse()
+;var he="[0-9](_*[0-9])*",fe=`\\.(${he})`,Ee="[0-9a-fA-F](_*[0-9a-fA-F])*",ye={
+className:"number",variants:[{
+begin:`(\\b(${he})((${fe})|\\.)?|(${fe}))[eE][+-]?(${he})[fFdD]?\\b`},{
+begin:`\\b(${he})((${fe})[fFdD]?\\b|\\.([fFdD]\\b)?)`},{
+begin:`(${fe})[fFdD]?\\b`},{begin:`\\b(${he})[fFdD]\\b`},{
+begin:`\\b0[xX]((${Ee})\\.?|(${Ee})?\\.(${Ee}))[pP][+-]?(${he})[fFdD]?\\b`},{
+begin:"\\b(0|[1-9](_*[0-9])*)[lL]?\\b"},{begin:`\\b0[xX](${Ee})[lL]?\\b`},{
+begin:"\\b0(_*[0-7])*[lL]?\\b"},{begin:"\\b0[bB][01](_*[01])*[lL]?\\b"}],
+relevance:0};function ve(e,n,t){return-1===t?"":e.replace(n,(a=>ve(e,n,t-1)))}
+const we=e=>m(/\b/,e,/\w$/.test(e)?/\b/:/\B/),Ne=["Protocol","Type"].map(we),ke=["init","self"].map(we),Oe=["Any","Self"],Me=["__abstract","__await","__catch","__COLUMN__","__event","__external","__FILE__",,"__ensure","__field","__invariants","__lock","__old","__reintroduce","__require__result","__using","__finally","__FUNCTION__","__inline","__LINE__","__mapped","__out","__partial","__throw","__try","__yield","as","as!","as?","associativity","actor","any","associatedtype","async","await",/as\?/,/as!/,"as","borrowing","break","case","catch","class","consume","consuming","continue","convenience","copy","default","defer","deinit","didSet","distributed","do","dynamic","each","else","enum","extension","fallthrough",/fileprivate\(set\)/,"fileprivate","final","for","func","get","guard","if","import","indirect","infix",/init\?/,/init!/,"inout",/internal\(set\)/,"internal","in","is","isolated","nonisolated","lazy","let","macro","mutating","nonmutating",/open\(set\)/,"open","operator","optional","override","package","postfix","precedencegroup","prefix",/private\(set\)/,"private","protocol",/public\(set\)/,"public","repeat","required","rethrows","return","set","some","static","struct","subscript","super","switch","throws","throw",/try\?/,/try!/,"try","typealias",/unowned\(safe\)/,/unowned\(unsafe\)/,"unowned","var","weak","where","while","willSet"],xe=["false","nil","true"],Ae=["assignment","associativity","higherThan","left","lowerThan","none","right"],Ce=["#colorLiteral","#column","#dsohandle","#else","#elseif","#endif","#error","#file","#fileID","#fileLiteral","#filePath","#function","#if","#imageLiteral","#keyPath","#line","#selector","#sourceLocation","#warning"],Se=["abs","all","any","assert","assertionFailure","debugPrint","dump","fatalError","getVaList","isKnownUniquelyReferenced","max","min","numericCast","pointwiseMax","pointwiseMin","precondition","preconditionFailure","print","readLine","repeatElement","sequence","stride","swap","swift_unboxFromSwiftValueWithType","transcode","type","unsafeBitCast","unsafeDowncast","withExtendedLifetime","withUnsafeMutablePointer","withUnsafePointer","withVaList","withoutActuallyEscaping","zip"],Te=p(/[/=\-+!*%<>&|^~?]/,/[\u00A1-\u00A7]/,/[\u00A9\u00AB]/,/[\u00AC\u00AE]/,/[\u00B0\u00B1]/,/[\u00B6\u00BB\u00BF\u00D7\u00F7]/,/[\u2016-\u2017]/,/[\u2020-\u2027]/,/[\u2030-\u203E]/,/[\u2041-\u2053]/,/[\u2055-\u205E]/,/[\u2190-\u23FF]/,/[\u2500-\u2775]/,/[\u2794-\u2BFF]/,/[\u2E00-\u2E7F]/,/[\u3001-\u3003]/,/[\u3008-\u3020]/,/[\u3030]/),Ie=p(Te,/[\u0300-\u036F]/,/[\u1DC0-\u1DFF]/,/[\u20D0-\u20FF]/,/[\uFE00-\uFE0F]/,/[\uFE20-\uFE2F]/),De=m(Te,Ie,"*"),Re=p(/[a-zA-Z_]/,/[\u00A8\u00AA\u00AD\u00AF\u00B2-\u00B5\u00B7-\u00BA]/,/[\u00BC-\u00BE\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]/,/[\u0100-\u02FF\u0370-\u167F\u1681-\u180D\u180F-\u1DBF]/,/[\u1E00-\u1FFF]/,/[\u200B-\u200D\u202A-\u202E\u203F-\u2040\u2054\u2060-\u206F]/,/[\u2070-\u20CF\u2100-\u218F\u2460-\u24FF\u2776-\u2793]/,/[\u2C00-\u2DFF\u2E80-\u2FFF]/,/[\u3004-\u3007\u3021-\u302F\u3031-\u303F\u3040-\uD7FF]/,/[\uF900-\uFD3D\uFD40-\uFDCF\uFDF0-\uFE1F\uFE30-\uFE44]/,/[\uFE47-\uFEFE\uFF00-\uFFFD]/),Le=p(Re,/\d/,/[\u0300-\u036F\u1DC0-\u1DFF\u20D0-\u20FF\uFE20-\uFE2F]/),Be=m(Re,Le,"*"),$e=m(/[A-Z]/,Le,"*"),Fe=["attached","autoclosure",m(/convention\(/,p("swift","block","c"),/\)/),"discardableResult","dynamicCallable","dynamicMemberLookup","escaping","freestanding","frozen","GKInspectable","IBAction","IBDesignable","IBInspectable","IBOutlet","IBSegueAction","inlinable","main","nonobjc","NSApplicationMain","NSCopying","NSManaged",m(/objc\(/,Be,/\)/),"objc","objcMembers","propertyWrapper","requires_stored_property_inits","resultBuilder","Sendable","testable","UIApplicationMain","unchecked","unknown","usableFromInline","warn_unqualified_access"],ze=["iOS","iOSApplicationExtension","macOS","macOSApplicationExtension","macCatalyst","macCatalystApplicationExtension","watchOS","watchOSApplicationExtension","tvOS","tvOSApplicationExtension","swift"]
+;function je(e,n,t){return-1===t?"":e.replace(n,(a=>je(e,n,t-1)))}
+var Ue=Object.freeze({__proto__:null,grmr_apache:e=>{const n={
+className:"number",begin:/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d{1,5})?/}
+;return{name:"Apache config",aliases:["apacheconf"],case_insensitive:!0,
+contains:[e.HASH_COMMENT_MODE,{className:"section",begin:/<\/?/,end:/>/,
+contains:[n,{className:"number",begin:/:\d{1,5}/
+},e.inherit(e.QUOTE_STRING_MODE,{relevance:0})]},{className:"attribute",
+begin:/\w+/,relevance:0,keywords:{
+_:["order","deny","allow","setenv","rewriterule","rewriteengine","rewritecond","documentroot","sethandler","errordocument","loadmodule","options","header","listen","serverroot","servername"]
+},starts:{end:/$/,relevance:0,keywords:{literal:"on off all deny allow"},
+contains:[{scope:"punctuation",match:/\\\n/},{className:"meta",begin:/\s\[/,
+end:/\]$/},{className:"variable",begin:/[\$%]\{/,end:/\}/,contains:["self",{
+className:"number",begin:/[$%]\d+/}]},n,{className:"number",begin:/\b\d+/
+},e.QUOTE_STRING_MODE]}}],illegal:/\S/}},grmr_bash:e=>{const n=e.regex,t={},a={
+begin:/\$\{/,end:/\}/,contains:["self",{begin:/:-/,contains:[t]}]}
+;Object.assign(t,{className:"variable",variants:[{
+begin:n.concat(/\$[\w\d#@][\w\d_]*/,"(?![\\w\\d])(?![$])")},a]});const i={
+className:"subst",begin:/\$\(/,end:/\)/,contains:[e.BACKSLASH_ESCAPE]
+},r=e.inherit(e.COMMENT(),{match:[/(^|\s)/,/#.*$/],scope:{2:"comment"}}),s={
+begin:/<<-?\s*(?=\w+)/,starts:{contains:[e.END_SAME_AS_BEGIN({begin:/(\w+)/,
+end:/(\w+)/,className:"string"})]}},o={className:"string",begin:/"/,end:/"/,
+contains:[e.BACKSLASH_ESCAPE,t,i]};i.contains.push(o);const c={begin:/\$?\(\(/,
+end:/\)\)/,contains:[{begin:/\d+#[0-9a-f]+/,className:"number"},e.NUMBER_MODE,t]
+},l=e.SHEBANG({binary:"(fish|bash|zsh|sh|csh|ksh|tcsh|dash|scsh)",relevance:10
+}),d={className:"function",begin:/\w[\w\d_]*\s*\(\s*\)\s*\{/,returnBegin:!0,
+contains:[e.inherit(e.TITLE_MODE,{begin:/\w[\w\d_]*/})],relevance:0};return{
+name:"Bash",aliases:["sh","zsh"],keywords:{$pattern:/\b[a-z][a-z0-9._-]+\b/,
+keyword:["if","then","else","elif","fi","time","for","while","until","in","do","done","case","esac","coproc","function","select"],
+literal:["true","false"],
+built_in:["break","cd","continue","eval","exec","exit","export","getopts","hash","pwd","readonly","return","shift","test","times","trap","umask","unset","alias","bind","builtin","caller","command","declare","echo","enable","help","let","local","logout","mapfile","printf","read","readarray","source","sudo","type","typeset","ulimit","unalias","set","shopt","autoload","bg","bindkey","bye","cap","chdir","clone","comparguments","compcall","compctl","compdescribe","compfiles","compgroups","compquote","comptags","comptry","compvalues","dirs","disable","disown","echotc","echoti","emulate","fc","fg","float","functions","getcap","getln","history","integer","jobs","kill","limit","log","noglob","popd","print","pushd","pushln","rehash","sched","setcap","setopt","stat","suspend","ttyctl","unfunction","unhash","unlimit","unsetopt","vared","wait","whence","where","which","zcompile","zformat","zftp","zle","zmodload","zparseopts","zprof","zpty","zregexparse","zsocket","zstyle","ztcp","chcon","chgrp","chown","chmod","cp","dd","df","dir","dircolors","ln","ls","mkdir","mkfifo","mknod","mktemp","mv","realpath","rm","rmdir","shred","sync","touch","truncate","vdir","b2sum","base32","base64","cat","cksum","comm","csplit","cut","expand","fmt","fold","head","join","md5sum","nl","numfmt","od","paste","ptx","pr","sha1sum","sha224sum","sha256sum","sha384sum","sha512sum","shuf","sort","split","sum","tac","tail","tr","tsort","unexpand","uniq","wc","arch","basename","chroot","date","dirname","du","echo","env","expr","factor","groups","hostid","id","link","logname","nice","nohup","nproc","pathchk","pinky","printenv","printf","pwd","readlink","runcon","seq","sleep","stat","stdbuf","stty","tee","test","timeout","tty","uname","unlink","uptime","users","who","whoami","yes"]
+},contains:[l,e.SHEBANG(),d,c,r,s,{match:/(\/[a-z._-]+)+/},o,{match:/\\"/},{
+className:"string",begin:/'/,end:/'/},{match:/\\'/},t]}},grmr_coffeescript:e=>{
+const n={
+keyword:re.concat(["then","unless","until","loop","by","when","and","or","is","isnt","not"]).filter((t=["var","const","let","function","static"],
+e=>!t.includes(e))),literal:se.concat(["yes","no","on","off"]),
+built_in:ge.concat(["npm","print"])};var t
+;const a="[A-Za-z$_][0-9A-Za-z$_]*",i={className:"subst",begin:/#\{/,end:/\}/,
+keywords:n},r=[e.BINARY_NUMBER_MODE,e.inherit(e.C_NUMBER_MODE,{starts:{
+end:"(\\s*/)?",relevance:0}}),{className:"string",variants:[{begin:/'''/,
+end:/'''/,contains:[e.BACKSLASH_ESCAPE]},{begin:/'/,end:/'/,
+contains:[e.BACKSLASH_ESCAPE]},{begin:/"""/,end:/"""/,
+contains:[e.BACKSLASH_ESCAPE,i]},{begin:/"/,end:/"/,
+contains:[e.BACKSLASH_ESCAPE,i]}]},{className:"regexp",variants:[{begin:"///",
+end:"///",contains:[i,e.HASH_COMMENT_MODE]},{begin:"//[gim]{0,3}(?=\\W)",
+relevance:0},{begin:/\/(?![ *]).*?(?![\\]).\/[gim]{0,3}(?=\W)/}]},{begin:"@"+a
+},{subLanguage:"javascript",excludeBegin:!0,excludeEnd:!0,variants:[{
+begin:"```",end:"```"},{begin:"`",end:"`"}]}];i.contains=r
+;const s=e.inherit(e.TITLE_MODE,{begin:a}),o="(\\(.*\\)\\s*)?\\B[-=]>",c={
+className:"params",begin:"\\([^\\(]",returnBegin:!0,contains:[{begin:/\(/,
+end:/\)/,keywords:n,contains:["self"].concat(r)}]},l={variants:[{
+match:[/class\s+/,a,/\s+extends\s+/,a]},{match:[/class\s+/,a]}],scope:{
+2:"title.class",4:"title.class.inherited"},keywords:n};return{
+name:"CoffeeScript",aliases:["coffee","cson","iced"],keywords:n,illegal:/\/\*/,
+contains:[...r,e.COMMENT("###","###"),e.HASH_COMMENT_MODE,{className:"function",
+begin:"^\\s*"+a+"\\s*=\\s*"+o,end:"[-=]>",returnBegin:!0,contains:[s,c]},{
+begin:/[:\(,=]\s*/,relevance:0,contains:[{className:"function",begin:o,
+end:"[-=]>",returnBegin:!0,contains:[c]}]},l,{begin:a+":",end:":",
+returnBegin:!0,returnEnd:!0,relevance:0}]}},grmr_cpp:e=>{
+const n=e.regex,t=e.COMMENT("//","$",{contains:[{begin:/\\\n/}]
+}),a="decltype\\(auto\\)",i="[a-zA-Z_]\\w*::",r="(?!struct)("+a+"|"+n.optional(i)+"[a-zA-Z_]\\w*"+n.optional("<[^<>]+>")+")",s={
+className:"type",begin:"\\b[a-z\\d_]*_t\\b"},o={className:"string",variants:[{
+begin:'(u8?|U|L)?"',end:'"',illegal:"\\n",contains:[e.BACKSLASH_ESCAPE]},{
+begin:"(u8?|U|L)?'(\\\\(x[0-9A-Fa-f]{2}|u[0-9A-Fa-f]{4,8}|[0-7]{3}|\\S)|.)",
+end:"'",illegal:"."},e.END_SAME_AS_BEGIN({
+begin:/(?:u8?|U|L)?R"([^()\\ ]{0,16})\(/,end:/\)([^()\\ ]{0,16})"/})]},c={
+className:"number",variants:[{
+begin:"[+-]?(?:(?:[0-9](?:'?[0-9])*\\.(?:[0-9](?:'?[0-9])*)?|\\.[0-9](?:'?[0-9])*)(?:[Ee][+-]?[0-9](?:'?[0-9])*)?|[0-9](?:'?[0-9])*[Ee][+-]?[0-9](?:'?[0-9])*|0[Xx](?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*(?:\\.(?:[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)?)?|\\.[0-9A-Fa-f](?:'?[0-9A-Fa-f])*)[Pp][+-]?[0-9](?:'?[0-9])*)(?:[Ff](?:16|32|64|128)?|(BF|bf)16|[Ll]|)"
+},{
+begin:"[+-]?\\b(?:0[Bb][01](?:'?[01])*|0[Xx][0-9A-Fa-f](?:'?[0-9A-Fa-f])*|0(?:'?[0-7])*|[1-9](?:'?[0-9])*)(?:[Uu](?:LL?|ll?)|[Uu][Zz]?|(?:LL?|ll?)[Uu]?|[Zz][Uu]|)"
+}],relevance:0},l={className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,keywords:{
+keyword:"if else elif endif define undef warning error line pragma _Pragma ifdef ifndef include"
+},contains:[{begin:/\\\n/,relevance:0},e.inherit(o,{className:"string"}),{
+className:"string",begin:/<.*?>/},t,e.C_BLOCK_COMMENT_MODE]},d={
+className:"title",begin:n.optional(i)+e.IDENT_RE,relevance:0
+},g=n.optional(i)+e.IDENT_RE+"\\s*\\(",u=["alignas","alignof","and","and_eq","asm","atomic_cancel","atomic_commit","atomic_noexcept","auto","bitand","bitor","break","case","catch","class","co_await","co_return","co_yield","compl","concept","const_cast|10","consteval","constexpr","constinit","continue","decltype","default","delete","do","dynamic_cast|10","else","enum","explicit","export","extern","false","final","for","friend","goto","if","import","inline","module","mutable","namespace","new","noexcept","not","not_eq","nullptr","operator","or","or_eq","override","private","protected","public","reflexpr","register","reinterpret_cast|10","requires","return","sizeof","static_assert","static_cast|10","struct","switch","synchronized","template","this","thread_local","throw","transaction_safe","transaction_safe_dynamic","true","try","typedef","typeid","typename","union","using","virtual","volatile","while","xor","xor_eq"],b={
+type:["bool","char","char16_t","char32_t","char8_t","double","float","int","long","short","void","wchar_t","unsigned","signed","const","static"],
+keyword:u,literal:["NULL","false","nullopt","nullptr","true"],
+built_in:["_Pragma"],
+_type_hints:["any","auto_ptr","barrier","binary_semaphore","bitset","complex","condition_variable","condition_variable_any","counting_semaphore","deque","false_type","flat_map","flat_set","future","imaginary","initializer_list","istringstream","jthread","latch","lock_guard","multimap","multiset","mutex","optional","ostringstream","packaged_task","pair","promise","priority_queue","queue","recursive_mutex","recursive_timed_mutex","scoped_lock","set","shared_future","shared_lock","shared_mutex","shared_timed_mutex","shared_ptr","stack","string_view","stringstream","timed_mutex","thread","true_type","tuple","unique_lock","unique_ptr","unordered_map","unordered_multimap","unordered_multiset","unordered_set","variant","vector","weak_ptr","wstring","wstring_view"]
+},m={className:"function.dispatch",relevance:0,keywords:{
+_hint:["abort","abs","acos","apply","as_const","asin","atan","atan2","calloc","ceil","cerr","cin","clog","cos","cosh","cout","declval","endl","exchange","exit","exp","fabs","floor","fmod","forward","fprintf","fputs","free","frexp","fscanf","future","invoke","isalnum","isalpha","iscntrl","isdigit","isgraph","islower","isprint","ispunct","isspace","isupper","isxdigit","labs","launder","ldexp","log","log10","make_pair","make_shared","make_shared_for_overwrite","make_tuple","make_unique","malloc","memchr","memcmp","memcpy","memset","modf","move","pow","printf","putchar","puts","realloc","scanf","sin","sinh","snprintf","sprintf","sqrt","sscanf","std","stderr","stdin","stdout","strcat","strchr","strcmp","strcpy","strcspn","strlen","strncat","strncmp","strncpy","strpbrk","strrchr","strspn","strstr","swap","tan","tanh","terminate","to_underlying","tolower","toupper","vfprintf","visit","vprintf","vsprintf"]
+},
+begin:n.concat(/\b/,`(?!${u.join("|")})`,e.IDENT_RE,n.lookahead(/(<[^<>]+>|)\s*\(/))
+},p=[m,l,s,t,e.C_BLOCK_COMMENT_MODE,c,o],_={variants:[{begin:/=/,end:/;/},{
+begin:/\(/,end:/\)/},{beginKeywords:"new throw return else",end:/;/}],
+keywords:b,contains:p.concat([{begin:/\(/,end:/\)/,keywords:b,
+contains:p.concat(["self"]),relevance:0}]),relevance:0},h={className:"function",
+begin:"("+r+"[\\*&\\s]+)+"+g,returnBegin:!0,end:/[{;=]/,excludeEnd:!0,
+keywords:b,illegal:/[^\w\s\*&:<>.]/,contains:[{begin:a,keywords:b,relevance:0},{
+begin:g,returnBegin:!0,contains:[d],relevance:0},{begin:/::/,relevance:0},{
+begin:/:/,endsWithParent:!0,contains:[o,c]},{relevance:0,match:/,/},{
+className:"params",begin:/\(/,end:/\)/,keywords:b,relevance:0,
+contains:[t,e.C_BLOCK_COMMENT_MODE,o,c,s,{begin:/\(/,end:/\)/,keywords:b,
+relevance:0,contains:["self",t,e.C_BLOCK_COMMENT_MODE,o,c,s]}]
+},s,t,e.C_BLOCK_COMMENT_MODE,l]};return{name:"C++",
+aliases:["cc","c++","h++","hpp","hh","hxx","cxx"],keywords:b,illegal:"</",
+classNameAliases:{"function.dispatch":"built_in"},
+contains:[].concat(_,h,m,p,[l,{
+begin:"\\b(deque|list|queue|priority_queue|pair|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array|tuple|optional|variant|function|flat_map|flat_set)\\s*<(?!<)",
+end:">",keywords:b,contains:["self",s]},{begin:e.IDENT_RE+"::",keywords:b},{
+match:[/\b(?:enum(?:\s+(?:class|struct))?|class|struct|union)/,/\s+/,/\w+/],
+className:{1:"keyword",3:"title.class"}}])}},grmr_csharp:e=>{const n={
+keyword:["abstract","as","base","break","case","catch","class","const","continue","do","else","event","explicit","extern","finally","fixed","for","foreach","goto","if","implicit","in","interface","internal","is","lock","namespace","new","operator","out","override","params","private","protected","public","readonly","record","ref","return","scoped","sealed","sizeof","stackalloc","static","struct","switch","this","throw","try","typeof","unchecked","unsafe","using","virtual","void","volatile","while"].concat(["add","alias","and","ascending","args","async","await","by","descending","dynamic","equals","file","from","get","global","group","init","into","join","let","nameof","not","notnull","on","or","orderby","partial","record","remove","required","scoped","select","set","unmanaged","value|0","var","when","where","with","yield","__arglist","__makeref","__reftype","__refvalue","module","assembly"]),
+built_in:["bool","byte","char","decimal","delegate","double","dynamic","enum","float","int","long","nint","nuint","object","sbyte","short","string","ulong","uint","ushort"],
+literal:["default","false","null","true"]},t=e.inherit(e.TITLE_MODE,{
+begin:"[a-zA-Z](\\.?\\w)*"}),a={className:"number",variants:[{
+begin:"\\b(0b[01']+)"},{
+begin:"(-?)\\b([\\d']+(\\.[\\d']*)?|\\.[\\d']+)(u|U|l|L|ul|UL|f|F|b|B)"},{
+begin:"(-?)(\\b0[xX][a-fA-F0-9'_]+|(\\b[\\d'_]+(\\.[\\d'_]*)?|\\.[\\d'_]+)([eE][-+]?[\\d'_]+)?)"
+}],relevance:0},i={className:"string",begin:'@"',end:'"',contains:[{begin:'""'}]
+},r=e.inherit(i,{illegal:/\n/}),s={className:"subst",begin:/\{/,end:/\}/,
+keywords:n},o=e.inherit(s,{illegal:/\n/}),c={className:"string",begin:/\$"/,
+end:'"',illegal:/\n/,contains:[{begin:/\{\{/},{begin:/\}\}/
+},e.BACKSLASH_ESCAPE,o]},l={className:"string",begin:/\$@"/,end:'"',contains:[{
+begin:/\{\{/},{begin:/\}\}/},{begin:'""'},s]},d=e.inherit(l,{illegal:/\n/,
+contains:[{begin:/\{\{/},{begin:/\}\}/},{begin:'""'},o]})
+;s.contains=[l,c,i,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,a,e.C_BLOCK_COMMENT_MODE],
+o.contains=[d,c,r,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,a,e.inherit(e.C_BLOCK_COMMENT_MODE,{
+illegal:/\n/})];const g={variants:[{className:"string",
+begin:/"""("*)(?!")(.|\n)*?"""\1/,relevance:1
+},l,c,i,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE]},u={begin:"<",end:">",
+contains:[{beginKeywords:"in out"},t]
+},b=e.IDENT_RE+"(<"+e.IDENT_RE+"(\\s*,\\s*"+e.IDENT_RE+")*>)?(\\[\\])?",m={
+begin:"@"+e.IDENT_RE,relevance:0};return{name:"C#",aliases:["cs","c#"],
+keywords:n,illegal:/::/,contains:[e.COMMENT("///","$",{returnBegin:!0,
+contains:[{className:"doctag",variants:[{begin:"///",relevance:0},{
+begin:"\x3c!--|--\x3e"},{begin:"</?",end:">"}]}]
+}),e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,{className:"meta",begin:"#",
+end:"$",keywords:{
+keyword:"if else elif endif define undef warning error line region endregion pragma checksum"
+}},g,a,{beginKeywords:"class interface",relevance:0,end:/[{;=]/,
+illegal:/[^\s:,]/,contains:[{beginKeywords:"where class"
+},t,u,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{beginKeywords:"namespace",
+relevance:0,end:/[{;=]/,illegal:/[^\s:]/,
+contains:[t,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{
+beginKeywords:"record",relevance:0,end:/[{;=]/,illegal:/[^\s:]/,
+contains:[t,u,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{className:"meta",
+begin:"^\\s*\\[(?=[\\w])",excludeBegin:!0,end:"\\]",excludeEnd:!0,contains:[{
+className:"string",begin:/"/,end:/"/}]},{
+beginKeywords:"new return throw await else",relevance:0},{className:"function",
+begin:"("+b+"\\s+)+"+e.IDENT_RE+"\\s*(<[^=]+>\\s*)?\\(",returnBegin:!0,
+end:/\s*[{;=]/,excludeEnd:!0,keywords:n,contains:[{
+beginKeywords:"public private protected static internal protected abstract async extern override unsafe virtual new sealed partial",
+relevance:0},{begin:e.IDENT_RE+"\\s*(<[^=]+>\\s*)?\\(",returnBegin:!0,
+contains:[e.TITLE_MODE,u],relevance:0},{match:/\(\)/},{className:"params",
+begin:/\(/,end:/\)/,excludeBegin:!0,excludeEnd:!0,keywords:n,relevance:0,
+contains:[g,a,e.C_BLOCK_COMMENT_MODE]
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},m]}},grmr_css:e=>{
+const n=e.regex,t=(e=>({IMPORTANT:{scope:"meta",begin:"!important"},
+BLOCK_COMMENT:e.C_BLOCK_COMMENT_MODE,HEXCOLOR:{scope:"number",
+begin:/#(([0-9a-fA-F]{3,4})|(([0-9a-fA-F]{2}){3,4}))\b/},UNICODE_RANGE:{
+scope:"number",
+begin:/\b[Uu]\+[0-9A-Fa-f][0-9A-Fa-f?]{0,4}(-[0-9A-Fa-f][0-9A-Fa-f]{0,4})?/},
+FUNCTION_DISPATCH:{className:"built_in",begin:/[\w-]+(?=\()/},
+ATTRIBUTE_SELECTOR_MODE:{scope:"selector-attr",begin:/\[/,end:/\]/,illegal:"$",
+contains:[e.APOS_STRING_MODE,e.QUOTE_STRING_MODE]},CSS_NUMBER_MODE:{
+scope:"number",
+begin:e.NUMBER_RE+"(%|em|ex|ch|rem|vw|vh|vmin|vmax|cm|mm|in|pt|pc|px|deg|grad|rad|turn|s|ms|Hz|kHz|dpi|dpcm|dppx)?",
+relevance:0},CSS_VARIABLE:{className:"attr",begin:/--[A-Za-z_][A-Za-z0-9_-]*/}
+}))(e),a=[e.APOS_STRING_MODE,e.QUOTE_STRING_MODE];return{name:"CSS",
+case_insensitive:!0,illegal:/[=|'\$]/,keywords:{keyframePosition:"from to"},
+classNameAliases:{keyframePosition:"selector-tag"},contains:[t.BLOCK_COMMENT,{
+begin:/-(webkit|moz|ms|o)-(?=[a-z])/},t.CSS_NUMBER_MODE,{
+className:"selector-id",begin:/#[A-Za-z0-9_-]+/,relevance:0},{
+className:"selector-class",begin:"\\.[a-zA-Z-][a-zA-Z0-9_-]*",relevance:0
+},t.ATTRIBUTE_SELECTOR_MODE,{className:"selector-pseudo",variants:[{
+begin:":("+me.join("|")+")"},{begin:":(:)?("+pe.join("|")+")"}]
+},t.CSS_VARIABLE,{className:"attribute",begin:"\\b("+_e.join("|")+")\\b"},{
+begin:/:/,end:/[;}{]/,
+contains:[t.BLOCK_COMMENT,t.HEXCOLOR,t.IMPORTANT,t.CSS_NUMBER_MODE,t.UNICODE_RANGE,...a,{
+begin:/(url|data-uri)\(/,end:/\)/,relevance:0,keywords:{built_in:"url data-uri"
+},contains:[...a,{className:"string",begin:/[^)]/,endsWithParent:!0,
+excludeEnd:!0}]},t.FUNCTION_DISPATCH]},{begin:n.lookahead(/@/),end:"[{;]",
+relevance:0,illegal:/:/,contains:[{className:"keyword",begin:/@-?\w[\w]*(-\w+)*/
+},{begin:/\s/,endsWithParent:!0,excludeEnd:!0,relevance:0,keywords:{
+$pattern:/[a-z-]+/,keyword:"and or not only",attribute:be.join(" ")},contains:[{
+begin:/[a-z-]+(?=:)/,className:"attribute"},...a,t.CSS_NUMBER_MODE]}]},{
+className:"selector-tag",begin:"\\b("+ue.join("|")+")\\b"}]}},grmr_delphi:e=>{
+const n=["exports","register","file","shl","array","record","property","for","mod","while","set","ally","label","uses","raise","not","stored","class","safecall","var","interface","or","private","static","exit","index","inherited","to","else","stdcall","override","shr","asm","far","resourcestring","finalization","packed","virtual","out","and","protected","library","do","xorwrite","goto","near","function","end","div","overload","object","unit","begin","string","on","inline","repeat","until","destructor","write","message","program","with","read","initialization","except","default","nil","if","case","cdecl","in","downto","threadvar","of","try","pascal","const","external","constructor","type","public","then","implementation","finally","published","procedure","absolute","reintroduce","operator","as","is","abstract","alias","assembler","bitpacked","break","continue","cppdecl","cvar","enumerator","experimental","platform","deprecated","unimplemented","dynamic","export","far16","forward","generic","helper","implements","interrupt","iochecks","local","name","nodefault","noreturn","nostackframe","oldfpccall","otherwise","saveregisters","softfloat","specialize","strict","unaligned","varargs"],t=[e.C_LINE_COMMENT_MODE,e.COMMENT(/\{/,/\}/,{
+relevance:0}),e.COMMENT(/\(\*/,/\*\)/,{relevance:10})],a={className:"meta",
+variants:[{begin:/\{\$/,end:/\}/},{begin:/\(\*\$/,end:/\*\)/}]},i={
+className:"string",begin:/'/,end:/'/,contains:[{begin:/''/}]},r={
+className:"string",variants:[{match:/#\d[\d_]*/},{
+match:/#\$[\dA-Fa-f][\dA-Fa-f_]*/},{match:/#&[0-7][0-7_]*/},{
+match:/#%[01][01_]*/}]},s={begin:e.IDENT_RE+"\\s*=\\s*class\\s*\\(",
+returnBegin:!0,contains:[e.TITLE_MODE]},o={className:"function",
+beginKeywords:"function constructor destructor procedure",end:/[:;]/,
+keywords:"function constructor|10 destructor|10 procedure|10",
+contains:[e.TITLE_MODE,{className:"params",begin:/\(/,end:/\)/,keywords:n,
+contains:[i,r,a].concat(t)},a].concat(t)};return{name:"Delphi",
+aliases:["dpr","dfm","pas","pascal"],case_insensitive:!0,keywords:n,
+illegal:/"|\$[G-Zg-z]|\/\*|<\/|\|/,contains:[i,r,{className:"number",
+relevance:0,variants:[{match:/\b\d[\d_]*(\.\d[\d_]*)?/},{match:/\$[\dA-Fa-f_]+/
+},{match:/\$/,relevance:0},{match:/&[0-7][0-7_]*/},{match:/%[01_]+/},{match:/%/,
+relevance:0}]},s,o,a].concat(t)}},grmr_diff:e=>{const n=e.regex;return{
+name:"Diff",aliases:["patch"],contains:[{className:"meta",relevance:10,
+match:n.either(/^@@ +-\d+,\d+ +\+\d+,\d+ +@@/,/^@@ +-\d+ +\+\d+,\d+ +@@/,/^@@ +-\d+,\d+ +\+\d+ +@@/,/^@@ +-\d+ +\+\d+ +@@/,/^\*\*\* +\d+,\d+ +\*\*\*\*$/,/^--- +\d+,\d+ +----$/)
+},{className:"comment",variants:[{
+begin:n.either(/Index: /,/^index/,/={3,}/,/^-{3}/,/^\*{3} /,/^\+{3}/,/^diff --git/),
+end:/$/},{match:/^\*{15}$/}]},{className:"addition",begin:/^\+/,end:/$/},{
+className:"deletion",begin:/^-/,end:/$/},{className:"addition",begin:/^!/,
+end:/$/}]}},grmr_fsharp:e=>{const n={scope:"keyword",
+match:/\b(yield|return|let|do|match|use)!/
+},t=["bool","byte","sbyte","int8","int16","int32","uint8","uint16","uint32","int","uint","int64","uint64","nativeint","unativeint","decimal","float","double","float32","single","char","string","unit","bigint","option","voption","list","array","seq","byref","exn","inref","nativeptr","obj","outref","voidptr","Result"],a={
+keyword:["abstract","and","as","assert","base","begin","class","default","delegate","do","done","downcast","downto","elif","else","end","exception","extern","finally","fixed","for","fun","function","global","if","in","inherit","inline","interface","internal","lazy","let","match","member","module","mutable","namespace","new","of","open","or","override","private","public","rec","return","static","struct","then","to","try","type","upcast","use","val","void","when","while","with","yield"],
+literal:["true","false","null","Some","None","Ok","Error","infinity","infinityf","nan","nanf"],
+built_in:["not","ref","raise","reraise","dict","readOnlyDict","set","get","enum","sizeof","typeof","typedefof","nameof","nullArg","invalidArg","invalidOp","id","fst","snd","ignore","lock","using","box","unbox","tryUnbox","printf","printfn","sprintf","eprintf","eprintfn","fprintf","fprintfn","failwith","failwithf"],
+"variable.constant":["__LINE__","__SOURCE_DIRECTORY__","__SOURCE_FILE__"]},i={
+variants:[e.COMMENT(/\(\*(?!\))/,/\*\)/,{contains:["self"]
+}),e.C_LINE_COMMENT_MODE]},r={scope:"variable",begin:/``/,end:/``/
+},s=/\B('|\^)/,o={scope:"symbol",variants:[{match:m(s,/``.*?``/)},{
+match:m(s,e.UNDERSCORE_IDENT_RE)}],relevance:0},c=({includeEqual:e})=>{let n
+;n=e?"!%&*+-/<=>@^|~?":"!%&*+-/<>@^|~?"
+;const t=m("[",...Array.from(n).map(l),"]"),a=p(t,/\./),i=m(a,g(a)),r=p(m(i,a,"*"),m(t,"+"))
+;return{scope:"operator",match:p(r,/:\?>/,/:\?/,/:>/,/:=/,/::?/,/\$/),
+relevance:0}},d=c({includeEqual:!0}),u=c({includeEqual:!1}),b=(n,s)=>({
+begin:m(n,g(m(/\s*/,p(/\w/,/'/,/\^/,/#/,/``/,/\(/,/{\|/)))),beginScope:s,
+end:g(p(/\n/,/=/)),relevance:0,keywords:e.inherit(a,{type:t}),
+contains:[i,o,e.inherit(r,{scope:null}),u]
+}),_=b(/:/,"operator"),h=b(/\bof\b/,"keyword"),f={
+begin:[/(^|\s+)/,/type/,/\s+/,/[a-zA-Z_](\w|')*/],beginScope:{2:"keyword",
+4:"title.class"},end:g(/\(|=|$/),keywords:a,contains:[i,e.inherit(r,{scope:null
+}),o,{scope:"operator",match:/<|>/},_]},E={scope:"computation-expression",
+match:/\b[_a-z]\w*(?=\s*\{)/},y={
+begin:[/^\s*/,m(/#/,p("if","else","endif","line","nowarn","light","r","i","I","load","time","help","quit")),/\b/],
+beginScope:{2:"meta"},end:g(/\s|$/)},v={
+variants:[e.BINARY_NUMBER_MODE,e.C_NUMBER_MODE]},w={scope:"string",begin:/"/,
+end:/"/,contains:[e.BACKSLASH_ESCAPE]},N={scope:"string",begin:/@"/,end:/"/,
+contains:[{match:/""/},e.BACKSLASH_ESCAPE]},k={scope:"string",begin:/"""/,
+end:/"""/,relevance:2},O={scope:"subst",begin:/\{/,end:/\}/,keywords:a},M={
+scope:"string",begin:/\$"/,end:/"/,contains:[{match:/\{\{/},{match:/\}\}/
+},e.BACKSLASH_ESCAPE,O]},x={scope:"string",begin:/(\$@|@\$)"/,end:/"/,
+contains:[{match:/\{\{/},{match:/\}\}/},{match:/""/},e.BACKSLASH_ESCAPE,O]},A={
+scope:"string",begin:/\$"""/,end:/"""/,contains:[{match:/\{\{/},{match:/\}\}/
+},O],relevance:2},C={scope:"string",
+match:m(/'/,p(/[^\\']/,/\\(?:.|\d{3}|x[a-fA-F\d]{2}|u[a-fA-F\d]{4}|U[a-fA-F\d]{8})/),/'/)
+};return O.contains=[x,M,N,w,C,n,i,r,_,E,y,v,o,d],{name:"F#",
+aliases:["fs","f#"],keywords:a,illegal:/\/\*/,classNameAliases:{
+"computation-expression":"keyword"},contains:[n,{variants:[A,x,M,k,N,w,C]
+},i,r,f,{scope:"meta",begin:/\[</,end:/>\]/,relevance:2,contains:[r,k,N,w,C,v]
+},h,_,E,y,v,o,d]}},grmr_gold:e=>{const n={
+keyword:["break","case","chan","const","continue","default","defer","else","fallthrough","for","func","go","goto","if","import","interface","map","package","range","return","select","struct","switch","type","var"],
+type:["bool","byte","complex64","complex128","error","float32","float64","int8","int16","int32","int64","string","uint8","uint16","uint32","uint64","int","uint","uintptr","rune"],
+literal:["true","false","iota","nil"],
+built_in:["append","cap","close","complex","copy","imag","len","make","new","panic","print","println","real","recover","delete"]
+};return{name:"Gold",aliases:["gold"],keywords:n,illegal:"</",
+contains:[e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,{className:"string",
+variants:[e.QUOTE_STRING_MODE,e.APOS_STRING_MODE,{begin:"`",end:"`"}]},{
+className:"number",variants:[{
+match:/-?\b0[xX]\.[a-fA-F0-9](_?[a-fA-F0-9])*[pP][+-]?\d(_?\d)*i?/,relevance:0
+},{
+match:/-?\b0[xX](_?[a-fA-F0-9])+((\.([a-fA-F0-9](_?[a-fA-F0-9])*)?)?[pP][+-]?\d(_?\d)*)?i?/,
+relevance:0},{match:/-?\b0[oO](_?[0-7])*i?/,relevance:0},{
+match:/-?\.\d(_?\d)*([eE][+-]?\d(_?\d)*)?i?/,relevance:0},{
+match:/-?\b\d(_?\d)*(\.(\d(_?\d)*)?)?([eE][+-]?\d(_?\d)*)?i?/,relevance:0}]},{
+begin:/:=/},{className:"function",beginKeywords:"func",end:"\\s*(\\{|$)",
+excludeEnd:!0,contains:[e.TITLE_MODE,{className:"params",begin:/\(/,end:/\)/,
+endsParent:!0,keywords:n,illegal:/["']/}]}]}},grmr_http:e=>{
+const n="HTTP/([32]|1\\.[01])",t={className:"attribute",
+begin:e.regex.concat("^",/[A-Za-z][A-Za-z0-9-]*/,"(?=\\:\\s)"),starts:{
+contains:[{className:"punctuation",begin:/: /,relevance:0,starts:{end:"$",
+relevance:0}}]}},a=[t,{begin:"\\n\\n",starts:{subLanguage:[],endsWithParent:!0}
+}];return{name:"HTTP",aliases:["https"],illegal:/\S/,contains:[{
+begin:"^(?="+n+" \\d{3})",end:/$/,contains:[{className:"meta",begin:n},{
+className:"number",begin:"\\b\\d{3}\\b"}],starts:{end:/\b\B/,illegal:/\S/,
+contains:a}},{begin:"(?=^[A-Z]+ (.*?) "+n+"$)",end:/$/,contains:[{
+className:"string",begin:" ",end:" ",excludeBegin:!0,excludeEnd:!0},{
+className:"meta",begin:n},{className:"keyword",begin:"[A-Z]+"}],starts:{
+end:/\b\B/,illegal:/\S/,contains:a}},e.inherit(t,{relevance:0})]}},
+grmr_hydrogene:e=>{const n={
+keyword:["abstract","as","base","break","case","catch","class","const","continue","do","else","event","explicit","extern","finally","fixed","for","foreach","goto","if","implicit","in","interface","internal","is","lock","namespace","new","operator","out","override","params","private","protected","public","readonly","record","ref","return","scoped","sealed","sizeof","stackalloc","static","struct","switch","this","throw","try","typeof","unchecked","unsafe","using","virtual","void","volatile","while"].concat(["add","alias","and","ascending","args","async","await","by","descending","dynamic","equals","file","from","get","global","group","init","into","join","let","nameof","not","notnull","on","or","orderby","partial","record","remove","required","scoped","select","set","unmanaged","value|0","var","when","where","with","yield","__arglist","__makeref","__reftype","__refvalue","module","assembly"]).concat(["__autoreleasepool","__selector","__weak","__strong","__unretained","__aspect","__mapped","__inline","__extension","__require","__ensure","__result","__old","__invariants"]),
+built_in:["bool","byte","char","decimal","delegate","double","dynamic","enum","float","int","long","nint","nuint","object","sbyte","short","string","ulong","uint","ushort"],
+literal:["default","false","null","true"]},t=e.inherit(e.TITLE_MODE,{
+begin:"[a-zA-Z](\\.?\\w)*"}),a={className:"number",variants:[{
+begin:"\\b(0b[01']+)"},{
+begin:"(-?)\\b([\\d']+(\\.[\\d']*)?|\\.[\\d']+)(u|U|l|L|ul|UL|f|F|b|B)"},{
+begin:"(-?)(\\b0[xX][a-fA-F0-9']+|(\\b[\\d']+(\\.[\\d']*)?|\\.[\\d']+)([eE][-+]?[\\d']+)?)"
+}],relevance:0},i={className:"string",begin:'@"',end:'"',contains:[{begin:'""'}]
+},r=e.inherit(i,{illegal:/\n/}),s={className:"subst",begin:/\{/,end:/\}/,
+keywords:n},o=e.inherit(s,{illegal:/\n/}),c={className:"string",begin:/\$"/,
+end:'"',illegal:/\n/,contains:[{begin:/\{\{/},{begin:/\}\}/
+},e.BACKSLASH_ESCAPE,o]},l={className:"string",begin:/\$@"/,end:'"',contains:[{
+begin:/\{\{/},{begin:/\}\}/},{begin:'""'},s]},d=e.inherit(l,{illegal:/\n/,
+contains:[{begin:/\{\{/},{begin:/\}\}/},{begin:'""'},o]})
+;s.contains=[l,c,i,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,a,e.C_BLOCK_COMMENT_MODE],
+o.contains=[d,c,r,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,a,e.inherit(e.C_BLOCK_COMMENT_MODE,{
+illegal:/\n/})];const g={variants:[{className:"string",
+begin:/"""("*)(?!")(.|\n)*?"""\1/,relevance:1
+},l,c,i,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE]},u={begin:"<",end:">",
+contains:[{beginKeywords:"in out"},t]
+},b=e.IDENT_RE+"(<"+e.IDENT_RE+"(\\s*,\\s*"+e.IDENT_RE+")*>)?(\\[\\])?",m={
+begin:"@"+e.IDENT_RE,relevance:0};return{name:"Hydrogene",aliases:["hydrogene"],
+keywords:n,illegal:/::/,contains:[e.COMMENT("///","$",{returnBegin:!0,
+contains:[{className:"doctag",variants:[{begin:"///",relevance:0},{
+begin:"\x3c!--|--\x3e"},{begin:"</?",end:">"}]}]
+}),e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,{className:"meta",begin:"#",
+end:"$",keywords:{
+keyword:"if else elif endif define undef warning error line region endregion pragma checksum"
+}},g,a,{beginKeywords:"class interface",relevance:0,end:/[{;=]/,
+illegal:/[^\s:,]/,contains:[{beginKeywords:"where class"
+},t,u,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{beginKeywords:"namespace",
+relevance:0,end:/[{;=]/,illegal:/[^\s:]/,
+contains:[t,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{
+beginKeywords:"record",relevance:0,end:/[{;=]/,illegal:/[^\s:]/,
+contains:[t,u,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{className:"meta",
+begin:"^\\s*\\[(?=[\\w])",excludeBegin:!0,end:"\\]",excludeEnd:!0,contains:[{
+className:"string",begin:/"/,end:/"/}]},{
+beginKeywords:"new return throw await else",relevance:0},{className:"function",
+begin:"("+b+"\\s+)+"+e.IDENT_RE+"\\s*(<[^=]+>\\s*)?\\(",returnBegin:!0,
+end:/\s*[{;=]/,excludeEnd:!0,keywords:n,contains:[{
+beginKeywords:"public private protected static internal protected abstract async extern override unsafe virtual new sealed partial",
+relevance:0},{begin:e.IDENT_RE+"\\s*(<[^=]+>\\s*)?\\(",returnBegin:!0,
+contains:[e.TITLE_MODE,u],relevance:0},{match:/\(\)/},{className:"params",
+begin:/\(/,end:/\)/,excludeBegin:!0,excludeEnd:!0,keywords:n,relevance:0,
+contains:[g,a,e.C_BLOCK_COMMENT_MODE]
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},m]}},grmr_ini:e=>{
+const n=e.regex,t={className:"number",relevance:0,variants:[{
+begin:/([+-]+)?[\d]+_[\d_]+/},{begin:e.NUMBER_RE}]},a=e.COMMENT();a.variants=[{
+begin:/;/,end:/$/},{begin:/#/,end:/$/}];const i={className:"variable",
+variants:[{begin:/\$[\w\d"][\w\d_]*/},{begin:/\$\{(.*?)\}/}]},r={
+className:"literal",begin:/\bon|off|true|false|yes|no\b/},s={className:"string",
+contains:[e.BACKSLASH_ESCAPE],variants:[{begin:"'''",end:"'''",relevance:10},{
+begin:'"""',end:'"""',relevance:10},{begin:'"',end:'"'},{begin:"'",end:"'"}]
+},o={begin:/\[/,end:/\]/,contains:[a,r,i,s,t,"self"],relevance:0
+},c=n.either(/[A-Za-z0-9_-]+/,/"(\\"|[^"])*"/,/'[^']*'/);return{
+name:"TOML, also INI",aliases:["toml"],case_insensitive:!0,illegal:/\S/,
+contains:[a,{className:"section",begin:/\[+/,end:/\]+/},{
+begin:n.concat(c,"(\\s*\\.\\s*",c,")*",n.lookahead(/\s*=\s*[^#\s]/)),
+className:"attr",starts:{end:/$/,contains:[a,o,r,i,s,t]}}]}},grmr_iodine:e=>{
+const n=e.regex,t="[\xc0-\u02b8a-zA-Z_$][\xc0-\u02b8a-zA-Z_$0-9]*",a=t+je("(?:<"+t+"~~~(?:\\s*,\\s*"+t+"~~~)*>)?",/~~~/g,2),i={
+keyword:["synchronized","abstract","private","var","static","if","const ","for","while","strictfp","finally","protected","import","native","final","void","enum","else","break","transient","catch","instanceof","volatile","case","assert","package","default","public","try","switch","continue","throws","protected","public","private","module","requires","exports","do","sealed","yield","permits","goto","when"].concat(["__aspect","__assembly","__module","__extension","__partial","__out","__ref","__struct","__mapped","__get","__set","__block","__strong","__weak","__unretained","__selector","__require","__ensure","__result","__old","__invariants","__autoreleasepool","__event","__add","__remove"]),
+literal:["false","true","null"],
+type:["char","boolean","long","float","int","byte","short","double"],
+built_in:["super","this"]},r={className:"meta",begin:"@"+t,contains:[{
+begin:/\(/,end:/\)/,contains:["self"]}]},s={className:"params",begin:/\(/,
+end:/\)/,keywords:i,relevance:0,contains:[e.C_BLOCK_COMMENT_MODE],endsParent:!0}
+;return{name:"Iodine",aliases:["iodine"],keywords:i,illegal:/<\/|#/,
+contains:[e.COMMENT("/\\*\\*","\\*/",{relevance:0,contains:[{begin:/\w+@/,
+relevance:0},{className:"doctag",begin:"@[A-Za-z]+"}]}),{
+begin:/import java\.[a-z]+\./,keywords:"import",relevance:2
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,{begin:/"""/,end:/"""/,
+className:"string",contains:[e.BACKSLASH_ESCAPE]
+},e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,{
+match:[/\b(?:class|interface|enum|extends|implements|new)/,/\s+/,t],className:{
+1:"keyword",3:"title.class"}},{match:/non-sealed/,scope:"keyword"},{
+begin:[n.concat(/(?!else)/,t),/\s+/,t,/\s+/,/=(?!=)/],className:{1:"type",
+3:"variable",5:"operator"}},{begin:[/record/,/\s+/,t],className:{1:"keyword",
+3:"title.class"},contains:[s,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{
+beginKeywords:"new throw return else",relevance:0},{
+begin:["(?:"+a+"\\s+)",e.UNDERSCORE_IDENT_RE,/\s*(?=\()/],className:{
+2:"title.function"},keywords:i,contains:[{className:"params",begin:/\(/,
+end:/\)/,keywords:i,relevance:0,
+contains:[r,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,ye,e.C_BLOCK_COMMENT_MODE]
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},ye,r]}},grmr_java:e=>{
+const n=e.regex,t="[\xc0-\u02b8a-zA-Z_$][\xc0-\u02b8a-zA-Z_$0-9]*",a=t+ve("(?:<"+t+"~~~(?:\\s*,\\s*"+t+"~~~)*>)?",/~~~/g,2),i={
+keyword:["synchronized","abstract","private","var","static","if","const ","for","while","strictfp","finally","protected","import","native","final","void","enum","else","break","transient","catch","instanceof","volatile","case","assert","package","default","public","try","switch","continue","throws","protected","public","private","module","requires","exports","do","sealed","yield","permits","goto","when"],
+literal:["false","true","null"],
+type:["char","boolean","long","float","int","byte","short","double"],
+built_in:["super","this"]},r={className:"meta",begin:"@"+t,contains:[{
+begin:/\(/,end:/\)/,contains:["self"]}]},s={className:"params",begin:/\(/,
+end:/\)/,keywords:i,relevance:0,contains:[e.C_BLOCK_COMMENT_MODE],endsParent:!0}
+;return{name:"Java",aliases:["jsp"],keywords:i,illegal:/<\/|#/,
+contains:[e.COMMENT("/\\*\\*","\\*/",{relevance:0,contains:[{begin:/\w+@/,
+relevance:0},{className:"doctag",begin:"@[A-Za-z]+"}]}),{
+begin:/import java\.[a-z]+\./,keywords:"import",relevance:2
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,{begin:/"""/,end:/"""/,
+className:"string",contains:[e.BACKSLASH_ESCAPE]
+},e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,{
+match:[/\b(?:class|interface|enum|extends|implements|new)/,/\s+/,t],className:{
+1:"keyword",3:"title.class"}},{match:/non-sealed/,scope:"keyword"},{
+begin:[n.concat(/(?!else)/,t),/\s+/,t,/\s+/,/=(?!=)/],className:{1:"type",
+3:"variable",5:"operator"}},{begin:[/record/,/\s+/,t],className:{1:"keyword",
+3:"title.class"},contains:[s,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{
+beginKeywords:"new throw return else",relevance:0},{
+begin:["(?:"+a+"\\s+)",e.UNDERSCORE_IDENT_RE,/\s*(?=\()/],className:{
+2:"title.function"},keywords:i,contains:[{className:"params",begin:/\(/,
+end:/\)/,keywords:i,relevance:0,
+contains:[r,e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,ye,e.C_BLOCK_COMMENT_MODE]
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},ye,r]}},grmr_javascript:e=>{
+const n=e.regex,t=ae,a={begin:/<[A-Za-z0-9\\._:-]+/,
+end:/\/[A-Za-z0-9\\._:-]+>|\/>/,isTrulyOpeningTag:(e,n)=>{
+const t=e[0].length+e.index,a=e.input[t]
+;if("<"===a||","===a)return void n.ignoreMatch();let i
+;">"===a&&(((e,{after:n})=>{const t="</"+e[0].slice(1)
+;return-1!==e.input.indexOf(t,n)})(e,{after:t})||n.ignoreMatch())
+;const r=e.input.substring(t)
+;((i=r.match(/^\s*=/))||(i=r.match(/^\s+extends\s+/))&&0===i.index)&&n.ignoreMatch()
+}},i={$pattern:ae,keyword:re,literal:se,built_in:ge,"variable.language":de
+},r="[0-9](_?[0-9])*",s=`\\.(${r})`,o="0|[1-9](_?[0-9])*|0[0-7]*[89][0-9]*",c={
+className:"number",variants:[{
+begin:`(\\b(${o})((${s})|\\.)?|(${s}))[eE][+-]?(${r})\\b`},{
+begin:`\\b(${o})\\b((${s})\\b|\\.)?|(${s})\\b`},{
+begin:"\\b(0|[1-9](_?[0-9])*)n\\b"},{
+begin:"\\b0[xX][0-9a-fA-F](_?[0-9a-fA-F])*n?\\b"},{
+begin:"\\b0[bB][0-1](_?[0-1])*n?\\b"},{begin:"\\b0[oO][0-7](_?[0-7])*n?\\b"},{
+begin:"\\b0[0-7]+n?\\b"}],relevance:0},l={className:"subst",begin:"\\$\\{",
+end:"\\}",keywords:i,contains:[]},d={begin:".?html`",end:"",starts:{end:"`",
+returnEnd:!1,contains:[e.BACKSLASH_ESCAPE,l],subLanguage:"xml"}},g={
+begin:".?css`",end:"",starts:{end:"`",returnEnd:!1,
+contains:[e.BACKSLASH_ESCAPE,l],subLanguage:"css"}},u={begin:".?gql`",end:"",
+starts:{end:"`",returnEnd:!1,contains:[e.BACKSLASH_ESCAPE,l],
+subLanguage:"graphql"}},b={className:"string",begin:"`",end:"`",
+contains:[e.BACKSLASH_ESCAPE,l]},m={className:"comment",
+variants:[e.COMMENT(/\/\*\*(?!\/)/,"\\*/",{relevance:0,contains:[{
+begin:"(?=@[A-Za-z]+)",relevance:0,contains:[{className:"doctag",
+begin:"@[A-Za-z]+"},{className:"type",begin:"\\{",end:"\\}",excludeEnd:!0,
+excludeBegin:!0,relevance:0},{className:"variable",begin:t+"(?=\\s*(-)|$)",
+endsParent:!0,relevance:0},{begin:/(?=[^\n])\s/,relevance:0}]}]
+}),e.C_BLOCK_COMMENT_MODE,e.C_LINE_COMMENT_MODE]
+},p=[e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,d,g,u,b,{match:/\$\d+/},c]
+;l.contains=p.concat({begin:/\{/,end:/\}/,keywords:i,contains:["self"].concat(p)
+});const _=[].concat(m,l.contains),h=_.concat([{begin:/(\s*)\(/,end:/\)/,
+keywords:i,contains:["self"].concat(_)}]),f={className:"params",begin:/(\s*)\(/,
+end:/\)/,excludeBegin:!0,excludeEnd:!0,keywords:i,contains:h},E={variants:[{
+match:[/class/,/\s+/,t,/\s+/,/extends/,/\s+/,n.concat(t,"(",n.concat(/\./,t),")*")],
+scope:{1:"keyword",3:"title.class",5:"keyword",7:"title.class.inherited"}},{
+match:[/class/,/\s+/,t],scope:{1:"keyword",3:"title.class"}}]},y={relevance:0,
+match:n.either(/\bJSON/,/\b[A-Z][a-z]+([A-Z][a-z]*|\d)*/,/\b[A-Z]{2,}([A-Z][a-z]+|\d)+([A-Z][a-z]*)*/,/\b[A-Z]{2,}[a-z]+([A-Z][a-z]+|\d)*([A-Z][a-z]*)*/),
+className:"title.class",keywords:{_:[...oe,...ce]}},v={variants:[{
+match:[/function/,/\s+/,t,/(?=\s*\()/]},{match:[/function/,/\s*(?=\()/]}],
+className:{1:"keyword",3:"title.function"},label:"func.def",contains:[f],
+illegal:/%/},w={
+match:n.concat(/\b/,(N=[...le,"super","import","await"].map((e=>e+"\\s*\\(")),
+n.concat("(?!",N.join("|"),")")),t,n.lookahead(/\s*\(/)),
+className:"title.function",relevance:0};var N;const k={
+begin:n.concat(/\./,n.lookahead(n.concat(t,/(?![0-9A-Za-z$_(])/))),end:t,
+excludeBegin:!0,keywords:"prototype",className:"property",relevance:0},O={
+match:[/get|set/,/\s+/,t,/(?=\()/],className:{1:"keyword",3:"title.function"},
+contains:[{begin:/\(\)/},f]
+},M="(\\([^()]*(\\([^()]*(\\([^()]*\\)[^()]*)*\\)[^()]*)*\\)|"+e.UNDERSCORE_IDENT_RE+")\\s*=>",x={
+match:[/const|var|let/,/\s+/,t,/\s*/,/=\s*/,/(async\s*)?/,n.lookahead(M)],
+keywords:"async",className:{1:"keyword",3:"title.function"},contains:[f]}
+;return{name:"JavaScript",aliases:["js","jsx","mjs","cjs"],keywords:i,exports:{
+PARAMS_CONTAINS:h,CLASS_REFERENCE:y},illegal:/#(?![$_A-Za-z])/,
+contains:[e.SHEBANG({label:"shebang",binary:"node",relevance:5}),{
+label:"use_strict",className:"meta",relevance:10,
+begin:/^\s*['"]use (strict|asm)['"]/
+},e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,d,g,u,b,m,{match:/\$\d+/},c,y,{
+scope:"attr",match:t+n.lookahead(":"),relevance:0},x,{
+begin:"("+e.RE_STARTERS_RE+"|\\b(case|return|throw)\\b)\\s*",
+keywords:"return throw case",relevance:0,contains:[m,e.REGEXP_MODE,{
+className:"function",begin:M,returnBegin:!0,end:"\\s*=>",contains:[{
+className:"params",variants:[{begin:e.UNDERSCORE_IDENT_RE,relevance:0},{
+className:null,begin:/\(\s*\)/,skip:!0},{begin:/(\s*)\(/,end:/\)/,
+excludeBegin:!0,excludeEnd:!0,keywords:i,contains:h}]}]},{begin:/,/,relevance:0
+},{match:/\s+/,relevance:0},{variants:[{begin:"<>",end:"</>"},{
+match:/<[A-Za-z0-9\\._:-]+\s*\/>/},{begin:a.begin,
+"on:begin":a.isTrulyOpeningTag,end:a.end}],subLanguage:"xml",contains:[{
+begin:a.begin,end:a.end,skip:!0,contains:["self"]}]}]},v,{
+beginKeywords:"while if switch catch for"},{
+begin:"\\b(?!function)"+e.UNDERSCORE_IDENT_RE+"\\([^()]*(\\([^()]*(\\([^()]*\\)[^()]*)*\\)[^()]*)*\\)\\s*\\{",
+returnBegin:!0,label:"func.def",contains:[f,e.inherit(e.TITLE_MODE,{begin:t,
+className:"title.function"})]},{match:/\.\.\./,relevance:0},k,{match:"\\$"+t,
+relevance:0},{match:[/\bconstructor(?=\s*\()/],className:{1:"title.function"},
+contains:[f]},w,{relevance:0,match:/\b[A-Z][A-Z_0-9]+\b/,
+className:"variable.constant"},E,O,{match:/\$[(.]/}]}},grmr_json:e=>{
+const n=["true","false","null"],t={scope:"literal",beginKeywords:n.join(" ")}
+;return{name:"JSON",aliases:["jsonc","json5"],keywords:{literal:n},contains:[{
+className:"attr",begin:/(("(\\.|[^\\"\r\n])*")|('(\\.|[^\\'\r\n])*'))(?=\s*:)/,
+relevance:1.01},{match:/[{}[\],:]/,className:"punctuation",relevance:0
+},e.APOS_STRING_MODE,e.QUOTE_STRING_MODE,t,ie,e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE],
+illegal:"\\S"}},grmr_makefile:e=>{const n={className:"variable",variants:[{
+begin:"\\$\\("+e.UNDERSCORE_IDENT_RE+"\\)",contains:[e.BACKSLASH_ESCAPE]},{
+begin:/\$[@%<?\^\+\*]/}]},t={className:"string",begin:/"/,end:/"/,
+contains:[e.BACKSLASH_ESCAPE,n]},a={className:"variable",begin:/\$\([\w-]+\s/,
+end:/\)/,keywords:{
+built_in:"subst patsubst strip findstring filter filter-out sort word wordlist firstword lastword dir notdir suffix basename addsuffix addprefix join wildcard realpath abspath error warning shell origin flavor foreach if or and call eval file value"
+},contains:[n,t]},i={begin:"^"+e.UNDERSCORE_IDENT_RE+"\\s*(?=[:+?]?=)"},r={
+className:"section",begin:/^[^\s]+:/,end:/$/,contains:[n]};return{
+name:"Makefile",aliases:["mk","mak","make"],keywords:{$pattern:/[\w-]+/,
+keyword:"define endef undefine ifdef ifndef ifeq ifneq else endif include -include sinclude override export unexport private vpath"
+},contains:[e.HASH_COMMENT_MODE,n,t,a,i,{className:"meta",begin:/^\.PHONY:/,
+end:/$/,keywords:{$pattern:/[\.\w]+/,keyword:".PHONY"}},r]}},grmr_markdown:e=>{
+const n={begin:/<\/?[A-Za-z_]/,end:">",subLanguage:"xml",relevance:0},t={
+variants:[{begin:/\[.+?\]\[.*?\]/,relevance:0},{
+begin:/\[.+?\]\(((data|javascript|mailto):|(?:http|ftp)s?:\/\/).*?\)/,
+relevance:2},{
+begin:e.regex.concat(/\[.+?\]\(/,/[A-Za-z][A-Za-z0-9+.-]*/,/:\/\/.*?\)/),
+relevance:2},{begin:/\[.+?\]\([./?&#].*?\)/,relevance:1},{
+begin:/\[.*?\]\(.*?\)/,relevance:0}],returnBegin:!0,contains:[{match:/\[(?=\])/
+},{className:"string",relevance:0,begin:"\\[",end:"\\]",excludeBegin:!0,
+returnEnd:!0},{className:"link",relevance:0,begin:"\\]\\(",end:"\\)",
+excludeBegin:!0,excludeEnd:!0},{className:"symbol",relevance:0,begin:"\\]\\[",
+end:"\\]",excludeBegin:!0,excludeEnd:!0}]},a={className:"strong",contains:[],
+variants:[{begin:/_{2}(?!\s)/,end:/_{2}/},{begin:/\*{2}(?!\s)/,end:/\*{2}/}]
+},i={className:"emphasis",contains:[],variants:[{begin:/\*(?![*\s])/,end:/\*/},{
+begin:/_(?![_\s])/,end:/_/,relevance:0}]},r=e.inherit(a,{contains:[]
+}),s=e.inherit(i,{contains:[]});a.contains.push(s),i.contains.push(r)
+;let o=[n,t];return[a,i,r,s].forEach((e=>{e.contains=e.contains.concat(o)
+})),o=o.concat(a,i),{name:"Markdown",aliases:["md","mkdown","mkd"],contains:[{
+className:"section",variants:[{begin:"^#{1,6}",end:"$",contains:o},{
+begin:"(?=^.+?\\n[=-]{2,}$)",contains:[{begin:"^[=-]*$"},{begin:"^",end:"\\n",
+contains:o}]}]},n,{className:"bullet",begin:"^[ \t]*([*+-]|(\\d+\\.))(?=\\s+)",
+end:"\\s+",excludeEnd:!0},a,i,{className:"quote",begin:"^>\\s+",contains:o,
+end:"$"},{className:"code",variants:[{begin:"(`{3,})[^`](.|\\n)*?\\1`*[ ]*"},{
+begin:"(~{3,})[^~](.|\\n)*?\\1~*[ ]*"},{begin:"```",end:"```+[ ]*$"},{
+begin:"~~~",end:"~~~+[ ]*$"},{begin:"`.+?`"},{begin:"(?=^( {4}|\\t))",
+contains:[{begin:"^( {4}|\\t)",end:"(\\n)$"}],relevance:0}]},{
+begin:"^[-\\*]{3,}",end:"$"},t,{begin:/^\[[^\n]+\]:/,returnBegin:!0,contains:[{
+className:"symbol",begin:/\[/,end:/\]/,excludeBegin:!0,excludeEnd:!0},{
+className:"link",begin:/:\s*/,end:/$/,excludeBegin:!0}]},{scope:"literal",
+match:/&([a-zA-Z0-9]+|#[0-9]{1,7}|#[Xx][0-9a-fA-F]{1,6});/}]}},grmr_mercury:e=>{
+const n=e.COMMENT("%","$"),t=e.inherit(e.APOS_STRING_MODE,{relevance:0
+}),a=e.inherit(e.QUOTE_STRING_MODE,{relevance:0})
+;return a.contains=a.contains.slice(),a.contains.push({className:"subst",
+begin:"\\\\[abfnrtv]\\|\\\\x[0-9a-fA-F]*\\\\\\|%[-+# *.0-9]*[dioxXucsfeEgGp]",
+relevance:0}),{name:"Mercury",aliases:["m","moo"],keywords:{
+keyword:"module use_module import_module include_module end_module initialise mutable initialize finalize finalise interface implementation pred mode func type inst solver any_pred any_func is semidet det nondet multi erroneous failure cc_nondet cc_multi typeclass instance where pragma promise external trace atomic or_else require_complete_switch require_det require_semidet require_multi require_nondet require_cc_multi require_cc_nondet require_erroneous require_failure",
+meta:"inline no_inline type_spec source_file fact_table obsolete memo loop_check minimal_model terminates does_not_terminate check_termination promise_equivalent_clauses foreign_proc foreign_decl foreign_code foreign_type foreign_import_module foreign_export_enum foreign_export foreign_enum may_call_mercury will_not_call_mercury thread_safe not_thread_safe maybe_thread_safe promise_pure promise_semipure tabled_for_io local untrailed trailed attach_to_io_state can_pass_as_mercury_type stable will_not_throw_exception may_modify_trail will_not_modify_trail may_duplicate may_not_duplicate affects_liveness does_not_affect_liveness doesnt_affect_liveness no_sharing unknown_sharing sharing",
+built_in:"some all not if then else true fail false try catch catch_any semidet_true semidet_false semidet_fail impure_true impure semipure"
+},contains:[{className:"built_in",variants:[{begin:"<=>"},{begin:"<=",
+relevance:0},{begin:"=>",relevance:0},{begin:"/\\\\"},{begin:"\\\\/"}]},{
+className:"built_in",variants:[{begin:":-\\|--\x3e"},{begin:"=",relevance:0}]
+},n,e.C_BLOCK_COMMENT_MODE,{className:"number",begin:"0'.\\|0[box][0-9a-fA-F]*"
+},e.NUMBER_MODE,t,a,{begin:/:-/},{begin:/\.$/}]}},grmr_nginx:e=>{
+const n=e.regex,t={className:"variable",variants:[{begin:/\$\d+/},{
+begin:/\$\{\w+\}/},{begin:n.concat(/[$@]/,e.UNDERSCORE_IDENT_RE)}]},a={
+endsWithParent:!0,keywords:{$pattern:/[a-z_]{2,}|\/dev\/poll/,
+literal:["on","off","yes","no","true","false","none","blocked","debug","info","notice","warn","error","crit","select","break","last","permanent","redirect","kqueue","rtsig","epoll","poll","/dev/poll"]
+},relevance:0,illegal:"=>",contains:[e.HASH_COMMENT_MODE,{className:"string",
+contains:[e.BACKSLASH_ESCAPE,t],variants:[{begin:/"/,end:/"/},{begin:/'/,end:/'/
+}]},{begin:"([a-z]+):/",end:"\\s",endsWithParent:!0,excludeEnd:!0,contains:[t]
+},{className:"regexp",contains:[e.BACKSLASH_ESCAPE,t],variants:[{begin:"\\s\\^",
+end:"\\s|\\{|;",returnEnd:!0},{begin:"~\\*?\\s+",end:"\\s|\\{|;",returnEnd:!0},{
+begin:"\\*(\\.[a-z\\-]+)+"},{begin:"([a-z\\-]+\\.)+\\*"}]},{className:"number",
+begin:"\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}(:\\d{1,5})?\\b"},{
+className:"number",begin:"\\b\\d+[kKmMgGdshdwy]?\\b",relevance:0},t]};return{
+name:"Nginx config",aliases:["nginxconf"],contains:[e.HASH_COMMENT_MODE,{
+beginKeywords:"upstream location",end:/;|\{/,contains:a.contains,keywords:{
+section:"upstream location"}},{className:"section",
+begin:n.concat(e.UNDERSCORE_IDENT_RE+n.lookahead(/\s+\{/)),relevance:0},{
+begin:n.lookahead(e.UNDERSCORE_IDENT_RE+"\\s"),end:";|\\{",contains:[{
+className:"attribute",begin:e.UNDERSCORE_IDENT_RE,starts:a}],relevance:0}],
+illegal:"[^\\s\\}\\{]"}},grmr_objectivec:e=>{
+const n=/[a-zA-Z@][a-zA-Z0-9_]*/,t={$pattern:n,
+keyword:["@interface","@class","@protocol","@implementation"]};return{
+name:"Objective-C",aliases:["mm","objc","obj-c","obj-c++","objective-c++"],
+keywords:{"variable.language":["this","super"],$pattern:n,
+keyword:["while","export","sizeof","typedef","const","struct","for","union","volatile","static","mutable","if","do","return","goto","enum","else","break","extern","asm","case","default","register","explicit","typename","switch","continue","inline","readonly","assign","readwrite","self","@synchronized","id","typeof","nonatomic","IBOutlet","IBAction","strong","weak","copy","in","out","inout","bycopy","byref","oneway","__strong","__weak","__block","__autoreleasing","@private","@protected","@public","@try","@property","@end","@throw","@catch","@finally","@autoreleasepool","@synthesize","@dynamic","@selector","@optional","@required","@encode","@package","@import","@defs","@compatibility_alias","__bridge","__bridge_transfer","__bridge_retained","__bridge_retain","__covariant","__contravariant","__kindof","_Nonnull","_Nullable","_Null_unspecified","__FUNCTION__","__PRETTY_FUNCTION__","__attribute__","getter","setter","retain","unsafe_unretained","nonnull","nullable","null_unspecified","null_resettable","class","instancetype","NS_DESIGNATED_INITIALIZER","NS_UNAVAILABLE","NS_REQUIRES_SUPER","NS_RETURNS_INNER_POINTER","NS_INLINE","NS_AVAILABLE","NS_DEPRECATED","NS_ENUM","NS_OPTIONS","NS_SWIFT_UNAVAILABLE","NS_ASSUME_NONNULL_BEGIN","NS_ASSUME_NONNULL_END","NS_REFINED_FOR_SWIFT","NS_SWIFT_NAME","NS_SWIFT_NOTHROW","NS_DURING","NS_HANDLER","NS_ENDHANDLER","NS_VALUERETURN","NS_VOIDRETURN"],
+literal:["false","true","FALSE","TRUE","nil","YES","NO","NULL"],
+built_in:["dispatch_once_t","dispatch_queue_t","dispatch_sync","dispatch_async","dispatch_once"],
+type:["int","float","char","unsigned","signed","short","long","double","wchar_t","unichar","void","bool","BOOL","id|0","_Bool"]
+},illegal:"</",contains:[{className:"built_in",
+begin:"\\b(AV|CA|CF|CG|CI|CL|CM|CN|CT|MK|MP|MTK|MTL|NS|SCN|SK|UI|WK|XC)\\w+"
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,e.C_NUMBER_MODE,e.QUOTE_STRING_MODE,e.APOS_STRING_MODE,{
+className:"string",variants:[{begin:'@"',end:'"',illegal:"\\n",
+contains:[e.BACKSLASH_ESCAPE]}]},{className:"meta",begin:/#\s*[a-z]+\b/,end:/$/,
+keywords:{
+keyword:"if else elif endif define undef warning error line pragma ifdef ifndef include"
+},contains:[{begin:/\\\n/,relevance:0},e.inherit(e.QUOTE_STRING_MODE,{
+className:"string"}),{className:"string",begin:/<.*?>/,end:/$/,illegal:"\\n"
+},e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE]},{className:"class",
+begin:"("+t.keyword.join("|")+")\\b",end:/(\{|$)/,excludeEnd:!0,keywords:t,
+contains:[e.UNDERSCORE_TITLE_MODE]},{begin:"\\."+e.UNDERSCORE_IDENT_RE,
+relevance:0}]}},grmr_oxygene:e=>{const n={$pattern:/\.?\w+/,
+keyword:"abstract    add    and    array    as    asc    asm    aspect    assembly    async    autoreleasepool    await    begin    block    break    by    case    cdecl    class    const    constructor    continue    copy    create    default    delegate    deprecated    desc    destructor    distinct    div    do    downto    dynamic    each    else    empty    end    ensure    enum    equals    event    except    exit    extension    external    false    field    final    finalization    finalize    finalizer    finally    flags    for    forward    from    function    future    global    goto    group    has    helper    if    implementation    implements    implies    in    index    inherited    initialization    inline    interface    into    invariants    is    iterator    join    lazy    library    lifetimestrategy    locked    locking    loop    mapped    matching    method    mod    module    namespace    nested    new    nil    not    notify    nullable    of    old    on    operator    optional    or    order    otherwise    out    overload    override    packed    parallel    param    params    partial    pascal    pinned    platform    private    procedure    property    protected    public    published    queryable    raise    raises    read    readonly    record    reference    register    reintroduce    remove    repeat    require    required    result    reverse    safecall    sealed    select    selector    self    sequence    set    shl    shr    skip    soft    static    stdcall    step    strict    strong    take    then    to    true    try    tuple    type    unconstrained    unit    unmanaged    unretained    unsafe    until    uses    using    var    virtual    volatile    weak    where    while    with    write    xor    yield  "
+},t=e.COMMENT(/\{/,/\}/,{relevance:0}),a=e.COMMENT("\\(\\*","\\*\\)",{
+relevance:10}),i={className:"string",begin:"'",end:"'",contains:[{begin:"''"}]
+},r={className:"string",begin:"(#\\d+)+"},s={
+beginKeywords:"function constructor destructor procedure method",end:"[:;]",
+keywords:"function constructor|10 destructor|10 procedure|10 method|10",
+contains:[e.inherit(e.TITLE_MODE,{scope:"title.function"}),{className:"params",
+begin:"\\(",end:"\\)",keywords:n,contains:[i,r]},t,a]};return{name:"Oxygene",
+case_insensitive:!0,keywords:n,illegal:'("|\\$[G-Zg-z]|\\/\\*|</|=>|->)',
+contains:[t,a,e.C_LINE_COMMENT_MODE,i,r,e.NUMBER_MODE,s,{scope:"punctuation",
+match:/;/,relevance:0}]}},grmr_perl:e=>{
+const n=e.regex,t=/[dualxmsipngr]{0,12}/,a={$pattern:/[\w.]+/,
+keyword:"abs accept alarm and atan2 bind binmode bless break caller chdir chmod chomp chop chown chr chroot class close closedir connect continue cos crypt dbmclose dbmopen defined delete die do dump each else elsif endgrent endhostent endnetent endprotoent endpwent endservent eof eval exec exists exit exp fcntl field fileno flock for foreach fork format formline getc getgrent getgrgid getgrnam gethostbyaddr gethostbyname gethostent getlogin getnetbyaddr getnetbyname getnetent getpeername getpgrp getpriority getprotobyname getprotobynumber getprotoent getpwent getpwnam getpwuid getservbyname getservbyport getservent getsockname getsockopt given glob gmtime goto grep gt hex if index int ioctl join keys kill last lc lcfirst length link listen local localtime log lstat lt ma map method mkdir msgctl msgget msgrcv msgsnd my ne next no not oct open opendir or ord our pack package pipe pop pos print printf prototype push q|0 qq quotemeta qw qx rand read readdir readline readlink readpipe recv redo ref rename require reset return reverse rewinddir rindex rmdir say scalar seek seekdir select semctl semget semop send setgrent sethostent setnetent setpgrp setpriority setprotoent setpwent setservent setsockopt shift shmctl shmget shmread shmwrite shutdown sin sleep socket socketpair sort splice split sprintf sqrt srand stat state study sub substr symlink syscall sysopen sysread sysseek system syswrite tell telldir tie tied time times tr truncate uc ucfirst umask undef unless unlink unpack unshift untie until use utime values vec wait waitpid wantarray warn when while write x|0 xor y|0"
+},i={className:"subst",begin:"[$@]\\{",end:"\\}",keywords:a},r={begin:/->\{/,
+end:/\}/},s={scope:"attr",match:/\s+:\s*\w+(\s*\(.*?\))?/},o={scope:"variable",
+variants:[{begin:/\$\d/},{
+begin:n.concat(/[$%@](?!")(\^\w\b|#\w+(::\w+)*|\{\w+\}|\w+(::\w*)*)/,"(?![A-Za-z])(?![@$%])")
+},{begin:/[$%@](?!")[^\s\w{=]|\$=/,relevance:0}],contains:[s]},c={
+className:"number",variants:[{match:/0?\.[0-9][0-9_]+\b/},{
+match:/\bv?(0|[1-9][0-9_]*(\.[0-9_]+)?|[1-9][0-9_]*)\b/},{
+match:/\b0[0-7][0-7_]*\b/},{match:/\b0x[0-9a-fA-F][0-9a-fA-F_]*\b/},{
+match:/\b0b[0-1][0-1_]*\b/}],relevance:0
+},l=[e.BACKSLASH_ESCAPE,i,o],d=[/!/,/\//,/\|/,/\?/,/'/,/"/,/#/],g=(e,a,i="\\1")=>{
+const r="\\1"===i?i:n.concat(i,a)
+;return n.concat(n.concat("(?:",e,")"),a,/(?:\\.|[^\\\/])*?/,r,/(?:\\.|[^\\\/])*?/,i,t)
+},u=(e,a,i)=>n.concat(n.concat("(?:",e,")"),a,/(?:\\.|[^\\\/])*?/,i,t),b=[o,e.HASH_COMMENT_MODE,e.COMMENT(/^=\w/,/=cut/,{
+endsWithParent:!0}),r,{className:"string",contains:l,variants:[{
+begin:"q[qwxr]?\\s*\\(",end:"\\)",relevance:5},{begin:"q[qwxr]?\\s*\\[",
+end:"\\]",relevance:5},{begin:"q[qwxr]?\\s*\\{",end:"\\}",relevance:5},{
+begin:"q[qwxr]?\\s*\\|",end:"\\|",relevance:5},{begin:"q[qwxr]?\\s*<",end:">",
+relevance:5},{begin:"qw\\s+q",end:"q",relevance:5},{begin:"'",end:"'",
+contains:[e.BACKSLASH_ESCAPE]},{begin:'"',end:'"'},{begin:"`",end:"`",
+contains:[e.BACKSLASH_ESCAPE]},{begin:/\{\w+\}/,relevance:0},{
+begin:"-?\\w+\\s*=>",relevance:0}]},c,{
+begin:"(\\/\\/|"+e.RE_STARTERS_RE+"|\\b(split|return|print|reverse|grep)\\b)\\s*",
+keywords:"split return print reverse grep",relevance:0,
+contains:[e.HASH_COMMENT_MODE,{className:"regexp",variants:[{
+begin:g("s|tr|y",n.either(...d,{capture:!0}))},{begin:g("s|tr|y","\\(","\\)")},{
+begin:g("s|tr|y","\\[","\\]")},{begin:g("s|tr|y","\\{","\\}")}],relevance:2},{
+className:"regexp",variants:[{begin:/(m|qr)\/\//,relevance:0},{
+begin:u("(?:m|qr)?",/\//,/\//)},{begin:u("m|qr",n.either(...d,{capture:!0
+}),/\1/)},{begin:u("m|qr",/\(/,/\)/)},{begin:u("m|qr",/\[/,/\]/)},{
+begin:u("m|qr",/\{/,/\}/)}]}]},{className:"function",beginKeywords:"sub method",
+end:"(\\s*\\(.*?\\))?[;{]",excludeEnd:!0,relevance:5,contains:[e.TITLE_MODE,s]
+},{className:"class",beginKeywords:"class",end:"[;{]",excludeEnd:!0,relevance:5,
+contains:[e.TITLE_MODE,s,c]},{begin:"-\\w\\b",relevance:0},{begin:"^__DATA__$",
+end:"^__END__$",subLanguage:"mojolicious",contains:[{begin:"^@@.*",end:"$",
+className:"comment"}]}];return i.contains=b,r.contains=b,{name:"Perl",
+aliases:["pl","pm"],keywords:a,contains:b}},grmr_php:e=>{
+const n=e.regex,t=/(?![A-Za-z0-9])(?![$])/,a=n.concat(/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*/,t),i=n.concat(/(\\?[A-Z][a-z0-9_\x7f-\xff]+|\\?[A-Z]+(?=[A-Z][a-z0-9_\x7f-\xff])){1,}/,t),r=n.concat(/[A-Z]+/,t),s={
+scope:"variable",match:"\\$+"+a},o={scope:"subst",variants:[{begin:/\$\w+/},{
+begin:/\{\$/,end:/\}/}]},c=e.inherit(e.APOS_STRING_MODE,{illegal:null
+}),l="[ \t\n]",d={scope:"string",variants:[e.inherit(e.QUOTE_STRING_MODE,{
+illegal:null,contains:e.QUOTE_STRING_MODE.contains.concat(o)}),c,{
+begin:/<<<[ \t]*(?:(\w+)|"(\w+)")\n/,end:/[ \t]*(\w+)\b/,
+contains:e.QUOTE_STRING_MODE.contains.concat(o),"on:begin":(e,n)=>{
+n.data._beginMatch=e[1]||e[2]},"on:end":(e,n)=>{
+n.data._beginMatch!==e[1]&&n.ignoreMatch()}},e.END_SAME_AS_BEGIN({
+begin:/<<<[ \t]*'(\w+)'\n/,end:/[ \t]*(\w+)\b/})]},g={scope:"number",variants:[{
+begin:"\\b0[bB][01]+(?:_[01]+)*\\b"},{begin:"\\b0[oO][0-7]+(?:_[0-7]+)*\\b"},{
+begin:"\\b0[xX][\\da-fA-F]+(?:_[\\da-fA-F]+)*\\b"},{
+begin:"(?:\\b\\d+(?:_\\d+)*(\\.(?:\\d+(?:_\\d+)*))?|\\B\\.\\d+)(?:[eE][+-]?\\d+)?"
+}],relevance:0
+},u=["false","null","true"],b=["__CLASS__","__DIR__","__FILE__","__FUNCTION__","__COMPILER_HALT_OFFSET__","__LINE__","__METHOD__","__NAMESPACE__","__TRAIT__","die","echo","exit","include","include_once","print","require","require_once","array","abstract","and","as","binary","bool","boolean","break","callable","case","catch","class","clone","const","continue","declare","default","do","double","else","elseif","empty","enddeclare","endfor","endforeach","endif","endswitch","endwhile","enum","eval","extends","final","finally","float","for","foreach","from","global","goto","if","implements","instanceof","insteadof","int","integer","interface","isset","iterable","list","match|0","mixed","new","never","object","or","private","protected","public","readonly","real","return","string","switch","throw","trait","try","unset","use","var","void","while","xor","yield"],m=["Error|0","AppendIterator","ArgumentCountError","ArithmeticError","ArrayIterator","ArrayObject","AssertionError","BadFunctionCallException","BadMethodCallException","CachingIterator","CallbackFilterIterator","CompileError","Countable","DirectoryIterator","DivisionByZeroError","DomainException","EmptyIterator","ErrorException","Exception","FilesystemIterator","FilterIterator","GlobIterator","InfiniteIterator","InvalidArgumentException","IteratorIterator","LengthException","LimitIterator","LogicException","MultipleIterator","NoRewindIterator","OutOfBoundsException","OutOfRangeException","OuterIterator","OverflowException","ParentIterator","ParseError","RangeException","RecursiveArrayIterator","RecursiveCachingIterator","RecursiveCallbackFilterIterator","RecursiveDirectoryIterator","RecursiveFilterIterator","RecursiveIterator","RecursiveIteratorIterator","RecursiveRegexIterator","RecursiveTreeIterator","RegexIterator","RuntimeException","SeekableIterator","SplDoublyLinkedList","SplFileInfo","SplFileObject","SplFixedArray","SplHeap","SplMaxHeap","SplMinHeap","SplObjectStorage","SplObserver","SplPriorityQueue","SplQueue","SplStack","SplSubject","SplTempFileObject","TypeError","UnderflowException","UnexpectedValueException","UnhandledMatchError","ArrayAccess","BackedEnum","Closure","Fiber","Generator","Iterator","IteratorAggregate","Serializable","Stringable","Throwable","Traversable","UnitEnum","WeakReference","WeakMap","Directory","__PHP_Incomplete_Class","parent","php_user_filter","self","static","stdClass"],p={
+keyword:b,literal:(e=>{const n=[];return e.forEach((e=>{
+n.push(e),e.toLowerCase()===e?n.push(e.toUpperCase()):n.push(e.toLowerCase())
+})),n})(u),built_in:m},_=e=>e.map((e=>e.replace(/\|\d+$/,""))),h={variants:[{
+match:[/new/,n.concat(l,"+"),n.concat("(?!",_(m).join("\\b|"),"\\b)"),i],scope:{
+1:"keyword",4:"title.class"}}]},f=n.concat(a,"\\b(?!\\()"),E={variants:[{
+match:[n.concat(/::/,n.lookahead(/(?!class\b)/)),f],scope:{2:"variable.constant"
+}},{match:[/::/,/class/],scope:{2:"variable.language"}},{
+match:[i,n.concat(/::/,n.lookahead(/(?!class\b)/)),f],scope:{1:"title.class",
+3:"variable.constant"}},{match:[i,n.concat("::",n.lookahead(/(?!class\b)/))],
+scope:{1:"title.class"}},{match:[i,/::/,/class/],scope:{1:"title.class",
+3:"variable.language"}}]},y={scope:"attr",
+match:n.concat(a,n.lookahead(":"),n.lookahead(/(?!::)/))},v={relevance:0,
+begin:/\(/,end:/\)/,keywords:p,
+contains:[y,s,E,e.C_BLOCK_COMMENT_MODE,e.C_LINE_COMMENT_MODE,e.HASH_COMMENT_MODE,d,g,h]
+},w={relevance:0,
+match:[/\b/,n.concat("(?!fn\\b|function\\b|",_(b).join("\\b|"),"|",_(m).join("\\b|"),"\\b)"),a,n.concat(l,"*"),n.lookahead(/(?=\()/)],
+scope:{3:"title.function.invoke"},contains:[v]};v.contains.push(w)
+;const N=[y,E,e.C_BLOCK_COMMENT_MODE,e.C_LINE_COMMENT_MODE,e.HASH_COMMENT_MODE,d,g,h],k={
+begin:n.concat(/#\[\s*\\?/,n.either(i,r)),beginScope:"meta",end:/]/,
+endScope:"meta",keywords:{literal:u,keyword:["new","array"]},contains:[{
+begin:/\[/,end:/]/,keywords:{literal:u,keyword:["new","array"]},
+contains:["self",...N]},...N,{scope:"meta",variants:[{match:i},{match:r}]}]}
+;return{case_insensitive:!1,keywords:p,
+contains:[k,e.HASH_COMMENT_MODE,e.COMMENT("//","$"),e.COMMENT("/\\*","\\*/",{
+contains:[{scope:"doctag",match:"@[A-Za-z]+"}]}),{match:/__halt_compiler\(\);/,
+keywords:"__halt_compiler",starts:{scope:"comment",end:e.MATCH_NOTHING_RE,
+contains:[{match:/\?>/,scope:"meta",endsParent:!0}]}},{scope:"meta",variants:[{
+begin:/<\?php/,relevance:10},{begin:/<\?=/},{begin:/<\?/,relevance:.1},{
+begin:/\?>/}]},{scope:"variable.language",match:/\$this\b/},s,w,E,{
+match:[/const/,/\s/,a],scope:{1:"keyword",3:"variable.constant"}},h,{
+scope:"function",relevance:0,beginKeywords:"fn function",end:/[;{]/,
+excludeEnd:!0,illegal:"[$%\\[]",contains:[{beginKeywords:"use"
+},e.UNDERSCORE_TITLE_MODE,{begin:"=>",endsParent:!0},{scope:"params",
+begin:"\\(",end:"\\)",excludeBegin:!0,excludeEnd:!0,keywords:p,
+contains:["self",k,s,E,e.C_BLOCK_COMMENT_MODE,e.C_LINE_COMMENT_MODE,e.HASH_COMMENT_MODE,d,g]
+}]},{scope:"class",variants:[{beginKeywords:"enum",illegal:/[($"]/},{
+beginKeywords:"class interface trait",illegal:/[:($"]/}],relevance:0,end:/\{/,
+excludeEnd:!0,contains:[{beginKeywords:"extends implements"
+},e.UNDERSCORE_TITLE_MODE]},{beginKeywords:"namespace",relevance:0,end:";",
+illegal:/[.']/,contains:[e.inherit(e.UNDERSCORE_TITLE_MODE,{scope:"title.class"
+})]},{beginKeywords:"use",relevance:0,end:";",contains:[{
+match:/\b(as|const|function)\b/,scope:"keyword"},e.UNDERSCORE_TITLE_MODE]},d,g]}
+},grmr_python:e=>{
+const n=e.regex,t=/[\p{XID_Start}_]\p{XID_Continue}*/u,a=["and","as","assert","async","await","break","case","class","continue","def","del","elif","else","except","finally","for","from","global","if","import","in","is","lambda","match","nonlocal|10","not","or","pass","raise","return","try","while","with","yield"],i={
+$pattern:/[A-Za-z]\w+|__\w+__/,keyword:a,
+built_in:["__import__","abs","all","any","ascii","bin","bool","breakpoint","bytearray","bytes","callable","chr","classmethod","compile","complex","delattr","dict","dir","divmod","enumerate","eval","exec","filter","float","format","frozenset","getattr","globals","hasattr","hash","help","hex","id","input","int","isinstance","issubclass","iter","len","list","locals","map","max","memoryview","min","next","object","oct","open","ord","pow","print","property","range","repr","reversed","round","set","setattr","slice","sorted","staticmethod","str","sum","super","tuple","type","vars","zip"],
+literal:["__debug__","Ellipsis","False","None","NotImplemented","True"],
+type:["Any","Callable","Coroutine","Dict","List","Literal","Generic","Optional","Sequence","Set","Tuple","Type","Union"]
+},r={className:"meta",begin:/^(>>>|\.\.\.) /},s={className:"subst",begin:/\{/,
+end:/\}/,keywords:i,illegal:/#/},o={begin:/\{\{/,relevance:0},c={
+className:"string",contains:[e.BACKSLASH_ESCAPE],variants:[{
+begin:/([uU]|[bB]|[rR]|[bB][rR]|[rR][bB])?'''/,end:/'''/,
+contains:[e.BACKSLASH_ESCAPE,r],relevance:10},{
+begin:/([uU]|[bB]|[rR]|[bB][rR]|[rR][bB])?"""/,end:/"""/,
+contains:[e.BACKSLASH_ESCAPE,r],relevance:10},{
+begin:/([fF][rR]|[rR][fF]|[fF])'''/,end:/'''/,
+contains:[e.BACKSLASH_ESCAPE,r,o,s]},{begin:/([fF][rR]|[rR][fF]|[fF])"""/,
+end:/"""/,contains:[e.BACKSLASH_ESCAPE,r,o,s]},{begin:/([uU]|[rR])'/,end:/'/,
+relevance:10},{begin:/([uU]|[rR])"/,end:/"/,relevance:10},{
+begin:/([bB]|[bB][rR]|[rR][bB])'/,end:/'/},{begin:/([bB]|[bB][rR]|[rR][bB])"/,
+end:/"/},{begin:/([fF][rR]|[rR][fF]|[fF])'/,end:/'/,
+contains:[e.BACKSLASH_ESCAPE,o,s]},{begin:/([fF][rR]|[rR][fF]|[fF])"/,end:/"/,
+contains:[e.BACKSLASH_ESCAPE,o,s]},e.APOS_STRING_MODE,e.QUOTE_STRING_MODE]
+},l="[0-9](_?[0-9])*",d=`(\\b(${l}))?\\.(${l})|\\b(${l})\\.`,g="\\b|"+a.join("|"),u={
+className:"number",relevance:0,variants:[{
+begin:`(\\b(${l})|(${d}))[eE][+-]?(${l})[jJ]?(?=${g})`},{begin:`(${d})[jJ]?`},{
+begin:`\\b([1-9](_?[0-9])*|0+(_?0)*)[lLjJ]?(?=${g})`},{
+begin:`\\b0[bB](_?[01])+[lL]?(?=${g})`},{begin:`\\b0[oO](_?[0-7])+[lL]?(?=${g})`
+},{begin:`\\b0[xX](_?[0-9a-fA-F])+[lL]?(?=${g})`},{begin:`\\b(${l})[jJ](?=${g})`
+}]},b={className:"comment",begin:n.lookahead(/# type:/),end:/$/,keywords:i,
+contains:[{begin:/# type:/},{begin:/#/,end:/\b\B/,endsWithParent:!0}]},m={
+className:"params",variants:[{className:"",begin:/\(\s*\)/,skip:!0},{begin:/\(/,
+end:/\)/,excludeBegin:!0,excludeEnd:!0,keywords:i,
+contains:["self",r,u,c,e.HASH_COMMENT_MODE]}]};return s.contains=[c,u,r],{
+name:"Python",aliases:["py","gyp","ipython"],unicodeRegex:!0,keywords:i,
+illegal:/(<\/|\?)|=>/,contains:[r,u,{scope:"variable.language",match:/\bself\b/
+},{beginKeywords:"if",relevance:0},{match:/\bor\b/,scope:"keyword"
+},c,b,e.HASH_COMMENT_MODE,{match:[/\bdef/,/\s+/,t],scope:{1:"keyword",
+3:"title.function"},contains:[m]},{variants:[{
+match:[/\bclass/,/\s+/,t,/\s*/,/\(\s*/,t,/\s*\)/]},{match:[/\bclass/,/\s+/,t]}],
+scope:{1:"keyword",3:"title.class",6:"title.class.inherited"}},{
+className:"meta",begin:/^[\t ]*@/,end:/(?=#)|$/,contains:[u,m,c]}]}},
+grmr_ruby:e=>{
+const n=e.regex,t="([a-zA-Z_]\\w*[!?=]?|[-+~]@|<<|>>|=~|===?|<=>|[<>]=?|\\*\\*|[-/+%^&*~`|]|\\[\\]=?)",a=n.either(/\b([A-Z]+[a-z0-9]+)+/,/\b([A-Z]+[a-z0-9]+)+[A-Z]+/),i=n.concat(a,/(::\w+)*/),r={
+"variable.constant":["__FILE__","__LINE__","__ENCODING__"],
+"variable.language":["self","super"],
+keyword:["alias","and","begin","BEGIN","break","case","class","defined","do","else","elsif","end","END","ensure","for","if","in","module","next","not","or","redo","require","rescue","retry","return","then","undef","unless","until","when","while","yield","include","extend","prepend","public","private","protected","raise","throw"],
+built_in:["proc","lambda","attr_accessor","attr_reader","attr_writer","define_method","private_constant","module_function"],
+literal:["true","false","nil"]},s={className:"doctag",begin:"@[A-Za-z]+"},o={
+begin:"#<",end:">"},c=[e.COMMENT("#","$",{contains:[s]
+}),e.COMMENT("^=begin","^=end",{contains:[s],relevance:10
+}),e.COMMENT("^__END__",e.MATCH_NOTHING_RE)],l={className:"subst",begin:/#\{/,
+end:/\}/,keywords:r},d={className:"string",contains:[e.BACKSLASH_ESCAPE,l],
+variants:[{begin:/'/,end:/'/},{begin:/"/,end:/"/},{begin:/`/,end:/`/},{
+begin:/%[qQwWx]?\(/,end:/\)/},{begin:/%[qQwWx]?\[/,end:/\]/},{
+begin:/%[qQwWx]?\{/,end:/\}/},{begin:/%[qQwWx]?</,end:/>/},{begin:/%[qQwWx]?\//,
+end:/\//},{begin:/%[qQwWx]?%/,end:/%/},{begin:/%[qQwWx]?-/,end:/-/},{
+begin:/%[qQwWx]?\|/,end:/\|/},{begin:/\B\?(\\\d{1,3})/},{
+begin:/\B\?(\\x[A-Fa-f0-9]{1,2})/},{begin:/\B\?(\\u\{?[A-Fa-f0-9]{1,6}\}?)/},{
+begin:/\B\?(\\M-\\C-|\\M-\\c|\\c\\M-|\\M-|\\C-\\M-)[\x20-\x7e]/},{
+begin:/\B\?\\(c|C-)[\x20-\x7e]/},{begin:/\B\?\\?\S/},{
+begin:n.concat(/<<[-~]?'?/,n.lookahead(/(\w+)(?=\W)[^\n]*\n(?:[^\n]*\n)*?\s*\1\b/)),
+contains:[e.END_SAME_AS_BEGIN({begin:/(\w+)/,end:/(\w+)/,
+contains:[e.BACKSLASH_ESCAPE,l]})]}]},g="[0-9](_?[0-9])*",u={className:"number",
+relevance:0,variants:[{
+begin:`\\b([1-9](_?[0-9])*|0)(\\.(${g}))?([eE][+-]?(${g})|r)?i?\\b`},{
+begin:"\\b0[dD][0-9](_?[0-9])*r?i?\\b"},{begin:"\\b0[bB][0-1](_?[0-1])*r?i?\\b"
+},{begin:"\\b0[oO][0-7](_?[0-7])*r?i?\\b"},{
+begin:"\\b0[xX][0-9a-fA-F](_?[0-9a-fA-F])*r?i?\\b"},{
+begin:"\\b0(_?[0-7])+r?i?\\b"}]},b={variants:[{match:/\(\)/},{
+className:"params",begin:/\(/,end:/(?=\))/,excludeBegin:!0,endsParent:!0,
+keywords:r}]},m=[d,{variants:[{match:[/class\s+/,i,/\s+<\s+/,i]},{
+match:[/\b(class|module)\s+/,i]}],scope:{2:"title.class",
+4:"title.class.inherited"},keywords:r},{match:[/(include|extend)\s+/,i],scope:{
+2:"title.class"},keywords:r},{relevance:0,match:[i,/\.new[. (]/],scope:{
+1:"title.class"}},{relevance:0,match:/\b[A-Z][A-Z_0-9]+\b/,
+className:"variable.constant"},{relevance:0,match:a,scope:"title.class"},{
+match:[/def/,/\s+/,t],scope:{1:"keyword",3:"title.function"},contains:[b]},{
+begin:e.IDENT_RE+"::"},{className:"symbol",
+begin:e.UNDERSCORE_IDENT_RE+"(!|\\?)?:",relevance:0},{className:"symbol",
+begin:":(?!\\s)",contains:[d,{begin:t}],relevance:0},u,{className:"variable",
+begin:"(\\$\\W)|((\\$|@@?)(\\w+))(?=[^@$?])(?![A-Za-z])(?![@$?'])"},{
+className:"params",begin:/\|(?!=)/,end:/\|/,excludeBegin:!0,excludeEnd:!0,
+relevance:0,keywords:r},{begin:"("+e.RE_STARTERS_RE+"|unless)\\s*",
+keywords:"unless",contains:[{className:"regexp",contains:[e.BACKSLASH_ESCAPE,l],
+illegal:/\n/,variants:[{begin:"/",end:"/[a-z]*"},{begin:/%r\{/,end:/\}[a-z]*/},{
+begin:"%r\\(",end:"\\)[a-z]*"},{begin:"%r!",end:"![a-z]*"},{begin:"%r\\[",
+end:"\\][a-z]*"}]}].concat(o,c),relevance:0}].concat(o,c)
+;l.contains=m,b.contains=m;const p=[{begin:/^\s*=>/,starts:{end:"$",contains:m}
+},{className:"meta.prompt",
+begin:"^([>?]>|[\\w#]+\\(\\w+\\):\\d+:\\d+[>*]|(\\w+-)?\\d+\\.\\d+\\.\\d+(p\\d+)?[^\\d][^>]+>)(?=[ ])",
+starts:{end:"$",keywords:r,contains:m}}];return c.unshift(o),{name:"Ruby",
+aliases:["rb","gemspec","podspec","thor","irb"],keywords:r,illegal:/\/\*/,
+contains:[e.SHEBANG({binary:"ruby"})].concat(p).concat(c).concat(m)}},
+grmr_sql:e=>{
+const n=e.regex,t=e.COMMENT("--","$"),a=["abs","acos","array_agg","asin","atan","avg","cast","ceil","ceiling","coalesce","corr","cos","cosh","count","covar_pop","covar_samp","cume_dist","dense_rank","deref","element","exp","extract","first_value","floor","json_array","json_arrayagg","json_exists","json_object","json_objectagg","json_query","json_table","json_table_primitive","json_value","lag","last_value","lead","listagg","ln","log","log10","lower","max","min","mod","nth_value","ntile","nullif","percent_rank","percentile_cont","percentile_disc","position","position_regex","power","rank","regr_avgx","regr_avgy","regr_count","regr_intercept","regr_r2","regr_slope","regr_sxx","regr_sxy","regr_syy","row_number","sin","sinh","sqrt","stddev_pop","stddev_samp","substring","substring_regex","sum","tan","tanh","translate","translate_regex","treat","trim","trim_array","unnest","upper","value_of","var_pop","var_samp","width_bucket"],i=a,r=["abs","acos","all","allocate","alter","and","any","are","array","array_agg","array_max_cardinality","as","asensitive","asin","asymmetric","at","atan","atomic","authorization","avg","begin","begin_frame","begin_partition","between","bigint","binary","blob","boolean","both","by","call","called","cardinality","cascaded","case","cast","ceil","ceiling","char","char_length","character","character_length","check","classifier","clob","close","coalesce","collate","collect","column","commit","condition","connect","constraint","contains","convert","copy","corr","corresponding","cos","cosh","count","covar_pop","covar_samp","create","cross","cube","cume_dist","current","current_catalog","current_date","current_default_transform_group","current_path","current_role","current_row","current_schema","current_time","current_timestamp","current_path","current_role","current_transform_group_for_type","current_user","cursor","cycle","date","day","deallocate","dec","decimal","decfloat","declare","default","define","delete","dense_rank","deref","describe","deterministic","disconnect","distinct","double","drop","dynamic","each","element","else","empty","end","end_frame","end_partition","end-exec","equals","escape","every","except","exec","execute","exists","exp","external","extract","false","fetch","filter","first_value","float","floor","for","foreign","frame_row","free","from","full","function","fusion","get","global","grant","group","grouping","groups","having","hold","hour","identity","in","indicator","initial","inner","inout","insensitive","insert","int","integer","intersect","intersection","interval","into","is","join","json_array","json_arrayagg","json_exists","json_object","json_objectagg","json_query","json_table","json_table_primitive","json_value","lag","language","large","last_value","lateral","lead","leading","left","like","like_regex","listagg","ln","local","localtime","localtimestamp","log","log10","lower","match","match_number","match_recognize","matches","max","member","merge","method","min","minute","mod","modifies","module","month","multiset","national","natural","nchar","nclob","new","no","none","normalize","not","nth_value","ntile","null","nullif","numeric","octet_length","occurrences_regex","of","offset","old","omit","on","one","only","open","or","order","out","outer","over","overlaps","overlay","parameter","partition","pattern","per","percent","percent_rank","percentile_cont","percentile_disc","period","portion","position","position_regex","power","precedes","precision","prepare","primary","procedure","ptf","range","rank","reads","real","recursive","ref","references","referencing","regr_avgx","regr_avgy","regr_count","regr_intercept","regr_r2","regr_slope","regr_sxx","regr_sxy","regr_syy","release","result","return","returns","revoke","right","rollback","rollup","row","row_number","rows","running","savepoint","scope","scroll","search","second","seek","select","sensitive","session_user","set","show","similar","sin","sinh","skip","smallint","some","specific","specifictype","sql","sqlexception","sqlstate","sqlwarning","sqrt","start","static","stddev_pop","stddev_samp","submultiset","subset","substring","substring_regex","succeeds","sum","symmetric","system","system_time","system_user","table","tablesample","tan","tanh","then","time","timestamp","timezone_hour","timezone_minute","to","trailing","translate","translate_regex","translation","treat","trigger","trim","trim_array","true","truncate","uescape","union","unique","unknown","unnest","update","upper","user","using","value","values","value_of","var_pop","var_samp","varbinary","varchar","varying","versioning","when","whenever","where","width_bucket","window","with","within","without","year","add","asc","collation","desc","final","first","last","view"].filter((e=>!a.includes(e))),s={
+match:n.concat(/\b/,n.either(...i),/\s*\(/),relevance:0,keywords:{built_in:i}}
+;function o(e){
+return n.concat(/\b/,n.either(...e.map((e=>e.replace(/\s+/,"\\s+")))),/\b/)}
+const c={scope:"keyword",
+match:o(["create table","insert into","primary key","foreign key","not null","alter table","add constraint","grouping sets","on overflow","character set","respect nulls","ignore nulls","nulls first","nulls last","depth first","breadth first"]),
+relevance:0};return{name:"SQL",case_insensitive:!0,illegal:/[{}]|<\//,keywords:{
+$pattern:/\b[\w\.]+/,keyword:((e,{exceptions:n,when:t}={})=>{const a=t
+;return n=n||[],e.map((e=>e.match(/\|\d+$/)||n.includes(e)?e:a(e)?e+"|0":e))
+})(r,{when:e=>e.length<3}),literal:["true","false","unknown"],
+type:["bigint","binary","blob","boolean","char","character","clob","date","dec","decfloat","decimal","float","int","integer","interval","nchar","nclob","national","numeric","real","row","smallint","time","timestamp","varchar","varying","varbinary"],
+built_in:["current_catalog","current_date","current_default_transform_group","current_path","current_role","current_schema","current_transform_group_for_type","current_user","session_user","system_time","system_user","current_time","localtime","current_timestamp","localtimestamp"]
+},contains:[{scope:"type",
+match:o(["double precision","large object","with timezone","without timezone"])
+},c,s,{scope:"variable",match:/@[a-z0-9][a-z0-9_]*/},{scope:"string",variants:[{
+begin:/'/,end:/'/,contains:[{match:/''/}]}]},{begin:/"/,end:/"/,contains:[{
+match:/""/}]},e.C_NUMBER_MODE,e.C_BLOCK_COMMENT_MODE,t,{scope:"operator",
+match:/[-+*/=%^~]|&&?|\|\|?|!=?|<(?:=>?|<|>)?|>[>=]?/,relevance:0}]}},
+grmr_swift:e=>{const n={match:/\s+/,relevance:0},t=e.COMMENT("/\\*","\\*/",{
+contains:["self"]}),a=[e.C_LINE_COMMENT_MODE,t],i={match:[/\./,p(...Ne,...ke)],
+className:{2:"keyword"}},r={match:m(/\./,p(...Me)),relevance:0
+},s=Me.filter((e=>"string"==typeof e)).concat(["_|0"]),o={variants:[{
+className:"keyword",
+match:p(...Me.filter((e=>"string"!=typeof e)).concat(Oe).map(we),...ke)}]},c={
+$pattern:p(/\b\w+/,/#\w+/),keyword:s.concat(Ce),literal:xe},l=[i,r,o],d=[{
+match:m(/\./,p(...Se)),relevance:0},{className:"built_in",
+match:m(/\b/,p(...Se),/(?=\()/)}],u={match:/->/,relevance:0},b=[u,{
+className:"operator",relevance:0,variants:[{match:De},{match:`\\.(\\.|${Ie})+`}]
+}],_="([0-9]_*)+",h="([0-9a-fA-F]_*)+",f={className:"number",relevance:0,
+variants:[{match:`\\b(${_})(\\.(${_}))?([eE][+-]?(${_}))?\\b`},{
+match:`\\b0x(${h})(\\.(${h}))?([pP][+-]?(${_}))?\\b`},{match:/\b0o([0-7]_*)+\b/
+},{match:/\b0b([01]_*)+\b/}]},E=(e="")=>({className:"subst",variants:[{
+match:m(/\\/,e,/[0\\tnr"']/)},{match:m(/\\/,e,/u\{[0-9a-fA-F]{1,8}\}/)}]
+}),y=(e="")=>({className:"subst",match:m(/\\/,e,/[\t ]*(?:[\r\n]|\r\n)/)
+}),v=(e="")=>({className:"subst",label:"interpol",begin:m(/\\/,e,/\(/),end:/\)/
+}),w=(e="")=>({begin:m(e,/"""/),end:m(/"""/,e),contains:[E(e),y(e),v(e)]
+}),N=(e="")=>({begin:m(e,/"/),end:m(/"/,e),contains:[E(e),v(e)]}),k={
+className:"string",
+variants:[w(),w("#"),w("##"),w("###"),N(),N("#"),N("##"),N("###")]
+},O=[e.BACKSLASH_ESCAPE,{begin:/\[/,end:/\]/,relevance:0,
+contains:[e.BACKSLASH_ESCAPE]}],M={begin:/\/[^\s](?=[^/\n]*\/)/,end:/\//,
+contains:O},x=e=>{const n=m(e,/\//),t=m(/\//,e);return{begin:n,end:t,
+contains:[...O,{scope:"comment",begin:`#(?!.*${t})`,end:/$/}]}},A={
+scope:"regexp",variants:[x("###"),x("##"),x("#"),M]},C={match:m(/`/,Be,/`/)
+},S=[C,{className:"variable",match:/\$\d+/},{className:"variable",
+match:`\\$${Le}+`}],T=[{match:/(@|#(un)?)available/,scope:"keyword",starts:{
+contains:[{begin:/\(/,end:/\)/,keywords:ze,contains:[...b,f,k]}]}},{
+scope:"keyword",match:m(/@/,p(...Fe),g(p(/\(/,/\s+/)))},{scope:"meta",
+match:m(/@/,Be)}],I={match:g(/\b[A-Z]/),relevance:0,contains:[{className:"type",
+match:m(/(AV|CA|CF|CG|CI|CL|CM|CN|CT|MK|MP|MTK|MTL|NS|SCN|SK|UI|WK|XC)/,Le,"+")
+},{className:"type",match:$e,relevance:0},{match:/[?!]+/,relevance:0},{
+match:/\.\.\./,relevance:0},{match:m(/\s+&\s+/,g($e)),relevance:0}]},D={
+begin:/</,end:/>/,keywords:c,contains:[...a,...l,...T,u,I]};I.contains.push(D)
+;const R={begin:/\(/,end:/\)/,relevance:0,keywords:c,contains:["self",{
+match:m(Be,/\s*:/),keywords:"_|0",relevance:0
+},...a,A,...l,...d,...b,f,k,...S,...T,I]},L={begin:/</,end:/>/,
+keywords:"repeat each",contains:[...a,I]},B={begin:/\(/,end:/\)/,keywords:c,
+contains:[{begin:p(g(m(Be,/\s*:/)),g(m(Be,/\s+/,Be,/\s*:/))),end:/:/,
+relevance:0,contains:[{className:"keyword",match:/\b_\b/},{className:"params",
+match:Be}]},...a,...l,...b,f,k,...T,I,R],endsParent:!0,illegal:/["']/},$={
+match:[/(func|macro)/,/\s+/,p(C.match,Be,De)],className:{1:"keyword",
+3:"title.function"},contains:[L,B,n],illegal:[/\[/,/%/]},F={
+match:[/\b(?:subscript|init[?!]?)/,/\s*(?=[<(])/],className:{1:"keyword"},
+contains:[L,B,n],illegal:/\[|%/},z={match:[/operator/,/\s+/,De],className:{
+1:"keyword",3:"title"}},j={begin:[/precedencegroup/,/\s+/,$e],className:{
+1:"keyword",3:"title"},contains:[I],keywords:[...Ae,...xe],end:/}/},U={
+begin:[/(struct|protocol|class|extension|enum|actor)/,/\s+/,Be,/\s*/],
+beginScope:{1:"keyword",3:"title.class"},keywords:c,contains:[L,...l,{begin:/:/,
+end:/\{/,keywords:c,contains:[{scope:"title.class.inherited",match:$e},...l],
+relevance:0}]};for(const e of k.variants){
+const n=e.contains.find((e=>"interpol"===e.label));n.keywords=c
+;const t=[...l,...d,...b,f,k,...S];n.contains=[...t,{begin:/\(/,end:/\)/,
+contains:["self",...t]}]}return{name:"Swift",aliases:["silver"],keywords:c,
+contains:[...a,$,F,{
+match:[/class\b/,/\s+/,/func\b/,/\s+/,/\b[A-Za-z_][A-Za-z0-9_]*\b/],scope:{
+1:"keyword",3:"keyword",5:"title.function"}},{match:[/class\b/,/\s+/,/var\b/],
+scope:{1:"keyword",3:"keyword"}},U,z,j,{beginKeywords:"import",end:/$/,
+contains:[...a],relevance:0},A,...l,...d,...b,f,k,...S,...T,I,R]}},
+grmr_vbmercury:e=>{
+const n=e.regex,t=/\d{1,2}\/\d{1,2}\/\d{4}/,a=/\d{4}-\d{1,2}-\d{1,2}/,i=/(\d|1[012])(:\d+){0,2} *(AM|PM)/,r=/\d{1,2}(:\d{1,2}){1,2}/,s={
+className:"literal",variants:[{begin:n.concat(/# */,n.either(a,t),/ *#/)},{
+begin:n.concat(/# */,r,/ *#/)},{begin:n.concat(/# */,i,/ *#/)},{
+begin:n.concat(/# */,n.either(a,t),/ +/,n.either(i,r),/ *#/)}]
+},o=e.COMMENT(/'''/,/$/,{contains:[{className:"doctag",begin:/<\/?/,end:/>/}]
+}),c=e.COMMENT(null,/$/,{variants:[{begin:/'/},{begin:/([\t ]|^)REM(?=\s)/}]})
+;return{name:"Mercury",aliases:["vbmercury"],case_insensitive:!0,
+classNameAliases:{label:"symbol"},keywords:{
+keyword:"addhandler alias aggregate ansi as ascending async assembly auto autoreleasepool binary by byref byval call case catch check class compare const continue custom declare default delegate descending dim distinct do dynamic each ensure equals else elseif end enum erase error event exit explicit extends finally for friend from function get global goto group handles if implements imports in index inherits interface into invariants iterator join key lazy let lib like long loop mappedto matching me mid mod module mustinherit mustoverride mybase myclass mymapped namespace narrowing new next notinheritable notoverridable of off old on operator option optional or order orelse out overloads overridable overrides paramarray partial preserve private property protected ptr public raiseevent readonly record redim removehandler require resume return select set shadows shared skip static step stop structure strict sub synclock take text then throw to try unicode unmanaged unsafe until using when where while widening with withevents writeonly yield zip",
+built_in:"addressof and andalso await directcast gettype getxmlnamespace is isfalse isnot istrue like mod nameof new not or orelse trycast typeof xor cbool cbyte cchar cdate cdbl cdec cint clng cobj csbyte cshort csng cstr cuint culng cushort",
+type:"boolean byte char date decimal double integer long object sbyte short single string uinteger ulong ushort",
+literal:"true false nothing"},
+illegal:"//|\\{|\\}|endif|gosub|variant|wend|^\\$ ",contains:[{
+className:"string",begin:/"(""|[^/n])"C\b/},{className:"string",begin:/"/,
+end:/"/,illegal:/\n/,contains:[{begin:/""/}]},s,{className:"number",relevance:0,
+variants:[{begin:/\b\d[\d_]*((\.[\d_]+(E[+-]?[\d_]+)?)|(E[+-]?[\d_]+))[RFD@!#]?/
+},{begin:/\b\d[\d_]*((U?[SIL])|[%&])?/},{begin:/&H[\dA-F_]+((U?[SIL])|[%&])?/},{
+begin:/&O[0-7_]+((U?[SIL])|[%&])?/},{begin:/&B[01_]+((U?[SIL])|[%&])?/}]},{
+className:"label",begin:/^\w+:/},o,c,{className:"meta",
+begin:/[\t ]*#(const|disable|else|elseif|enable|end|externalsource|if|region)\b/,
+end:/$/,keywords:{
+keyword:"const disable else elseif enable end externalsource if region then"},
+contains:[c]}]}},grmr_vbnet:e=>{
+const n=e.regex,t=/\d{1,2}\/\d{1,2}\/\d{4}/,a=/\d{4}-\d{1,2}-\d{1,2}/,i=/(\d|1[012])(:\d+){0,2} *(AM|PM)/,r=/\d{1,2}(:\d{1,2}){1,2}/,s={
+className:"literal",variants:[{begin:n.concat(/# */,n.either(a,t),/ *#/)},{
+begin:n.concat(/# */,r,/ *#/)},{begin:n.concat(/# */,i,/ *#/)},{
+begin:n.concat(/# */,n.either(a,t),/ +/,n.either(i,r),/ *#/)}]
+},o=e.COMMENT(/'''/,/$/,{contains:[{className:"doctag",begin:/<\/?/,end:/>/}]
+}),c=e.COMMENT(null,/$/,{variants:[{begin:/'/},{begin:/([\t ]|^)REM(?=\s)/}]})
+;return{name:"Visual Basic .NET",aliases:["vb"],case_insensitive:!0,
+classNameAliases:{label:"symbol"},keywords:{
+keyword:"addhandler alias aggregate ansi as async assembly auto binary by byref byval call case catch class compare const continue custom declare default delegate dim distinct do each equals else elseif end enum erase error event exit explicit finally for friend from function get global goto group handles if implements imports in inherits interface into iterator join key let lib loop me mid module mustinherit mustoverride mybase myclass namespace narrowing new next notinheritable notoverridable of off on operator option optional order overloads overridable overrides paramarray partial preserve private property protected public raiseevent readonly redim removehandler resume return select set shadows shared skip static step stop structure strict sub synclock take text then throw to try unicode until using when where while widening with withevents writeonly yield",
+built_in:"addressof and andalso await directcast gettype getxmlnamespace is isfalse isnot istrue like mod nameof new not or orelse trycast typeof xor cbool cbyte cchar cdate cdbl cdec cint clng cobj csbyte cshort csng cstr cuint culng cushort",
+type:"boolean byte char date decimal double integer long object sbyte short single string uinteger ulong ushort",
+literal:"true false nothing"},
+illegal:"//|\\{|\\}|endif|gosub|variant|wend|^\\$ ",contains:[{
+className:"string",begin:/"(""|[^/n])"C\b/},{className:"string",begin:/"/,
+end:/"/,illegal:/\n/,contains:[{begin:/""/}]},s,{className:"number",relevance:0,
+variants:[{begin:/\b\d[\d_]*((\.[\d_]+(E[+-]?[\d_]+)?)|(E[+-]?[\d_]+))[RFD@!#]?/
+},{begin:/\b\d[\d_]*((U?[SIL])|[%&])?/},{begin:/&H[\dA-F_]+((U?[SIL])|[%&])?/},{
+begin:/&O[0-7_]+((U?[SIL])|[%&])?/},{begin:/&B[01_]+((U?[SIL])|[%&])?/}]},{
+className:"label",begin:/^\w+:/},o,c,{className:"meta",
+begin:/[\t ]*#(const|disable|else|elseif|enable|end|externalsource|if|region)\b/,
+end:/$/,keywords:{
+keyword:"const disable else elseif enable end externalsource if region then"},
+contains:[c]}]}},grmr_xml:e=>{
+const n=e.regex,t=n.concat(/[\p{L}_]/u,n.optional(/[\p{L}0-9_.-]*:/u),/[\p{L}0-9_.-]*/u),a={
+className:"symbol",begin:/&[a-z]+;|&#[0-9]+;|&#x[a-f0-9]+;/},i={begin:/\s/,
+contains:[{className:"keyword",begin:/#?[a-z_][a-z1-9_-]+/,illegal:/\n/}]
+},r=e.inherit(i,{begin:/\(/,end:/\)/}),s=e.inherit(e.APOS_STRING_MODE,{
+className:"string"}),o=e.inherit(e.QUOTE_STRING_MODE,{className:"string"}),c={
+endsWithParent:!0,illegal:/</,relevance:0,contains:[{className:"attr",
+begin:/[\p{L}0-9._:-]+/u,relevance:0},{begin:/=\s*/,relevance:0,contains:[{
+className:"string",endsParent:!0,variants:[{begin:/"/,end:/"/,contains:[a]},{
+begin:/'/,end:/'/,contains:[a]},{begin:/[^\s"'=<>`]+/}]}]}]};return{
+name:"HTML, XML",
+aliases:["html","xhtml","rss","atom","xjb","xsd","xsl","plist","wsf","svg"],
+case_insensitive:!0,unicodeRegex:!0,contains:[{className:"meta",begin:/<![a-z]/,
+end:/>/,relevance:10,contains:[i,o,s,r,{begin:/\[/,end:/\]/,contains:[{
+className:"meta",begin:/<![a-z]/,end:/>/,contains:[i,r,o,s]}]}]
+},e.COMMENT(/<!--/,/-->/,{relevance:10}),{begin:/<!\[CDATA\[/,end:/\]\]>/,
+relevance:10},a,{className:"meta",end:/\?>/,variants:[{begin:/<\?xml/,
+relevance:10,contains:[o]},{begin:/<\?[a-z][a-z0-9]+/}]},{className:"tag",
+begin:/<style(?=\s|>)/,end:/>/,keywords:{name:"style"},contains:[c],starts:{
+end:/<\/style>/,returnEnd:!0,subLanguage:["css","xml"]}},{className:"tag",
+begin:/<script(?=\s|>)/,end:/>/,keywords:{name:"script"},contains:[c],starts:{
+end:/<\/script>/,returnEnd:!0,subLanguage:["javascript","handlebars","xml"]}},{
+className:"tag",begin:/<>|<\/>/},{className:"tag",
+begin:n.concat(/</,n.lookahead(n.concat(t,n.either(/\/>/,/>/,/\s/)))),
+end:/\/?>/,contains:[{className:"name",begin:t,relevance:0,starts:c}]},{
+className:"tag",begin:n.concat(/<\//,n.lookahead(n.concat(t,/>/))),contains:[{
+className:"name",begin:t,relevance:0},{begin:/>/,relevance:0,endsParent:!0}]}]}}
+});const Pe=te;for(const e of Object.keys(Ue)){
+const n=e.replace("grmr_","").replace("_","-");Pe.registerLanguage(n,Ue[e])}
+return Pe}()
+;"object"==typeof exports&&"undefined"!=typeof module&&(module.exports=hljs);
