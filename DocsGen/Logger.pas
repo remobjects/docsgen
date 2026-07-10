@@ -25,6 +25,7 @@ type
   ConsoleLogger = public class(ILogger)
   private
     fHasErrors : Boolean;
+    method WriteLine(aMsg: String; aColor: ConsoleColor);
   public
     property ShowDebug: Boolean;
     property ShowInfo: Boolean;
@@ -39,40 +40,40 @@ type
 
 implementation
 
+method ConsoleLogger.WriteLine(aMsg: String; aColor: ConsoleColor);
+begin
+  try
+    var lSave := Console.ForegroundColor;
+    Console.ForegroundColor := aColor;
+    Console.WriteLine(aMsg);
+    Console.ForegroundColor := lSave;
+  except
+    // The macOS helper can run without a writable stdout/stderr stream.
+  end;
+end;
+
 method ConsoleLogger.Error(aMsg: String);
 begin
-  var lSave := Console.ForegroundColor;
   fHasErrors  := true;
-  Console.ForegroundColor := ConsoleColor.Red;
-  Console.WriteLine('[Err] '+aMsg);
-  Console.ForegroundColor := lSave;
+  WriteLine('[Err] '+aMsg, ConsoleColor.Red);
 end;
 
 method ConsoleLogger.Debug(aMsg: String);
 begin
   if not ShowDebug then exit;
-  var lSave := Console.ForegroundColor;
-  Console.ForegroundColor := ConsoleColor.Blue;
-  Console.WriteLine('[Dbg] '+aMsg);
-  Console.ForegroundColor := lSave;
+  WriteLine('[Dbg] '+aMsg, ConsoleColor.Blue);
 end;
 
 method ConsoleLogger.Info(aMsg: String);
 begin
   if not ShowInfo then exit;
-  var lSave := Console.ForegroundColor;
-  Console.ForegroundColor := ConsoleColor.White;
-  Console.WriteLine('[Inf] '+aMsg);
-  Console.ForegroundColor := lSave;
+  WriteLine('[Inf] '+aMsg, ConsoleColor.White);
 end;
 
 method ConsoleLogger.Warn(aMsg: String);
 begin
   if not ShowWarn then exit;
-  var lSave := Console.ForegroundColor;
-  Console.ForegroundColor := ConsoleColor.Yellow;
-  Console.WriteLine('[Wrn] '+aMsg);
-  Console.ForegroundColor := lSave;
+  WriteLine('[Wrn] '+aMsg, ConsoleColor.Yellow);
 end;
 
 class method LogManager.GetCurrentClassLogger: ILogger;

@@ -21,6 +21,7 @@ type
     method SendError(aCtx: HttpListenerContext; aCode: Integer; aReason: String; aBody: String);
     method WriteString(aCtx: HttpListenerContext; s: String): Task;
     method SendFile(aCtx: HttpListenerContext; aFileName: String);
+    method TrySendOtherFile(aContext: HttpListenerContext; aPath: String): Boolean;
     fProject: Project;
     fInTimer: Boolean;
     fServer: HttpListener;
@@ -149,10 +150,8 @@ begin
         end;
 
 
-        if fProject.OtherFilesDict.Contains(s) then begin
-          SendFile(aContext, System.IO.Path.Combine(fProject.ProjectPath, s));
+        if TrySendOtherFile(aContext, s) then
           exit;
-        end;
         if fProject.ThemeResources.Contains(s.Replace('/', System.IO.Path.DirectorySeparatorChar)) then begin
           SendFile(aContext, System.IO.Path.Combine(fProject.ThemePath, s));
           exit;
@@ -162,6 +161,24 @@ begin
     end;
     else
       SendError(aContext, 403, 'Forbidden', 'Only GET and HEAD are allowed');
+  end;
+end;
+
+method HttpWorker.TrySendOtherFile(aContext: HttpListenerContext; aPath: String): Boolean;
+begin
+  if fProject.OtherFilesDict.Contains(aPath) then begin
+    SendFile(aContext, System.IO.Path.Combine(fProject.ProjectPath, aPath));
+    exit true;
+  end;
+
+  var lParts := aPath.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
+  if (length(lParts) >= 3) and lParts.Last.Contains('.') then begin
+    var lCandidateParts := lParts.Take(length(lParts)-2).Concat([lParts.Last]).ToArray;
+    var lCandidate := String.Join('/', lCandidateParts);
+    if fProject.OtherFilesDict.Contains(lCandidate) then begin
+      SendFile(aContext, System.IO.Path.Combine(fProject.ProjectPath, lCandidate));
+      exit true;
+    end;
   end;
 end;
 
