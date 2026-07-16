@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="4.0">
   <PropertyGroup>
     <RootNamespace>DocsGenMacHelper</RootNamespace>
-    <ProjectGuid>1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B</ProjectGuid>
+    <ProjectGuid>{1D6EE773-3A9A-4C18-B8C3-BE1E6B8FC19B}</ProjectGuid>
     <OutputType>executable</OutputType>
     <AssemblyName>DocsGenMacHelper</AssemblyName>
     <AllowGlobals>False</AllowGlobals>
@@ -44,16 +44,13 @@
     <Reference Include="libSwift" />
     <Reference Include="AppleScriptKit" />
     <Reference Include="CoreServices.AE" />
+    <Reference Include="ApplicationServices.HIServices" />
+    <Reference Include="libElements" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.swift" />
     <Compile Include="MainWindowController.swift" />
     <None Include="Resources\Entitlements.entitlements" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Resources\Info.plist" />
     <AppResource Include="Resources\App.icns" />
     <Xib Include="MainWindowController.xib">
@@ -62,6 +59,9 @@
     <Xib Include="Resources\MainMenu.xib" />
     <AppResource Include="..\Bin" />
     <AppResource Include="..\themes" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Toffee.targets" />
 </Project>

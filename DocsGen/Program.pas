@@ -26,9 +26,10 @@ implementation
 class method ConsoleApp.Main(args: array of String): Integer;
 begin
   {$IFDEF DEBUG}
-  Console.WriteLine('Argument count: '+length(args));
-  for each el in args index n do
-    Console.WriteLine(n+': '+el);
+  //Console.WriteLine('Argument count: '+length(args));
+  //for each el in args index n do
+    //Console.WriteLine(n+': '+el);
+  writeLn(String.Join(" ", args));
   {$ENDIF}
   var lOptionSet := new OptionSet;
   lOptionSet.Add('showinfo', 'Show logger info messages', a-> begin fLogger.ShowInfo := assigned(a) end);
