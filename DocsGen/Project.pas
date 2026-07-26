@@ -55,7 +55,9 @@ type
     method GenerateToc: String;
     class method GetHeadingLevel(s: String): Integer;
     method ProcessContent(fs: StreamWriter; aInput: String);
-    method CopyFile(a, b: String);
+    method CopyFile(a, b: String; aAlways: Boolean := false);
+    method CopyThemeResource(aResource, aOutputFile: String);
+    method EmbeddedThemeResourceName(aResource: String): String;
     method EffectiveFullFN(aFile: ProjectFile): String;
     method ResolveRelativeURL(aBaseRelativeFN, aURL: String): String;
     method ResolveMountedStaticFile(aURL: String): String;
@@ -87,6 +89,7 @@ type
     fUnknownTargets: Dictionary<String, HashSet<String>> := new Dictionary<String,HashSet<String>>;
     fHrefs: Dictionary<String, HashSet<String>> := new Dictionary<String,HashSet<String>>;
     fKnownHrefs: Dictionary<String, HashSet<String>> := new Dictionary<String,HashSet<String>>;
+    fBuiltinTheme: String;
     method GetCachedTemplateFile(s: String): String;
     method ReadTemplateFile(acontext: DotLiquid.Context; templateName: String): String;
   protected
@@ -132,6 +135,7 @@ type
     property OtherFiles: List<String> := new List<String>; readonly;
     property OtherFilesDict: HashSet<String> := new HashSet<String>; readonly;
 
+    method OpenThemeResource(aResource: String): Stream;
     method LoadTheme;
     method Build;
     method BuildSingleFile(aOut: String);
@@ -321,12 +325,18 @@ begin
     raise new ArgumentException('config file missing');
   ReadSettings(lSettings, aOverrides);
   var td := theme;
-  if td.StartsWith('{builtin}') then
-    td := StandardThemePath + td.Substring(9);
-  if not Path.IsPathRooted(td) then td := Path.Combine(fPath, theme);
-  if not td.EndsWith(Path.DirectorySeparatorChar) then
-    td := td + Path.DirectorySeparatorChar;
-  ThemePath := Path.GetFullPath(td);
+  if td.StartsWith('{builtin}') then begin
+    fBuiltinTheme := td.Substring(9).Replace('\','/').Trim(['/']);
+    if length(fBuiltinTheme) = 0 then
+      fBuiltinTheme := 'default';
+    ThemePath := Path.GetFullPath(Path.Combine(StandardThemePath, fBuiltinTheme));
+  end
+  else begin
+    if not Path.IsPathRooted(td) then td := Path.Combine(fPath, theme);
+    if not td.EndsWith(Path.DirectorySeparatorChar) then
+      td := td + Path.DirectorySeparatorChar;
+    ThemePath := Path.GetFullPath(td);
+  end;
   LoadTheme;
 
   var lPath := fPath;
@@ -362,11 +372,30 @@ end;
 method Project.LoadTheme;
 begin
   ThemeFiles.Clear;
+  ThemeResources.Clear;
+  if length(fBuiltinTheme) > 0 then begin
+    var lPrefix := 'themes/'+fBuiltinTheme+'/';
+    for each lResourceName in typeOf(Project).Assembly.GetManifestResourceNames.OrderBy(a -> a) do begin
+      if not lResourceName.StartsWith(lPrefix) then
+        continue;
+      var lRelativeFN := lResourceName.Substring(lPrefix.Length);
+      if (Path.GetExtension(lRelativeFN) = '.html') and not lRelativeFN.Contains('/') then begin
+        using lStream := typeOf(Project).Assembly.GetManifestResourceStream(lResourceName) do
+        using lReader := new StreamReader(lStream) do
+          ThemeFiles[Path.GetFileName(lRelativeFN)] := lReader.ReadToEnd;
+      end
+      else
+        ThemeResources.Add(lRelativeFN.Replace('/', Path.DirectorySeparatorChar));
+    end;
+    if not ThemeFiles.ContainsKey('base.html') then
+      fLogger.Error('Embedded theme has no base.html: '+fBuiltinTheme);
+    exit;
+  end;
+
   for each file in Directory.EnumerateFiles(ThemePath, '*.html') do
     ThemeFiles[Path.GetFileName(file)] := System.IO.File.ReadAllText(file);
   if not ThemeFiles.ContainsKey('base.html') then
     fLogger.Error('Theme has no base.html');
-  ThemeResources.Clear;
   for each themedir in Directory.EnumerateDirectories(ThemePath) do begin
     for each file in Directory.EnumerateFiles(themedir, '*.*', SearchOption.AllDirectories) do begin
       ThemeResources.Add(file.Substring(ThemePath.Length));
@@ -381,11 +410,14 @@ begin
   fNavGuard.Clear;
   var lOut := Path.Combine(fPath, Output);
   for each el in ThemeResources do begin
-    CopyFile(Path.Combine(ThemePath, el), Path.Combine(lOut, el));
+    CopyThemeResource(el, Path.Combine(lOut, el));
   end;
-  var lThemeFavicon := Path.Combine(ThemePath, 'img', 'favicon.ico');
-  if File.Exists(lThemeFavicon) then
-    CopyFile(lThemeFavicon, Path.Combine(lOut, 'favicon.ico'));
+  var lProjectFavicon := Path.Combine(fPath, 'favicon.ico');
+  var lThemeFavicon := Path.Combine('img', 'favicon.ico');
+  if File.Exists(lProjectFavicon) then
+    CopyFile(lProjectFavicon, Path.Combine(lOut, 'favicon.ico'), true)
+  else if ThemeResources.Contains(lThemeFavicon) then
+    CopyThemeResource(lThemeFavicon, Path.Combine(lOut, 'favicon.ico'));
 
   if generatesearch then
     fIndexer := new Indexer;
@@ -821,16 +853,48 @@ begin
   end;
 end;
 
-method Project.CopyFile(a: String; b: String);
+method Project.CopyFile(a: String; b: String; aAlways: Boolean := false);
 begin
   var sp := Path.GetDirectoryName(b);
   if not Directory.Exists(sp) then
     Directory.CreateDirectory(sp);
-  if File.Exists(b) then begin
+  if not aAlways and File.Exists(b) then begin
     if File.GetLastWriteTimeUtc(a) <= File.GetLastWriteTimeUtc(b) then exit;
   end;
   fLogger.Debug('Copying '+a);
   File.Copy(a, b, true);
+end;
+
+method Project.EmbeddedThemeResourceName(aResource: String): String;
+begin
+  exit 'themes/'+fBuiltinTheme+'/'+aResource.Replace('\','/');
+end;
+
+method Project.OpenThemeResource(aResource: String): Stream;
+begin
+  if length(fBuiltinTheme) > 0 then
+    exit typeOf(Project).Assembly.GetManifestResourceStream(EmbeddedThemeResourceName(aResource));
+  exit File.OpenRead(Path.Combine(ThemePath, aResource));
+end;
+
+method Project.CopyThemeResource(aResource, aOutputFile: String);
+begin
+  if length(fBuiltinTheme) = 0 then begin
+    CopyFile(Path.Combine(ThemePath, aResource), aOutputFile);
+    exit;
+  end;
+
+  var sp := Path.GetDirectoryName(aOutputFile);
+  if not Directory.Exists(sp) then
+    Directory.CreateDirectory(sp);
+  using lInput := OpenThemeResource(aResource) do begin
+    if not assigned(lInput) then begin
+      fLogger.Error('Embedded theme resource not found: '+EmbeddedThemeResourceName(aResource));
+      exit;
+    end;
+    using lOutput := File.Create(aOutputFile) do
+      lInput.CopyTo(lOutput);
+  end;
 end;
 
 method Project.GenerateFile(aFile: ProjectFile);

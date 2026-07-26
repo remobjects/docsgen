@@ -21,6 +21,7 @@ type
     method SendError(aCtx: HttpListenerContext; aCode: Integer; aReason: String; aBody: String);
     method WriteString(aCtx: HttpListenerContext; s: String): Task;
     method SendFile(aCtx: HttpListenerContext; aFileName: String);
+    method SendStream(aCtx: HttpListenerContext; aStream: System.IO.Stream; aFileName: String);
     method TrySendOtherFile(aContext: HttpListenerContext; aPath: String): Boolean;
     fProject: Project;
     fInTimer: Boolean;
@@ -132,9 +133,9 @@ begin
         if s = 'favicon.ico' then begin
           if TrySendOtherFile(aContext, s) then
             exit;
-          var lThemeFavicon := System.IO.Path.Combine(fProject.ThemePath, 'img', 'favicon.ico');
-          if System.IO.File.Exists(lThemeFavicon) then begin
-            SendFile(aContext, lThemeFavicon);
+          var lThemeFavicon := System.IO.Path.Combine('img', 'favicon.ico');
+          if fProject.ThemeResources.Contains(lThemeFavicon) then begin
+            SendStream(aContext, fProject.OpenThemeResource(lThemeFavicon), s);
             exit;
           end;
         end;
@@ -161,8 +162,9 @@ begin
 
         if TrySendOtherFile(aContext, s) then
           exit;
-        if fProject.ThemeResources.Contains(s.Replace('/', System.IO.Path.DirectorySeparatorChar)) then begin
-          SendFile(aContext, System.IO.Path.Combine(fProject.ThemePath, s));
+        var lThemeResource := s.Replace('/', System.IO.Path.DirectorySeparatorChar);
+        if fProject.ThemeResources.Contains(lThemeResource) then begin
+          SendStream(aContext, fProject.OpenThemeResource(lThemeResource), s);
           exit;
         end;
         SendError(aContext, 404, 'Not Found', 'Could not find that file');
@@ -221,7 +223,26 @@ end;
 method HttpWorker.SendFile(aCtx: HttpListenerContext; aFileName: String);
 begin
   try
-    using fs := System.IO.File.OpenRead(aFileName) do begin
+    SendStream(aCtx, System.IO.File.OpenRead(aFileName), aFileName);
+  except
+    on e: Exception do begin
+      try
+        SendError(aCtx, 500, 'Internal Error', e.Message);
+      except
+        //
+      end;
+    end;
+  end;
+end;
+
+method HttpWorker.SendStream(aCtx: HttpListenerContext; aStream: System.IO.Stream; aFileName: String);
+begin
+  try
+    using fs := aStream do begin
+      if not assigned(fs) then begin
+        SendError(aCtx, 404, 'Not Found', 'Could not find that file');
+        exit;
+      end;
       aCtx.Response.ContentType :=  case System.IO.Path.GetExtension(aFileName) of
         '.html': 'text/html';
         '.md': 'text/markdown';
