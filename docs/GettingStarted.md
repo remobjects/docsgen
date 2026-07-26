@@ -30,7 +30,7 @@ index: GettingStarted.md
 Your first document!
 ```
 
-Each markdown file should start with three dashes: ---, a header, then ---  again. This is the file header, any properties here are used to influence the generator. Currently only two properties do something : **title** sets the page title, this is used at the heading of the generated file and in the navigation. **index** is used to create entries in the navigation. The root file (index.md) defines the main index. Each file referenced from there will become sub entries in the navigation. While there's no limit to how many can be used there, the default theme is limited to 3 levels.
+Each markdown file should start with three dashes: ---, a header, then ---  again. This is the file header, any properties here are used to influence the generator. **title** sets the page title, this is used at the heading of the generated file and in the navigation. **index** is used to create entries in the navigation. The root file (index.md) defines the main index. Each file referenced from there will become sub entries in the navigation. **mount** adds a page or folder from another location to this section, rendering it as if it lived next to the current file. While there's no limit to how many can be used there, the default theme is limited to 3 levels.
 
 After the header you can start writing your content in [markdown](Markdown.md) format. 
 
@@ -43,6 +43,7 @@ Other file specific properties are:
 * **bodyclasses**: extra css classes that will affect the body area for this file.
 * **title_prefix**: prefix for title in toc
 * **title_suffix**: suffix for title in toc
+* **mount**: Mount a markdown file or folder into this section as if it lived next to the current file.
 * **status**; set the review status; Possible values: ignore, new, reviewed: byx, needs-review: reason, wip
 * **parentindex**; make a "fake" parent; when this is used that item will show "open"/active in the tree
 * **absolute**: Makes all links absolute; this is useful for a 404 page.
@@ -50,6 +51,22 @@ Other file specific properties are:
 * **review-status**: Used for the "edit mode" status page
 * **keywords**: Used for the "edit mode" keywords page
 * **sort_by:title**: Sort the index for this file by title instead of original order
+
+## Mounting Shared Pages
+
+Use **mount** to reuse a markdown file or subtree in more than one section without copying it:
+
+```markdown
+---
+title: CodeBot in Campfire
+index: About.md
+mount: ../Shared/Chat.md
+mount: ../Shared/Common/
+index: CampfireOnly.md
+---
+```
+
+Mounted content is rendered at the destination location. In the example above, `../Shared/Chat.md` is generated as if it were `Chat.md` in the same folder as the current file. Shared files only show in navigation where they are mounted or indexed.
 
 
 ## Second document
@@ -73,4 +90,3 @@ Inside edit mode 4 new virtual pages show up in the tree:
 * **flags**: Splits any comma seperated "flags" property in a file and groups then by flag.
 * **keywords**: Splits any comma seperated "keywords" property in a file and groups then by flag.
 * **missing**: Shows missing files and the documents that reference them.
-
