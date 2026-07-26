@@ -383,6 +383,9 @@ begin
   for each el in ThemeResources do begin
     CopyFile(Path.Combine(ThemePath, el), Path.Combine(lOut, el));
   end;
+  var lThemeFavicon := Path.Combine(ThemePath, 'img', 'favicon.ico');
+  if File.Exists(lThemeFavicon) then
+    CopyFile(lThemeFavicon, Path.Combine(lOut, 'favicon.ico'));
 
   if generatesearch then
     fIndexer := new Indexer;
@@ -747,8 +750,8 @@ begin
     lAnch := lIndex.Substring(lIndex.IndexOf('#')).Trim;
     lIndex := lIndex.Substring(0, lIndex.IndexOf('#'));
   end;
-  var lTargetBase := NavigationChildBase(aFile);
-  var lTargets := ExpandFiles(Path.Combine(lTargetBase, lIndex).Replace('\','/')).ToList;
+  var lTargetBase := Path.GetDirectoryName(aFile.RelativeFN).Replace('\','/');
+  var lTargets := ExpandFiles(ResolveSitePath(aFile, lIndex)).ToList;
   if not String.IsNullOrEmpty(aFile.MountedFrom) then begin
     var lSourceBase := Path.GetDirectoryName(aFile.MountedFrom).Replace('\','/');
     for each lSource in ExpandFiles(Path.Combine(lSourceBase, lIndex).Replace('\','/')) do begin

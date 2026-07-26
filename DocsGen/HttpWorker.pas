@@ -129,6 +129,15 @@ begin
 
         var lPath: ProjectFile;
         if s.EndsWith('index.html') then s := s.Substring(0, s.Length - 10);
+        if s = 'favicon.ico' then begin
+          if TrySendOtherFile(aContext, s) then
+            exit;
+          var lThemeFavicon := System.IO.Path.Combine(fProject.ThemePath, 'img', 'favicon.ico');
+          if System.IO.File.Exists(lThemeFavicon) then begin
+            SendFile(aContext, lThemeFavicon);
+            exit;
+          end;
+        end;
         if (s = '') and fProject.Files.TryGetValue('index.md', out lPath)  then begin
           ServeFile(aContext, lPath);
           exit;
@@ -221,6 +230,7 @@ begin
         '.png': 'image/png';
         '.jpg', '.jpeg': 'image/jpeg';
         '.gif': '.gif';
+        '.ico': 'image/x-icon';
       else
         'application/octet-stream';
       end;
