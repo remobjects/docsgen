@@ -184,6 +184,144 @@
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\base.html">
+      <LogicalName>themes/default/base.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\css\github.css">
+      <LogicalName>themes/default/css/github.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\css\lightbox.css">
+      <LogicalName>themes/default/css/lightbox.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\css\theme.css">
+      <LogicalName>themes/default/css/theme.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\css\vs.css">
+      <LogicalName>themes/default/css/vs.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\font\fontawesome_webfont.eot">
+      <LogicalName>themes/default/font/fontawesome_webfont.eot</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\font\fontawesome_webfont.svg">
+      <LogicalName>themes/default/font/fontawesome_webfont.svg</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\font\fontawesome_webfont.ttf">
+      <LogicalName>themes/default/font/fontawesome_webfont.ttf</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\font\fontawesome_webfont.woff">
+      <LogicalName>themes/default/font/fontawesome_webfont.woff</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\footer.html">
+      <LogicalName>themes/default/footer.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\img\close.png">
+      <LogicalName>themes/default/img/close.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\img\favicon.ico">
+      <LogicalName>themes/default/img/favicon.ico</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\img\loading.gif">
+      <LogicalName>themes/default/img/loading.gif</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\img\next.png">
+      <LogicalName>themes/default/img/next.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\img\prev.png">
+      <LogicalName>themes/default/img/prev.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\js\highlight.pack.js">
+      <LogicalName>themes/default/js/highlight.pack.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\js\jquery.cookie.js">
+      <LogicalName>themes/default/js/jquery.cookie.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\js\jquery.min.js">
+      <LogicalName>themes/default/js/jquery.min.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\js\lightbox.min.js">
+      <LogicalName>themes/default/js/lightbox.min.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\js\modernizr.min.js">
+      <LogicalName>themes/default/js/modernizr.min.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\js\theme.js">
+      <LogicalName>themes/default/js/theme.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\singlefile.html">
+      <LogicalName>themes/default/singlefile.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\toc.html">
+      <LogicalName>themes/default/toc.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\base.html">
+      <LogicalName>themes/embedded/base.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\css\github.css">
+      <LogicalName>themes/embedded/css/github.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\css\lightbox.css">
+      <LogicalName>themes/embedded/css/lightbox.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\css\theme.css">
+      <LogicalName>themes/embedded/css/theme.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\css\vs.css">
+      <LogicalName>themes/embedded/css/vs.css</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\font\fontawesome_webfont.eot">
+      <LogicalName>themes/embedded/font/fontawesome_webfont.eot</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\font\fontawesome_webfont.svg">
+      <LogicalName>themes/embedded/font/fontawesome_webfont.svg</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\font\fontawesome_webfont.ttf">
+      <LogicalName>themes/embedded/font/fontawesome_webfont.ttf</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\font\fontawesome_webfont.woff">
+      <LogicalName>themes/embedded/font/fontawesome_webfont.woff</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\footer.html">
+      <LogicalName>themes/embedded/footer.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\img\close.png">
+      <LogicalName>themes/embedded/img/close.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\img\favicon.ico">
+      <LogicalName>themes/embedded/img/favicon.ico</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\img\loading.gif">
+      <LogicalName>themes/embedded/img/loading.gif</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\img\next.png">
+      <LogicalName>themes/embedded/img/next.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\img\prev.png">
+      <LogicalName>themes/embedded/img/prev.png</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\js\highlight.pack.js">
+      <LogicalName>themes/embedded/js/highlight.pack.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\js\jquery.cookie.js">
+      <LogicalName>themes/embedded/js/jquery.cookie.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\js\jquery.min.js">
+      <LogicalName>themes/embedded/js/jquery.min.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\js\lightbox.min.js">
+      <LogicalName>themes/embedded/js/lightbox.min.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\js\modernizr.min.js">
+      <LogicalName>themes/embedded/js/modernizr.min.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\js\theme.js">
+      <LogicalName>themes/embedded/js/theme.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\singlefile.html">
+      <LogicalName>themes/embedded/singlefile.html</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\embedded\toc.html">
+      <LogicalName>themes/embedded/toc.html</LogicalName>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
     </None>
