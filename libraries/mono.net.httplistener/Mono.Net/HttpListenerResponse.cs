@@ -1,8 +1,8 @@
-//
+﻿//
 // System.Net.HttpListenerResponse
 //
 // Author:
-//	Gonzalo Paniagua Javier (gonzalo@novell.com)
+//    Gonzalo Paniagua Javier (gonzalo@novell.com)
 //
 // Copyright (c) 2005 Novell, Inc. (http://www.novell.com)
 //
@@ -13,10 +13,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -52,10 +52,10 @@ namespace Mono.Net {
 		string status_description = "OK";
 		bool chunked;
 		HttpListenerContext context;
-		
+
 		internal bool HeadersSent;
 		internal object headers_lock = new object ();
-		
+
 		bool force_close_chunked;
 
 		internal HttpListenerResponse (HttpListenerContext context)
@@ -80,7 +80,7 @@ namespace Mono.Net {
 				//TODO: is null ok?
 				if (HeadersSent)
 					throw new InvalidOperationException ("Cannot be changed after headers are sent.");
-					
+
 				content_encoding = value;
 			}
 		}
@@ -101,7 +101,7 @@ namespace Mono.Net {
 				content_length = value;
 			}
 		}
-		
+
 		public string ContentType {
 			get { return content_type; }
 			set {
@@ -130,10 +130,10 @@ namespace Mono.Net {
 			get { return headers; }
 			set {
 		/**
-		 *	"If you attempt to set a Content-Length, Keep-Alive, Transfer-Encoding, or
-		 *	WWW-Authenticate header using the Headers property, an exception will be
-		 *	thrown. Use the KeepAlive or ContentLength64 properties to set these headers.
-		 *	You cannot set the Transfer-Encoding or WWW-Authenticate headers manually."
+		 *    "If you attempt to set a Content-Length, Keep-Alive, Transfer-Encoding, or
+		 *    WWW-Authenticate header using the Headers property, an exception will be
+		 *    thrown. Use the KeepAlive or ContentLength64 properties to set these headers.
+		 *    You cannot set the Transfer-Encoding or WWW-Authenticate headers manually."
 		*/
 		// TODO: check if this is marked readonly after headers are sent.
 				headers = value;
@@ -148,7 +148,7 @@ namespace Mono.Net {
 
 				if (HeadersSent)
 					throw new InvalidOperationException ("Cannot be changed after headers are sent.");
-					
+
 				keep_alive = value;
 			}
 		}
@@ -160,7 +160,7 @@ namespace Mono.Net {
 				return output_stream;
 			}
 		}
-		
+
 		public Version ProtocolVersion {
 			get { return version; }
 			set {
@@ -169,7 +169,7 @@ namespace Mono.Net {
 
 				if (HeadersSent)
 					throw new InvalidOperationException ("Cannot be changed after headers are sent.");
-					
+
 				if (value == null)
 					throw new ArgumentNullException ("value");
 
@@ -191,7 +191,7 @@ namespace Mono.Net {
 
 				if (HeadersSent)
 					throw new InvalidOperationException ("Cannot be changed after headers are sent.");
-					
+
 				location = value;
 			}
 		}
@@ -204,7 +204,7 @@ namespace Mono.Net {
 
 				if (HeadersSent)
 					throw new InvalidOperationException ("Cannot be changed after headers are sent.");
-					
+
 				chunked = value;
 			}
 		}
@@ -217,7 +217,7 @@ namespace Mono.Net {
 
 				if (HeadersSent)
 					throw new InvalidOperationException ("Cannot be changed after headers are sent.");
-					
+
 				if (value < 100 || value > 999)
 					throw new ProtocolViolationException ("StatusCode must be between 100 and 999.");
 				status_code = value;
@@ -305,7 +305,7 @@ namespace Mono.Net {
 
 			if (name == "")
 				throw new ArgumentException ("'name' cannot be empty", "name");
-			
+
 			//TODO: check for forbidden headers and invalid characters
 			if (value.Length > 65535)
 				throw new ArgumentOutOfRangeException ("value");
@@ -317,7 +317,7 @@ namespace Mono.Net {
 		{
 			if (cookie == null)
 				throw new ArgumentNullException ("cookie");
-			
+
 			Cookies.Add (cookie);
 		}
 
@@ -328,7 +328,7 @@ namespace Mono.Net {
 
 			if (name == "")
 				throw new ArgumentException ("'name' cannot be empty", "name");
-			
+
 			if (value.Length > 65535)
 				throw new ArgumentOutOfRangeException ("value");
 
@@ -431,16 +431,16 @@ namespace Mono.Net {
 
 			Version v = context.Request.ProtocolVersion;
 			if (!cl_set && !chunked && v >= HttpVersion.Version11)
-				chunked = true;
-				
+				SendChunked = true;
+
 			/* Apache forces closing the connection for these status codes:
-			 *	HttpStatusCode.BadRequest 		400
-			 *	HttpStatusCode.RequestTimeout 		408
-			 *	HttpStatusCode.LengthRequired 		411
-			 *	HttpStatusCode.RequestEntityTooLarge 	413
-			 *	HttpStatusCode.RequestUriTooLong 	414
-			 *	HttpStatusCode.InternalServerError 	500
-			 *	HttpStatusCode.ServiceUnavailable 	503
+			 *    HttpStatusCode.BadRequest         400
+			 *    HttpStatusCode.RequestTimeout         408
+			 *    HttpStatusCode.LengthRequired         411
+			 *    HttpStatusCode.RequestEntityTooLarge     413
+			 *    HttpStatusCode.RequestUriTooLong     414
+			 *    HttpStatusCode.InternalServerError     500
+			 *    HttpStatusCode.ServiceUnavailable     503
 			 */
 			bool conn_close = (status_code == 400 || status_code == 408 || status_code == 411 ||
 					status_code == 413 || status_code == 414 || status_code == 500 ||
@@ -486,7 +486,7 @@ namespace Mono.Net {
 			string headers_str = headers.ToStringMultiValue ();
 			writer.Write (headers_str);
 			writer.Flush ();
-			int preamble = (encoding.CodePage == 65001) ? 3 : encoding.GetPreamble ().Length;
+			int preamble = encoding.GetPreamble ().Length;
 			if (output_stream == null)
 				output_stream = context.Connection.GetResponseStream ();
 
@@ -512,4 +512,3 @@ namespace Mono.Net {
 	}
 }
 #endif
-
