@@ -8,7 +8,7 @@
     <RootNamespace>MarkdownDeep</RootNamespace>
     <Mode>Echoes</Mode>
     <TargetFramework>.NETStandard2.0</TargetFramework>
-    <BinaryName>RemObjects.MarkdownDeep</BinaryName>
+    <BinaryName>RemObjects.Website.MarkdownDeep</BinaryName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <GeneratePDB>true</GeneratePDB>

@@ -60,6 +60,12 @@ namespace MarkdownDeep
 			// Process blocks
 			return new BlockProcessor(this, MarkdownInHtml).Process(str);
 		}
+		public string Transform(string str)
+		{
+			HashSet<string> hrefs;
+			return Transform(str, out hrefs);
+		}
+
 		public string Transform(string str,out HashSet<string> hrefs)
 		{
 			Dictionary<string, LinkDefinition> defs;
