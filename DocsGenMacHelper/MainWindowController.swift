@@ -65,7 +65,7 @@ typealias Int = Int32
 
 	private var docsGenPath: String {
 		get {
-			return NSBundle.mainBundle.pathForResource("Bin", ofType: "")!.stringByAppendingPathComponent("DocsGen.exe")!
+			return NSBundle.mainBundle.pathForResource("Bin/Debug", ofType: "")!.stringByAppendingPathComponent("DocsGen-osx-arm64")!
 		}
 	}
 
@@ -170,11 +170,13 @@ typealias Int = Int32
 
 	private func logLine(_ line: String) {
 		NSLog("%@", line)
-		log.textStorage!.beginEditing()
-		log.textStorage!.mutableString.appendString(line)
-		log.textStorage!.mutableString.appendString("\n")
-		log.textStorage!.endEditing()
-		log.scrollRangeToVisible(NSMakeRange(log.textStorage!.mutableString.length-1, 0))
+		dispatch_async(dispatch_get_main_queue()) {
+			self.log.textStorage!.beginEditing()
+			self.log.textStorage!.mutableString.appendString(line)
+			self.log.textStorage!.mutableString.appendString("\n")
+			self.log.textStorage!.endEditing()
+			self.log.scrollRangeToVisible(NSMakeRange(self.log.textStorage!.mutableString.length-1, 0))
+		}
 	}
 
 	private func showError(message: String) {
@@ -241,9 +243,7 @@ typealias Int = Int32
 					}
 					break;
 				}
-				dispatch_async(dispatch_get_main_queue()) {
-					self.logLine("["+name+"] "+s!);
-				}
+				self.logLine("["+name+"] "+s!);
 			}
 		}
 	}
@@ -307,22 +307,22 @@ typealias Int = Int32
 		if let task = oldTask {
 			task.terminate();
 		}
-		if length(folder) > 0 {
+		if length(folder) > 0 && RemObjects.Elements.RTL.Folder.Exists(folder) {
 			let result = NSTask()
 			//let args: [String] = [String](arrayLiteral: [docsGenPath, "serve", folder!, "--port", port.stringValue, "--loop"])
-			let args: NSMutableArray<String> = [docsGenPath, "serve", folder!, "--port", port.stringValue, "--loop"]
+			let args: NSMutableArray<String> = ["serve", folder!, "--port", port.stringValue, "--loop"]
 			if reviewMode {
 				args.addObject("--edit")
 			}
 			result.arguments = args
 
-			let env = ["MONO_MANAGED_WATCHER" : "false"]
-			result.environment = env
+			logLine(args.joined(separator: " "))
 
-			result.launchPath = "/usr/local/bin/mono"
-			if !NSFileManager.defaultManager.fileExistsAtPath(result.launchPath!) {
-				result.launchPath = "/Library/Frameworks/Mono.framework/Versions/Current/bin/mono"
-			}
+			//let env = ["MONO_MANAGED_WATCHER" : "false"]
+			//result.environment = env
+
+			result.launchPath = docsGenPath;
+			//if !NSFileManager.defaultManager.fileExistsAtPath(result.launchPath!) {
 			result.setStandardInput(NSPipe.pipe)
 			result.setStandardOutput(NSPipe.pipe)
 			result.setStandardError(NSPipe.pipe)
@@ -332,6 +332,7 @@ typealias Int = Int32
 			NSLog("Starting %@ %@", result.launchPath, result.arguments)
 			return result
 		} else {
+			logLine("\(folder) does not exist")
 			return nil
 		}
 	}
