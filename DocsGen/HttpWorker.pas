@@ -5,7 +5,6 @@ interface
 uses
   System.Collections.Generic,
   System.Linq,
-  Mono.Net,
   System.Threading.Tasks,
   System.Text;
 
@@ -19,45 +18,30 @@ type
     method StartUpdateCheck(aContext: HttpListenerContext);
     method ServeFile(aContext: HttpListenerContext; aFile: ProjectFile);
     method SendError(aCtx: HttpListenerContext; aCode: Integer; aReason: String; aBody: String);
-    method WriteString(aCtx: HttpListenerContext; s: String): Task;
+    method WriteString(aCtx: HttpListenerContext; s: String);
     method SendFile(aCtx: HttpListenerContext; aFileName: String);
     method SendStream(aCtx: HttpListenerContext; aStream: System.IO.Stream; aFileName: String);
     method TrySendOtherFile(aContext: HttpListenerContext; aPath: String): Boolean;
     fProject: Project;
     fInTimer: Boolean;
-    fServer: HttpListener;
     fTimer: System.Threading.Timer;
     fWaitingRequests: Dictionary<String, LinkedList<WaitingRequest>> := new Dictionary<String,LinkedList<WaitingRequest>>;
   protected
     method Editor(aContext: HttpListenerContext; aPath: String): Boolean;
-    method Run(aContext: HttpListenerContext); async; // run on threadpool
     method SendHtml(aCtx: HttpListenerContext; s: String);
     method RefreshWaiting(o: Object);
   public
+    method Run(aContext: HttpListenerContext);
     method FileUpdated(s: String);
-    constructor(aProject: Project; aServer: HttpListener);
-    method Callback(ar: IAsyncResult);
+    constructor(aProject: Project);
   end;
 
 implementation
 
-constructor HttpWorker(aProject: Project; aServer: HttpListener);
+constructor HttpWorker(aProject: Project);
 begin
   fProject := aProject;
-  fServer := aServer;
   fProject.FileUpdated += (a,b) -> FileUpdated(a.Replace('\', '/'));
-  if &Type.GetType('System.MonoType') <> nil then
-    fTimer := new System.Threading.Timer(@RefreshWaiting, nil, TimeSpan.FromSeconds(4), TimeSpan.FromSeconds(4));
-end;
-
-method HttpWorker.Callback(ar: IAsyncResult);
-begin
-  try
-    Run(fServer.EndGetContext(ar));
-    fServer.BeginGetContext(@Callback, nil);
-  except
-    // can fail on closing
-  end;
 end;
 
 method HttpWorker.Run(aContext: HttpListenerContext);
@@ -200,7 +184,7 @@ begin
     aCtx.Response.StatusDescription := aReason;
     aCtx.Response.ContentType := 'text/html';
 
-    await WriteString(aCtx, String.Format("<html>
+    WriteString(aCtx, String.Format("<html>
   <head>
     <title>{0} {1}</title>
   </head>
@@ -214,10 +198,10 @@ begin
   aCtx.Response.OutputStream.Close;
 end;
 
-method HttpWorker.WriteString(aCtx: HttpListenerContext; s: String): Task;
+method HttpWorker.WriteString(aCtx: HttpListenerContext; s: String);
 begin
-  var b := Encoding.UTF8.GetBytes(s);
-  exit aCtx.Response.OutputStream.WriteAsync(b, 0, b.Length);
+  var lBytes := Encoding.UTF8.GetBytes(s);
+  aCtx.Response.OutputStream.Write(lBytes, 0, lBytes.Length);
 end;
 
 method HttpWorker.SendFile(aCtx: HttpListenerContext; aFileName: String);
@@ -256,7 +240,7 @@ begin
         'application/octet-stream';
       end;
       aCtx.Response.ContentLength64 := fs.Length;
-      await fs.CopyToAsync(aCtx.Response.OutputStream);
+      fs.CopyTo(aCtx.Response.OutputStream);
 
       aCtx.Response.Close;
     end;
@@ -300,10 +284,10 @@ begin
         try
           aContext.Response.StatusCode := 302;
           aContext.Response.StatusDescription := 'moved temporarily';
-          aContext.Response.Headers['Location'] := '/__edit/editor.html?path='+HttpUtility.UrlEncode(lFile);
+          aContext.Response.Headers['Location'] := '/__edit/editor.html?path='+System.Uri.EscapeDataString(lFile);
           aContext.Response.ContentType := 'text/html';
 
-          WriteString(aContext, String.Format("<html />")).Wait;
+          WriteString(aContext, String.Format("<html />"));
         except
         end;
         aContext.Response.OutputStream.Close;
@@ -326,8 +310,8 @@ begin
         SendError(aContext, 404, 'Not Found', 'File not found!');
         exit true;
       end;
-      var fs := new System.IO.MemoryStream;
-      var lTask := aContext.Request.InputStream.CopyToAsync(fs).GetAwaiter;
+      var fs := new RemObjects.Elements.RTL.MemoryStream;
+      var lTask := Task.Run(-> aContext.Request.InputStream.CopyTo(fs)).GetAwaiter;
       lTask.OnCompleted(-> begin
         try
           lTask.GetResult;
@@ -417,7 +401,7 @@ begin
     aContext.Response.StatusDescription := 'OK';
     aContext.Response.ContentType := 'text/plain';
 
-    await WriteString(aContext, 'NOT UPDATED');
+    WriteString(aContext, 'NOT UPDATED');
   except
   end;
   try
@@ -444,7 +428,7 @@ begin
       el.Item.Response.StatusDescription := 'OK';
       el.Item.Response.ContentType := 'text/plain';
 
-      await WriteString(el.Item, 'UPDATED');
+      WriteString(el.Item, 'UPDATED');
     except
     end;
     try el.Item.Response.OutputStream.Close; except end;
@@ -458,7 +442,7 @@ begin
     aCtx.Response.StatusDescription := 'OK';
     aCtx.Response.ContentType := 'text/html';
 
-    await WriteString(aCtx, s);
+    WriteString(aCtx, s);
   except
   end;
   aCtx.Response.OutputStream.Close;

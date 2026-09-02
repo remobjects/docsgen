@@ -13,13 +13,14 @@
     <AllowUnsafeCode>False</AllowUnsafeCode>
     <ApplicationIcon>Properties\App.ico</ApplicationIcon>
     <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Name>DocsGen</Name>
     <ProjectView>ShowAllFiles</ProjectView>
+    <TargetFramework>.NETCore10.0</TargetFramework>
+    <OutputPath>..\Bin\$(Configuration)</OutputPath>
+    <RuntimeIdentifiers>osx-arm64;linux-arm64</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <OutputPath>..\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NET_4_5;SECURITY_DEP</DefineConstants>
     <GeneratePDB>True</GeneratePDB>
     <GenerateMDB>True</GenerateMDB>
@@ -32,7 +33,6 @@
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <OutputPath>bin\Release\</OutputPath>
     <EnableAsserts>False</EnableAsserts>
     <CaptureConsoleOutput>False</CaptureConsoleOutput>
     <StartMode>Project</StartMode>
@@ -45,21 +45,21 @@
     <DefineConstants>NET_4_5;SECURITY_DEP</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>..\libraries\sqlite\Mono.Data.Sqlite.dll</HintPath>
+    <NuGetReference Include="Microsoft.Data.Sqlite:*">
+      <Private>True</Private>
+    </NuGetReference>
+    <NuGetReference Include="SQLitePCLRaw.lib.e_sqlite3:*">
+      <Private>True</Private>
+    </NuGetReference>
+    <NuGetReference Include="System.Drawing.Common:*" />
+    <Reference Include="Elements">
       <Private>True</Private>
     </Reference>
-    <Reference Include="mscorlib" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\libraries\sqlite\System.Data.SQLite.dll</HintPath>
+    <Reference Include="RemObjects.InternetPack">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    <Reference Include="Echoes">
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -169,14 +169,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Content Include="Properties\App.ico" />
-    <Content Include="x64\SQLite.Interop.dll">
-      <SubType>Content</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\SQLite.Interop.dll">
-      <SubType>Content</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
@@ -326,11 +318,8 @@
       <Generator>SettingsSingleFileGenerator</Generator>
     </None>
     <Compile Include="Properties\Settings.Designer.pas" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="InternetPackServer.pas" />
     <Folder Include="Properties\" />
-    <Folder Include="x64\" />
-    <Folder Include="x86\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Echoes.targets" />
 </Project>

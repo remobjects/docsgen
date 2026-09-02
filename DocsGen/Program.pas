@@ -88,11 +88,10 @@ begin
   lWatcher.Created += (s,e) -> begin if not e.Name.StartsWith(lProject.Output) and not e.Name.Contains('__review.md') then  lProject.BeginRefresh; end;
   if &Type.GetType('System.MonoType') = nil then
     lWatcher.EnableRaisingEvents := true;
-  var lHttp := new Mono.Net.HttpListener();
-  lHttp.Prefixes.Add('http://*:'+fPort+'/');
-  lHttp.Start();
+  var lWorker := new HttpWorker(lProject);
+  var lHttp := new InternetPackServer(fPort, lWorker);
+  lHttp.Start;
   lProject.BuildNavRoot;
-  lHttp.BeginGetContext(@new HttpWorker(lProject, lHttp).Callback, nil);
   Console.WriteLine('Serving on http://localhost:'+fPort);
   lProject.BackgroundGenerate;
   if fLoop then begin

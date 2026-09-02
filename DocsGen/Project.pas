@@ -41,8 +41,6 @@ type
 
     method ExpandFiles(s: String): sequence of String; iterator;
 
-    method GetRegularDB(s: String): IDbConnection;
-    method GetMonoDB(s: String): IDbConnection;
     method get_Missing: String;
     method get_Broken: String;
     method get_HRefs: String;
@@ -1366,27 +1364,14 @@ begin
   fContext.SingleFile := false;
 end;
 
-method Project.GetRegularDB(s: String): IDbConnection;
-begin
-  var db := new System.Data.SQLite.SQLiteConnection('Data Source='+s+';Version=3;');
-  db.Open;
-  exit db;
-end;
-
-method Project.GetMonoDB(s: String): IDbConnection;
-begin
-  var db := new Mono.Data.Sqlite.SqliteConnection('Data Source='+s+';Version=3;');
-  db.Open;
-  exit db;
-end;
-
 method Project.GetDB(s: String): IDbConnection;
 begin
-  if File.Exists(s) then File.Delete(s);
-  if &Type.GetType('System.MonoType') = nil then begin
-    exit GetRegularDB(s);
-  end;
-  exit GetMonoDB(s)
+  if File.Exists(s) then
+    File.Delete(s);
+
+  var lDatabase := new Microsoft.Data.Sqlite.SqliteConnection('Data Source='+s+';');
+  lDatabase.Open;
+  result := lDatabase;
 end;
 
 method Project.CreateDashIndex(aFN: String);
@@ -1692,7 +1677,10 @@ begin
     for each el in aNames index n do begin
       var par := db.CreateParameter();
       par.ParameterName := '@'+el;
-      par.Value := aValues[n];
+      if assigned(aValues[n]) then
+        par.Value := aValues[n]
+      else
+        par.Value := DBNull.Value;
       db.Parameters.Add(par);
     end;
     result := db.ExecuteNonQuery;
