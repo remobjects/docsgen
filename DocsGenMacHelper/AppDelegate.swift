@@ -7,7 +7,7 @@ import ApplicationServices.HIServices
 
 	public func applicationDidFinishLaunching(_ notification: NSNotification!) {
 
-		//NSAppleEventManager.sharedAppleEventManager.setEventHandler(self, andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)), for: kInternetEventClass, andEventID: kAEGetURL)
+		NSAppleEventManager.sharedAppleEventManager.setEventHandler(self, andSelector: #selector(handleGetURLEvent(_:withReplyEvent:)), for: kInternetEventClass, andEventID: kAEGetURL)
 
 		mainWindowController = MainWindowController();
 		mainWindowController?.showWindow(nil);

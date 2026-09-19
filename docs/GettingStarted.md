@@ -75,6 +75,39 @@ Writing the secondd document is pretty much the same as the first, generate a ne
 ## Generating the output
 To build use the docsgen.exe with the parameter **build** from within the directory containing your file.
 
+## Markdown corpus
+
+Use **markdown** to export all published documentation into one UTF-8 Markdown file:
+
+```text
+docsgen markdown /path/to/docs
+```
+
+By default this writes `index_all.md` in the configured output folder (normally `_site`). You can specify an output filename and the public site root:
+
+```text
+docsgen markdown /path/to/docs /path/to/export/docs.md https://docs.example.com/
+```
+
+Relative output filenames are relative to the current working directory. An output inside the source tree must be in an excluded folder (a folder whose name begins with `_` or `.`), so it will not be imported on the next run. Source files cannot be overwritten.
+
+To include the corpus with every **build**, add these project settings:
+
+```text
+markdown: true
+markdown-base-url: https://docs.example.com/
+```
+
+Set `markdown-skip-generated: true` to omit pages marked `status: auto` from the corpus, while retaining handwritten API concepts and library introductions. `markdown-skip` accepts semicolon-separated source-path wildcards for additional exclusions. These settings affect Markdown only; HTML and help databases remain complete.
+
+The base URL is optional; without it, each page's source URL is site-relative. It can include a deployment subpath. The command-line base URL overrides the setting.
+
+The corpus visits pages in navigation order, then adds published pages outside navigation in ordinal source-path order. Each published URL appears once, even if navigation links to several anchors on that page. Mounted pages appear at their destination paths, just as they do on the site. Hidden pages and standalone include files are omitted. The HTML-only `singlefile-skip` setting does not omit pages from this complete export.
+
+Each page has a `docsgen:page-begin` comment containing its URL-encoded document path, a title, a source URL, a document path, and a `docsgen:page-end` comment. Liquid expressions and includes are expanded using the normal page context, with no surrounding site theme. Template errors fail the export instead of becoming text in the corpus. Output uses stable ordering and LF line endings, without a generated timestamp.
+
+Page bodies remain Markdown: headings, tables, code samples, inline HTML, and link targets are preserved after template expansion. Relative links and reference/footnote labels retain their per-page meaning; consumers should use the page boundaries and document/source metadata rather than treat the corpus as one merged Markdown rendering namespace. This export supplies the source corpus; it does not build a retrieval index or embeddings.
+
 ## Docset
 
 # Server mode

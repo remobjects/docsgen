@@ -47,6 +47,8 @@ type
     method get_Flags: String;
     method get_Keywords: String;
     method AppendSingleFileContent(aToc: TocEntry; sb: StringBuilder);
+    method AppendMarkdownNavigation(aEntry: TocEntry; aContent: StringBuilder; aVisited: HashSet<String>; aBaseURL: String);
+    method AppendMarkdownPage(aFile: ProjectFile; aContent: StringBuilder; aVisited: HashSet<String>; aBaseURL: String);
     method get_Review: String;
     method WriteToc(sb: StringBuilder; atoc: FileTocNode);
     method AddToToc(aHeadingLevel: Integer; var aIndex: Integer; aTarget: FileTocNode; aMax: Integer);
@@ -137,6 +139,7 @@ type
     method LoadTheme;
     method Build;
     method BuildSingleFile(aOut: String);
+    method BuildMarkdown(aFilename: String := nil; aBaseURL: String := nil);
     method BuildNavRoot;
     property Review: String read get_Review;
     property &Flags: String read get_Flags;
@@ -441,6 +444,8 @@ begin
   if singlefile then begin
     BuildSingleFile(lOut);
   end;
+  if Settings.Get('markdown').IfNullOrEmpty('false') = 'true' then
+    BuildMarkdown;
 end;
 
 method Project.FindFiles(aRoot, aStart: String);
@@ -849,6 +854,8 @@ begin
   if (aFile.Properties['sort_by'] = 'title') and (aParent <> nil) then begin
     aParent.children.Sort((a, b) -> a.title.CompareTo(b.title));
   end;
+  // Only ancestors are recursive; another navigation branch may reuse this page.
+  fNavGuard.Remove(aFile.RelativeFN);
 end;
 
 method Project.CopyFile(a: String; b: String; aAlways: Boolean := false);
@@ -1318,6 +1325,105 @@ begin
     fUnknownTargets.Add(aFrom, lVal);
   end;
   lVal.Add(aTarget);
+end;
+
+method Project.BuildMarkdown(aFilename: String := nil; aBaseURL: String := nil);
+begin
+  if length(aFilename) = 0 then
+    aFilename := Path.Combine(fPath, Output, 'index_all.md');
+  aFilename := Path.GetFullPath(aFilename);
+  var lProjectRoot := Path.GetFullPath(fPath).TrimEnd(Path.DirectorySeparatorChar)+Path.DirectorySeparatorChar;
+  if aFilename.StartsWith(lProjectRoot, StringComparison.OrdinalIgnoreCase) then begin
+    var lRelative := aFilename.Substring(lProjectRoot.Length);
+    // An export in the source tree must not become an input on the next build.
+    if not Path.GetDirectoryName(lRelative).Split(Path.DirectorySeparatorChar).Any(p -> p.StartsWith('_') or p.StartsWith('.')) then
+      raise new ArgumentException('Markdown output inside the project must be in an excluded folder, such as _site.');
+  end;
+  if fFiles.Values.Any(f -> Path.GetFullPath(EffectiveFullFN(f)).Equals(aFilename, StringComparison.OrdinalIgnoreCase)) then
+    raise new ArgumentException('Markdown output must not overwrite a documentation source file.');
+
+  if length(aBaseURL) = 0 then
+    aBaseURL := Settings.Get('markdown-base-url');
+  if length(aBaseURL) > 0 then begin
+    var lBaseURI: Uri;
+    if not Uri.TryCreate(aBaseURL, UriKind.Absolute, out lBaseURI) or
+       not (lBaseURI.Scheme in ['http', 'https']) or
+       (length(lBaseURI.Query) > 0) or (length(lBaseURI.Fragment) > 0) then
+      raise new ArgumentException('The Markdown base URL must be an absolute HTTP(S) site root without a query or fragment.');
+    aBaseURL := lBaseURI.AbsoluteUri.TrimEnd('/');
+  end;
+
+  BuildNavRoot;
+  var lPreviousFile := fContext.CurrentFile;
+  var lPreviousSingleFile := fContext.SingleFile;
+  var lVisited := new HashSet<String>(StringComparer.Ordinal);
+  var lContent := new StringBuilder;
+  lContent.AppendLine('# '+StripHtml(title));
+  lContent.AppendLine;
+  lContent.AppendLine('<!-- docsgen:markdown-v1 -->');
+  lContent.AppendLine;
+  try
+    // Keep the ordinary page context for includes and Liquid URL expressions.
+    fContext.SingleFile := false;
+    for each lEntry in fContext.nav do
+      AppendMarkdownNavigation(lEntry, lContent, lVisited, aBaseURL);
+    // Published pages need not appear in navigation. Use ordinal order for reproducible exports.
+    for each lFile in fFiles.Values.OrderBy(f -> f.RelativeFN.Replace('\', '/'), StringComparer.Ordinal) do
+      AppendMarkdownPage(lFile, lContent, lVisited, aBaseURL);
+  finally
+    fContext.CurrentFile := lPreviousFile;
+    fContext.SingleFile := lPreviousSingleFile;
+  end;
+
+  if fLogger.HasErrors then
+    raise new InvalidOperationException('Markdown export failed; see the documentation errors above.');
+  Directory.CreateDirectory(Path.GetDirectoryName(aFilename));
+  File.WriteAllText(aFilename, lContent.ToString.Replace(#13#10, #10).Replace(#13, #10), new UTF8Encoding(false));
+  fLogger.Info('Exported '+lVisited.Count+' Markdown pages to '+aFilename);
+end;
+
+method Project.AppendMarkdownNavigation(aEntry: TocEntry; aContent: StringBuilder; aVisited: HashSet<String>; aBaseURL: String);
+begin
+  AppendMarkdownPage(aEntry.File, aContent, aVisited, aBaseURL);
+  for each lChild in aEntry.children do
+    AppendMarkdownNavigation(lChild, aContent, aVisited, aBaseURL);
+end;
+
+method Project.AppendMarkdownPage(aFile: ProjectFile; aContent: StringBuilder; aVisited: HashSet<String>; aBaseURL: String);
+begin
+  if aFile.IncludeFile or aFile.Hidden then
+    exit;
+  if (Settings.Get('markdown-skip-generated').IfNullOrEmpty('false') = 'true') and (aFile.reviewstatus = 'auto') then
+    exit;
+  for each lPattern in Settings.Get('markdown-skip').IfNullOrEmpty('').Replace('\', '/').Split([';'], StringSplitOptions.RemoveEmptyEntries) do
+    if MatchString(lPattern.Trim, aFile.RelativeFN.Replace('\', '/')) then
+      exit;
+  if not aVisited.Add(aFile.TargetURL) then
+    exit;
+
+  fContext.CurrentFile := aFile;
+  var lParameters := new DotLiquid.RenderParameters;
+  lParameters.Registers := new DotLiquid.Hash;
+  lParameters.Registers.Add('__project', self);
+  lParameters.Registers['file_system'] := self;
+  lParameters.LocalVariables := DotLiquid.Hash.FromAnonymousObject(fContext);
+  lParameters.RethrowErrors := true;
+  var lResolved := DotLiquid.Template.Parse(aFile.Content).Render(lParameters);
+  var lPath := aFile.RelativeFN.Replace('\', '/');
+  var lURL := coalesce(aBaseURL, '')+aFile.TargetURL;
+  var lTitle := coalesceEmpty(aFile.Properties['page_title'], aFile.Title, lPath);
+
+  aContent.AppendLine('<!-- docsgen:page-begin '+Uri.EscapeDataString(lPath)+' -->');
+  aContent.AppendLine('# '+StripHtml(lTitle));
+  aContent.AppendLine;
+  aContent.AppendLine('Source: [View original page](<'+lURL.Replace(' ', '%20').Replace('<', '%3C').Replace('>', '%3E')+'>)');
+  aContent.AppendLine;
+  aContent.AppendLine('Document: '+DotLiquid.StandardFilters.Escape(lPath));
+  aContent.AppendLine;
+  aContent.AppendLine(lResolved.TrimEnd(#13, #10));
+  aContent.AppendLine;
+  aContent.AppendLine('<!-- docsgen:page-end -->');
+  aContent.AppendLine;
 end;
 
 method Project.BuildSingleFile(aOut: String);

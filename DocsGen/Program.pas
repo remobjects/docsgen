@@ -17,6 +17,7 @@ type
     class method Main(args: array of String): Integer;
     class method BuildElementsHelpProject(aPath, aTargetURL, aIcon: String);
     class method BuildProject(aPath: String);
+    class method BuildMarkdownProject(aPath, aFilename, aBaseURL: String);
     class method BuildDocSetProject(aPath: String);
     class method ServeProject(aPath: String);
   end;
@@ -47,12 +48,14 @@ begin
   try
     case lCmd:ToLowerInvariant of
       'build': BuildProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
+      'markdown': BuildMarkdownProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory, if args.Length > 2 then args[2], if args.Length > 3 then args[3]);
       'serve': ServeProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
       'docset':BuildDocSetProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory);
       'helpdb':BuildElementsHelpProject(if args.Length > 1 then args[1] else Environment.CurrentDirectory, if args.Length > 2 then args[2] else 'http://localhost/', if args.Length > 3 then args[3]);
     else
       Console.WriteLine('DocsGen [command] [path]');
       Console.WriteLine('  - Build: Generate it');
+      Console.WriteLine('  - Markdown [path] [output-file] [base-url]: Export all published pages as Markdown');
       Console.WriteLine('  - Serve: Run an http server that serves the files');
       Console.WriteLine('  - DocSet: Generate a Dash docset');
       Console.WriteLine('  - HelpDB: Generate an Elements HelpdB');
@@ -74,6 +77,12 @@ begin
   lTime.Start;
   lProject.Build;
   fLogger.Info('Took: '+lTime);
+end;
+
+class method ConsoleApp.BuildMarkdownProject(aPath, aFilename, aBaseURL: String);
+begin
+  var lProject := new Project(fLogger, Path.GetFullPath(aPath), fOverrideOptions);
+  lProject.BuildMarkdown(aFilename, aBaseURL);
 end;
 
 class method ConsoleApp.ServeProject(aPath: String);
