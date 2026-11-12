@@ -1,6 +1,8 @@
 ﻿<!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+{% assign modern_layout = false %}
+{% if project.docs_layout == 'modern' %}{% assign modern_layout = true %}{% endif %}
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +10,11 @@
   <title>{{ page_title | escape | markdown }}</title>
   {% endblock %}
 
+  {% if modern_layout %}
+  <link rel="stylesheet" href="https://use.typekit.net/nbz6fkz.css">
+  {% else %}
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  {% endif %}
 
   <link rel="icon" href="{{ base_url }}/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="{{ base_url }}/css/theme.css" type="text/css" />
@@ -64,19 +70,31 @@
     body {font-size: 90%;}
     pre, code {font-size: 100%;}
   </style>
+  {% if modern_layout %}
+  <link rel="stylesheet" href="{{ base_url }}/css/modern.css">
+  <script src="{{ base_url }}/js/modern.js" defer></script>
+  {% endif %}
 </head>
 
-<body class="mainbackground">
+<body class="mainbackground{% if modern_layout %} docs-modern{% endif %}">
+  {% if modern_layout %}
+  {% capture docs_brand %}
+  <a class="docs-brand" href="{{ homepage_url }}">
+    {% if project.docs_brand_icon %}<img src="{{ base_url }}/{{ project.docs_brand_icon | escape }}" alt="">{% endif %}
+    <span>{% if project.docs_brand_name %}{% if project.docs_brand_prefix %}{{ project.docs_brand_prefix | escape }} {% endif %}<strong>{{ project.docs_brand_name | escape }}</strong>{% else %}{{ project.title | escape }}{% endif %}</span>
+  </a>
+  {% endcapture %}
+  {% endif %}
 
   <div class="mainbackgroundgrid">
 
-    <nav class="sidenav" data-toggle="navshift">
+    <nav class="sidenav"{% if modern_layout %} id="docs-sidebar" aria-label="Documentation"{% else %} data-toggle="navshift"{% endif %}>
       <div class="navcolor sidenavsearch">
-        <a href="{{ homepage_url }}" class="icon icon-home"> {{ project.title }}</a>
+        {% if modern_layout %}{{ docs_brand }}{% else %}<a href="{{ homepage_url }}" class="icon icon-home"> {{ project.title }}</a>{% endif %}
         {% if project.generatesearch == "true" %}
 		<div role="search">
 		  <form id="searchindex" method="get">
-			<input id="searchindexedit" type="text" name="q" placeholder="Search docs" />
+			<input id="searchindexedit" type="text" name="q" aria-label="Search docs" placeholder="Search docs" />
 		  </form>
 		</div>
 		{% endif %}
@@ -90,11 +108,16 @@
       &nbsp;
     </nav>
 
-    <section data-toggle="navshift" class="maincontentsection{%if file.bodyclasses %} {{file.bodyclasses}}{%endif%}">
+    <section{% unless modern_layout %} data-toggle="navshift"{% endunless %} class="maincontentsection{%if file.bodyclasses %} {{file.bodyclasses}}{%endif%}">
 
       <nav class="navcolor topnav">
+        {% if modern_layout %}
+        <button type="button" id="docs-menu" aria-controls="docs-sidebar" aria-expanded="false">Menu</button>
+        {{ docs_brand }}
+        {% else %}
         <i data-toggle="navsel" class="icon icon-reorder"></i>
         <a href="{{ homepage_url }}">{{ project.title }}</a>
+        {% endif %}
       </nav>
 
       <div class="maincontentouter">

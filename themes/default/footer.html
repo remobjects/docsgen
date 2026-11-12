@@ -1,5 +1,21 @@
 <footer>
   {% if next_page or previous_page %}
+    {% if modern_layout %}
+    <nav class="docs-pagination" aria-label="Page navigation">
+      {% if previous_page %}
+      <a class="docs-page-link" href="{{ previous_page.url }}" rel="prev">
+        <span class="docs-page-direction"><span aria-hidden="true">←</span> Previous</span>
+        <span class="docs-page-title">{{ previous_page.title | escape }}</span>
+      </a>
+      {% endif %}
+      {% if next_page %}
+      <a class="docs-page-link docs-page-next" href="{{ next_page.url }}" rel="next">
+        <span class="docs-page-direction">Next <span aria-hidden="true">→</span></span>
+        <span class="docs-page-title">{{ next_page.title | escape }}</span>
+      </a>
+      {% endif %}
+    </nav>
+    {% else %}
     <div class="footerbuttons">
       {% if next_page %}
         <a href="{{ next_page.url }}" class="btn btn-neutral float-right" title="{{ next_page.title }}"/>Next <span class="icon icon-circle-arrow-right"></span></a>
@@ -8,6 +24,7 @@
         <a href="{{ previous_page.url }}" class="btn btn-neutral" title="{{ previous_page.title }}"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       {% endif %}
     </div>
+    {% endif %}
   {% endif %}
 
   <hr/>

@@ -21,7 +21,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <Optimize>False</Optimize>
-    <DefineConstants>DEBUG;TRACE;NET_4_5;SECURITY_DEP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NET_4_5;SECURITY_DEP;NETSTANDARD</DefineConstants>
     <GeneratePDB>True</GeneratePDB>
     <GenerateMDB>True</GenerateMDB>
     <StartMode>Project</StartMode>
@@ -42,7 +42,7 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <WarnOnCaseMismatch>True</WarnOnCaseMismatch>
-    <DefineConstants>NET_4_5;SECURITY_DEP</DefineConstants>
+    <DefineConstants>NET_4_5;SECURITY_DEP;NETSTANDARD</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <NuGetReference Include="Microsoft.Data.Sqlite:*">
@@ -51,7 +51,6 @@
     <NuGetReference Include="SQLitePCLRaw.lib.e_sqlite3:*">
       <Private>True</Private>
     </NuGetReference>
-    <NuGetReference Include="System.Drawing.Common:*" />
     <Reference Include="Elements">
       <Private>True</Private>
     </Reference>
@@ -185,6 +184,9 @@
     <EmbeddedResource Include="..\themes\default\css\lightbox.css">
       <LogicalName>themes/default/css/lightbox.css</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\css\modern.css">
+      <LogicalName>themes/default/css/modern.css</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\themes\default\css\theme.css">
       <LogicalName>themes/default/css/theme.css</LogicalName>
     </EmbeddedResource>
@@ -235,6 +237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\themes\default\js\modernizr.min.js">
       <LogicalName>themes/default/js/modernizr.min.js</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\themes\default\js\modern.js">
+      <LogicalName>themes/default/js/modern.js</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\themes\default\js\theme.js">
       <LogicalName>themes/default/js/theme.js</LogicalName>
