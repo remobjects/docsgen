@@ -279,13 +279,20 @@ typealias Int = Int32
 		let task = NSTask()
 		task.arguments = NSArray.arrayWithObjects((&arguments[0]) as! UnsafePointer<id>, count: length(arguments)) // workaround
 		NSLog("%@", task.arguments)
-		task.launchPath = exe
+		task.executableURL = NSURL.fileURLWithPath(exe)
 		task.currentDirectoryPath = folder
 
 		task.setStandardOutput(NSPipe.pipe)
 
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-			task.launch()
+			var error: NSError? = nil
+			if !task.launchAndReturnError(&error) {
+				self.logLine("Failed to start \(exe): \(error?.localizedDescription)")
+				dispatch_async(dispatch_get_main_queue()) {
+					callback(false)
+				}
+				return
+			}
 
 			let stdOut = task.standardOutput!.fileHandleForReading
 			var lastIncompleteLogLine: String?
@@ -321,15 +328,19 @@ typealias Int = Int32
 			//let env = ["MONO_MANAGED_WATCHER" : "false"]
 			//result.environment = env
 
-			result.launchPath = docsGenPath;
-			//if !NSFileManager.defaultManager.fileExistsAtPath(result.launchPath!) {
+			result.executableURL = NSURL.fileURLWithPath(docsGenPath);
+			//if !NSFileManager.defaultManager.fileExistsAtPath(docsGenPath) {
 			result.setStandardInput(NSPipe.pipe)
 			result.setStandardOutput(NSPipe.pipe)
 			result.setStandardError(NSPipe.pipe)
-			result.launch()
+			var error: NSError? = nil
+			if !result.launchAndReturnError(&error) {
+				logLine("Failed to start \(docsGenPath): \(error?.localizedDescription)")
+				return nil
+			}
 			processTaskOutput(result, name: folder!.lastPathComponent)
 
-			NSLog("Starting %@ %@", result.launchPath, result.arguments)
+			NSLog("Starting %@ %@", result.executableURL!.path, result.arguments)
 			return result
 		} else {
 			logLine("\(folder) does not exist")
