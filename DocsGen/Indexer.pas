@@ -16,7 +16,7 @@ type
   Indexer = public class
   assembly
     method MakeHash(s: String): Integer;
-    fKeywords: Dictionary<String, List<Tuple<Integer, Integer>>> := new Dictionary<String, List<Tuple<Integer, Integer>>>(StringComparer.OrdinalIgnoreCase);
+    fKeywords: Dictionary<String, List<ValueTuple<Integer, Integer>>> := new Dictionary<String, List<ValueTuple<Integer, Integer>>>(StringComparer.OrdinalIgnoreCase);
     fFiles: List<IndexerDoc> := new List<IndexerDoc>;
     class var fStopWords: HashSet<String> := new HashSet<String>(['a', 'the', 'on', 'off', 'do', 'an', 'that', 'value'], StringComparer.OrdinalIgnoreCase);
     method RegisterKeyword(s: String; aDoc, aIndex: Integer);
@@ -89,12 +89,12 @@ end;
 method Indexer.RegisterKeyword(s: String; aDoc: Integer; aIndex: Integer);
 begin
   if fStopWords.Contains(s) or (s.Length < 2) then exit;
-  var idx: List<Tuple<Integer, Integer>>;
+  var idx: List<ValueTuple<Integer, Integer>>;
   if not fKeywords.TryGetValue(s, out idx) then begin
-    idx := new List<Tuple<Integer, Integer>>;
+    idx := new List<ValueTuple<Integer, Integer>>;
     fKeywords.Add(s, idx);
   end;
-  idx.Add(Tuple.Create(aDoc, aIndex));
+  idx.Add(new ValueTuple<Integer, Integer>(aDoc, aIndex));
 end;
 
 method Indexer.IndexFile(s: String; aDoc: Integer);

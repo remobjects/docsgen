@@ -51,6 +51,10 @@
     <NuGetReference Include="SQLitePCLRaw.lib.e_sqlite3:*">
       <Private>True</Private>
     </NuGetReference>
+    <Reference Include="Elements.Markdown">
+      <HintPath>..\..\RTL2.Web\Source\Elements.Markdown\Bin\Release\Elements.Markdown.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Elements">
       <Private>True</Private>
     </Reference>
@@ -121,19 +125,6 @@
     <Compile Include="..\libraries\DotLiquid\Util\TypeUtility.cs" />
     <Compile Include="..\libraries\DotLiquid\Util\WeakTable.cs" />
     <Compile Include="..\libraries\DotLiquid\Variable.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\Abbreviation.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\Block.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\BlockProcessor.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\FootnoteReference.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\HtmlTag.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\LinkDefinition.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\LinkInfo.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\MardownDeep.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\SpanFormatter.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\StringScanner.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\TableSpec.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\Token.cs" />
-    <Compile Include="..\libraries\MarkdownDeep\Utils.cs" />
     <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\AuthenticationSchemes.cs" />
     <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\AuthenticationSchemeSelector.cs" />
     <Compile Include="..\libraries\mono.net.httplistener\Mono.Net\ChunkedInputStream.cs" />

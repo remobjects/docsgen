@@ -7,7 +7,6 @@ uses
   System.Linq,
   System.IO,
   System.Data,
-  MarkdownDeep,
   System.Text;
 
 type
@@ -32,13 +31,6 @@ type
       aMatch := "^" + System.Text.RegularExpressions.Regex.Escape(aMatch).Replace("\*", ".*") + "$";
       exit System.Text.RegularExpressions.Regex.Match(aStr, aMatch).Success;
     end;
-    method OnAfterBrokenLink(sb: StringBuilder; link, atitle: String);
-    begin
-      //if not link.EndsWith('.md') then
-        //sb.AppendFormat('<a href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'/index.md&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
-      //sb.AppendFormat('<a class="btn btn-warning" href="/__edit/__new?path='+Mono.Net.HttpUtility.UrlEncode(link)+'&title='+Mono.Net.HttpUtility.UrlEncode(atitle)+'">'+atitle+"</a>");
-    end;
-
     method ExpandFiles(s: String): sequence of String; iterator;
 
     method get_Missing: String;
@@ -155,9 +147,7 @@ type
     method BuildNavigation(aParent: TocEntry; aFile: ProjectFile);
     method FindFiles(aRoot, aStart: String);
     method LoadFileHeader(aFile: ProjectFile);
-    method CreateMarkdown: MarkdownDeep.Markdown;
-    [Lazy]
-    property Markdown : MarkdownDeep.Markdown := CreateMarkdown;
+    method RenderMarkdown(aSource: String): String;
     [Lazy]
     property BaseTemplate: DotLiquid.Template := DotLiquid.Template.Parse(ThemeFiles['base.html']);
     [Lazy]
@@ -925,20 +915,30 @@ begin
       cp.Registers["file_system"] := self;
       fHeadings.Clear;
       var lResolved := DotLiquid.Template.Parse(aFile.Content).Render(cp);
-      var lhrefs: HashSet<String>;
-      var lWork := Markdown.Transform(lResolved, out lhrefs);
+      var lWork := RenderMarkdown(lResolved);
       lWork := AdjustHtmlImageURLs(lWork);
 
-      //if lResolved.ToLowerInvariant.Contains("raw string") then begin
-        //writeLn(#"lResolved {lResolved}");
-        //writeLn(#"lWork {lWork}");
-        //writeLn("");
-      //end;
-
-
-      if lhrefs.Count > 0 then begin
-        fKnownHrefs[s] := lhrefs;
+      // Preserve numeric bookmarks previously published on these pages.
+      var lBookmarkHeading := case aFile.RelativeFN.Replace(#92, '/') of
+        'API/StandardTypes/Char.md': 'literals';
+        'Oxygene/Types/ClassReferences.md': 'virtual-constructors-and-status-members';
+        'Platforms/Cocoa/FX.md': 'supported-sdks';
+        'Platforms/Cocoa/PointerReferences.md': 'plain-object-references';
+        else nil;
       end;
+      if assigned(lBookmarkHeading) then
+        lWork := lWork.Replace('<h2 id="'+lBookmarkHeading+'">', '<h2 id="1"><span id="'+lBookmarkHeading+'"></span>');
+
+      var lHrefs := new HashSet<String>;
+      for each m: System.Text.RegularExpressions.Match in System.Text.RegularExpressions.Regex.Matches(
+        lWork, '<[a-z][^<>]*?\s(?:id|name)=(?:"([^"]+)"|''([^'']+)'')', System.Text.RegularExpressions.RegexOptions.IgnoreCase) do
+        lHrefs.Add(System.Net.WebUtility.HtmlDecode(if m.Groups[1].Success then m.Groups[1].Value else m.Groups[2].Value));
+      fKnownHrefs[s] := lHrefs;
+
+      for each m: System.Text.RegularExpressions.Match in System.Text.RegularExpressions.Regex.Matches(
+        lWork, '<(h[1-6]) id="([^"]+)">(.*?)</\1>', System.Text.RegularExpressions.RegexOptions.Singleline) do
+        fHeadings.Add(Tuple.Create(m.Groups[1].Value, m.Groups[2].Value, m.Groups[3].Value));
+
       if String.IsNullOrEmpty(aFile.Title) then
         fLogger.Error(aFile.RelativeFN+' does not have a title!');
       var lTitle := aFile.Properties.Get('unique_title');
@@ -1074,18 +1074,16 @@ begin
   end, System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 end;
 
-method Project.CreateMarkdown: MarkdownDeep.Markdown;
+method Project.RenderMarkdown(aSource: String): String;
 begin
-  result := new Markdown();
-
-  result.SafeMode := false;
-  result.ExtraMode := true;
-  result.MarkdownInHtml := true;
-  result.AutoHeadingIDs := true;
-  result.QualifyUrl := @AdjustURL;
-  result.HeadingGenerated += (h, id, value) -> fHeadings.Add(Tuple.Create(h, id, value));
-  if edit then
-    result.OnAfterBrokenLink += OnAfterBrokenLink;
+  var lOptions := new RemObjects.Elements.RTL.Markdown.MarkdownOptions;
+  lOptions.AllowRawHtml := true;
+  lOptions.UseLegacyHeadingIds := true;
+  lOptions.RewriteUrl := aUrl ->
+    if aUrl.StartsWith('mailto:', true) then aUrl else AdjustURL(aUrl);
+  result := RemObjects.Elements.RTL.Markdown.Markdown.ToHtml(aSource, lOptions);
+  result := System.Text.RegularExpressions.Regex.Replace(result, '<a href="">(.*?)</a>',
+    '<span class="brokenlink">$1</span>', System.Text.RegularExpressions.RegexOptions.Singleline);
 end;
 
 class method Project.GetHeadingLevel(s: String): Integer;
@@ -1154,7 +1152,7 @@ begin
   sb.Append('<ul>');
   for i: Integer := 0 to atoc.Items.Count -1 do begin
     sb.AppendFormat('<li><a href="#{0}">', atoc.Items[i].ID);
-    Utils.SmartHtmlEncodeAmpsAndAngles(sb, StripHtml(atoc.Items[i].Value));
+    sb.Append(System.Net.WebUtility.HtmlEncode(System.Net.WebUtility.HtmlDecode(StripHtml(atoc.Items[i].Value))));
     sb.Append('</a>');
     WriteToc(sb,atoc.Items[i]);
     sb.Append('</li>')
@@ -1462,8 +1460,7 @@ begin
   cp.Registers["file_system"] := self;
   var lResolved := DotLiquid.Template.Parse(aToc.File.Content).Render(cp);
   sb.AppendLine('<div class="newpage">');
-  var lhrefs: HashSet<String>;
-  sb.Append(Markdown.Transform(lResolved, out lhrefs));
+  sb.Append(RenderMarkdown(lResolved));
   sb.AppendLine('</div>');
   for each el in aToc.children do
     AppendSingleFileContent(el, sb);
@@ -2122,15 +2119,9 @@ end;
 method MyFilters.Markdown(ctx: DotLiquid.Context; md: String): String;
 begin
   var lProject := Project(ctx.Registers['__project']);
-  var hrefs: HashSet<String>;
-  result := lProject.Markdown.Transform(md, out hrefs).Trim;
+  result := lProject.RenderMarkdown(md).Trim;
   if result.StartsWith('<p>') and result.EndsWith('</p>') then
     result := result.Substring(3, result.Length -7);
-end;
-
-method OnAfterBrokenLink(arg1: StringBuilder; arg2: String);
-begin
-
 end;
 
 method Project.get_Broken: String;
