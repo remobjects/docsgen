@@ -47,9 +47,11 @@
   }
   .docs-brand img { width: 31px; height: 31px; flex: none; }
   .docs-brand strong { font-weight: 700; }
-  .sidenavsearch [role="search"] { margin-top: 12px; }
-  .sidenavsearch input[type="text"] {
-    border: 1px solid #b8cde3;
+  .docs-search { margin: 10px 12px 12px; }
+  .docs-search input[type="text"] {
+    width: 100%;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
     border-radius: 6px;
     background: #fff;
     color: var(--ink);
@@ -208,7 +210,6 @@
     .sidenav.shift { display: block; width: min(88vw, 330px); box-shadow: 10px 0 35px #17283e30; }
     .sidenavsearch { min-height: 0; padding: 0; margin: 0; border: 0; background: transparent; }
     .sidenavsearch .docs-brand { display: none; }
-    .sidenavsearch [role="search"] { margin: 10px 12px; }
     .maincontentsection { margin-left: 0; }
     .maincontentsection .maincontentouter { padding: 22px 20px 40px; }
   }

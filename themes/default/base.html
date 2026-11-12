@@ -91,15 +91,15 @@
     <nav class="sidenav"{% if modern_layout %} id="docs-sidebar" aria-label="Documentation"{% else %} data-toggle="navshift"{% endif %}>
       <div class="navcolor sidenavsearch">
         {% if modern_layout %}{{ docs_brand }}{% else %}<a href="{{ homepage_url }}" class="icon icon-home"> {{ project.title }}</a>{% endif %}
+        {% if modern_layout %}</div>{% endif %}
         {% if project.generatesearch == "true" %}
-		<div role="search">
-		  <form id="searchindex" method="get">
-			<input id="searchindexedit" type="text" name="q" aria-label="Search docs" placeholder="Search docs" />
-		  </form>
-		</div>
-		{% endif %}
-
-      </div>
+        <div role="search"{% if modern_layout %} class="docs-search"{% endif %}>
+          <form id="searchindex" method="get">
+            <input id="searchindexedit" type="text" name="q" aria-label="Search docs" placeholder="Search docs" />
+          </form>
+        </div>
+        {% endif %}
+        {% unless modern_layout %}</div>{% endunless %}
       <div class="tocmenu maintoc">
       {% include "toc.html" %}
       </div>
