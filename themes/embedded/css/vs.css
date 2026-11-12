@@ -95,3 +95,5 @@ Adjusted for RemObejcts Docs by mh
 .vhdl .hljs-attribute { color: #00b0e8; }
 
 .xml .hljs-attribute { color: #f00; }
+
+.hljs-invalid { color: #b00020; }

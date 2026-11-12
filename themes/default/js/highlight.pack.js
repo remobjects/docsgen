@@ -1236,3 +1236,33 @@ className:"name",begin:t,relevance:0},{begin:/>/,relevance:0,endsParent:!0}]}]}}
 const n=e.replace("grmr_","").replace("_","-");Pe.registerLanguage(n,Ue[e])}
 return Pe}()
 ;"object"==typeof exports&&"undefined"!=typeof module&&(module.exports=hljs);
+
+/* RemObjects Myth grammar from highlight.js/src/languages/myth.js */
+hljs.registerLanguage("myth",(e=>{const t={
+keyword:"abstract after allow always and as assembly assert because before binary block borrowed break case catch check class constructor continue copied decimal default destructor double else ensures enum extends field file finally flags for global hex if implements in indexer inherited interface internal invariant is log match method module mutates namespace never new none not octal of old or out override owned param partial private property protected public published read readonly reads released requires result retained return selector self shared single sometimes static step struct then throw throws try type unknown use using var version virtual while write writes false null true",
+type:"Boolean Byte Char Double Int8 Int16 Int32 Int64 Int128 NativeInt NativeUInt Object SByte Single String UInt8 UInt16 UInt32 UInt64 UInt128"
+},n=/[a-zA-Z_]\w*/,r=RegExp("~?"+n.source),s=[{match:RegExp("~"+n.source),
+relevance:0},{match:RegExp("(?:\\?\\.|\\.)\\s*"+r.source),relevance:0
+}],a=e=>`[${e}](?:_?[${e}])*`,o=e=>`${e}(?:\\.${e})?`,c=a("0-9"),l=[...[["hex","0-9A-F"],["octal","0-7"],["binary","01"]].map((([e,t])=>({
+match:[RegExp("\\b"+e+"\\b"),/\s+[+-]?/,RegExp(o(a(t)))],scope:{1:"keyword",
+3:"number"},relevance:0}))),{match:RegExp(`\\b${o(c)}(?:[eE][+-]?${c})?`),
+scope:"number",relevance:0}],i={
+match:RegExp("\\b(?!(?:"+t.keyword.split(" ").join("|")+")\\b)[a-z][a-z0-9_]*\\b"),
+scope:"invalid",relevance:0
+},p=[e.C_LINE_COMMENT_MODE,e.C_BLOCK_COMMENT_MODE,...s,e.QUOTE_STRING_MODE,e.APOS_STRING_MODE,...l,i],u={
+begin:/\{/,end:/\}/,relevance:0,keywords:t},d=[],b=[];for(let n=1;n<=4;n++){
+const r={scope:"subst",begin:RegExp("\\{".repeat(n)),
+end:RegExp("\\}".repeat(n)),keywords:t,relevance:0};for(let t=1;t<=4;t++){
+const s='"'.repeat(t);d.push({scope:"string",
+begin:RegExp("#".repeat(n)+"\\s*"+s+'(?!")'),end:RegExp(s),
+contains:[e.BACKSLASH_ESCAPE,r],relevance:0})}b.push(r)}
+d.push(e.END_SAME_AS_BEGIN({scope:"string",begin:/#+\s*("+)/,end:/("+)/,
+contains:[e.BACKSLASH_ESCAPE],relevance:0
+})),p.unshift(...d),u.contains=["self",...p]
+;for(const e of b)e.contains=[u,...p];return{name:"Myth",
+keywords:t,contains:[{match:[/\bversion\b/,/\s+/,/1(?=\s*;)/],scope:{
+1:"keyword",3:"number"},relevance:20},{match:[/\btype\b/,/\s+/,r],scope:{
+1:"keyword",3:"title.class"},relevance:0},{
+match:[/\b(?:method|constructor)\b/,/\s+/,r,/(?=\s*[<(])/],scope:{1:"keyword",
+3:"title.function"},relevance:0},{match:[/\b(?:namespace|use)\b/,/\s+/,r],
+scope:{1:"keyword"},relevance:0},...p]}}));
