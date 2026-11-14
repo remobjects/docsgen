@@ -252,7 +252,7 @@ typealias Int = Int32
 
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 			let stdOut = task.standardOutput!.fileHandleForReading
-			var lastIncompleteLogLine: String?
+			var lastIncompleteLogLine: String? = nil
 
 			while task.isRunning {
 				autoreleasepool {
@@ -263,7 +263,7 @@ typealias Int = Int32
 		}
 		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
 			let stdOut = task.standardError!.fileHandleForReading
-			var lastIncompleteLogLine: String?
+			var lastIncompleteLogLine: String? = nil
 
 			while task.isRunning {
 				autoreleasepool {
@@ -280,7 +280,7 @@ typealias Int = Int32
 		task.arguments = NSArray.arrayWithObjects((&arguments[0]) as! UnsafePointer<id>, count: length(arguments)) // workaround
 		NSLog("%@", task.arguments)
 		task.executableURL = NSURL.fileURLWithPath(exe)
-		task.currentDirectoryPath = folder
+		task.currentDirectoryURL = NSURL.fileURLWithPath(folder)
 
 		task.setStandardOutput(NSPipe.pipe)
 
