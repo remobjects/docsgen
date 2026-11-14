@@ -1082,6 +1082,8 @@ begin
   lOptions.RewriteUrl := aUrl ->
     if aUrl.StartsWith('mailto:', true) then aUrl else AdjustURL(aUrl);
   result := RemObjects.Elements.RTL.Markdown.Markdown.ToHtml(aSource, lOptions);
+  result := System.Text.RegularExpressions.Regex.Replace(result, '<a href="(?=https?://)',
+    '<a class="foreignlink" href="', System.Text.RegularExpressions.RegexOptions.IgnoreCase);
   result := System.Text.RegularExpressions.Regex.Replace(result, '<a href="">(.*?)</a>',
     '<span class="brokenlink">$1</span>', System.Text.RegularExpressions.RegexOptions.Singleline);
 end;
