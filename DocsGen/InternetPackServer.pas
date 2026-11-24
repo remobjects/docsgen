@@ -147,6 +147,10 @@ constructor InternetPackServer(aPort: Integer; aWorker: HttpWorker);
 begin
   fServer := new HttpServer;
   fServer.Port := aPort;
+  if length(aWorker.EditorToken) > 0 then begin
+    fServer.BindV6 := false;
+    fServer.BindingV4.Address := System.Net.IPAddress.Loopback;
+  end;
   fServer.KeepAlive := true;
   fServer.CloseConnectionsOnShutdown := true;
   fServer.HttpRequest += HandleRequest;

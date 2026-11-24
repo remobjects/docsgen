@@ -153,6 +153,7 @@
     <Compile Include="Logger.pas" />
     <Compile Include="Options.pas" />
     <Compile Include="Program.pas" />
+    <Compile Include="EditorManifest.pas" />
     <Compile Include="Project.pas" />
     <Compile Include="Properties\AssemblyInfo.pas" />
     <Compile Include="Resources.Designer.pas">

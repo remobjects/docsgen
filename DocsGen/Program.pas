@@ -12,6 +12,7 @@ type
   public
     class var fPort: Integer := 4000;
     class var fLoop: Boolean := false;
+    class var fEditorToken: String;
     class var fLogger: ILogger := new ConsoleLogger;
     class var fOverrideOptions: System.Collections.Generic.Dictionary<String, String> := new System.Collections.Generic.Dictionary<String, String>;
     class method Main(args: array of String): Integer;
@@ -30,7 +31,8 @@ begin
   //Console.WriteLine('Argument count: '+length(args));
   //for each el in args index n do
     //Console.WriteLine(n+': '+el);
-  writeLn(String.Join(" ", args));
+  if not args.Any(a -> a.StartsWith('--editor-token=')) then
+    writeLn(String.Join(" ", args));
   {$ENDIF}
   var lOptionSet := new OptionSet;
   lOptionSet.Add('showinfo', 'Show logger info messages', a-> begin fLogger.ShowInfo := assigned(a) end);
@@ -39,6 +41,7 @@ begin
   lOptionSet.Add('overrideoption:', 'Override a project option', (k,v)-> begin fOverrideOptions.Add(k, v) end );
   lOptionSet.Add('edit', 'Show review/edit options',  a -> begin fOverrideOptions['edit'] := if assigned(a) then 'true' else 'false' end );
   lOptionSet.Add('port|p=', 'Set the port to use when serving; defaults to 4000', a -> begin Int32.TryParse(a, out fPort) end);
+  lOptionSet.Add('editor-token=', 'Enable private editor integration (stdin owns server lifetime)', a -> begin fEditorToken := a end);
   lOptionSet.Add('loop', 'If set serve won''t wait for enter but loop', a -> begin fLoop := assigned(a) end);
 
   args := lOptionSet.Parse(args).ToArray;
@@ -68,7 +71,7 @@ begin
       exit 1;
     end;
   end;
- end;
+end;
 
 class method ConsoleApp.BuildProject(aPath: String);
 begin
@@ -98,12 +101,16 @@ begin
   if &Type.GetType('System.MonoType') = nil then
     lWatcher.EnableRaisingEvents := true;
   var lWorker := new HttpWorker(lProject);
+  lWorker.EditorToken := fEditorToken;
   var lHttp := new InternetPackServer(fPort, lWorker);
   lHttp.Start;
   lProject.BuildNavRoot;
   Console.WriteLine('Serving on http://localhost:'+fPort);
   lProject.BackgroundGenerate;
-  if fLoop then begin
+  if length(fEditorToken) > 0 then begin
+    // The editor closes its pipe on project close or process exit.
+    while Console.ReadLine <> nil do begin end;
+  end else if fLoop then begin
     loop System.Threading.Thread.Sleep(1000);
   end else begin
     Console.WriteLine('Press Enter to exit');

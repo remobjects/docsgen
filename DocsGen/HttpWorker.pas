@@ -5,13 +5,12 @@ interface
 uses
   System.Collections.Generic,
   System.Linq,
-  System.Threading.Tasks,
   System.Text;
 
 type
   WaitingRequest = public class
   public
-    property Item: HttpListenerContext;
+    property Completed: System.Threading.ManualResetEventSlim := new System.Threading.ManualResetEventSlim(false); readonly;
   end;
   HttpWorker = public class
   private
@@ -31,6 +30,7 @@ type
     method SendHtml(aCtx: HttpListenerContext; s: String);
     method RefreshWaiting(o: Object);
   public
+    property EditorToken: String;
     method Run(aContext: HttpListenerContext);
     method FileUpdated(s: String);
     constructor(aProject: Project);
@@ -47,6 +47,25 @@ end;
 method HttpWorker.Run(aContext: HttpListenerContext);
 begin
   var s := aContext.Request.Url.AbsolutePath;
+  if s.StartsWith('/__editor/') then begin
+    if (length(EditorToken) = 0) or (aContext.Request.QueryString['token'] <> EditorToken) then begin
+      SendError(aContext, 403, 'Forbidden', 'Editor integration is private.');
+      exit;
+    end;
+    if ((s = '/__editor/manifest') and (aContext.Request.HttpMethod = 'GET')) or
+       ((s = '/__editor/refresh') and (aContext.Request.HttpMethod = 'POST')) then begin
+      locking fProject do begin
+        // Refresh is synchronous: a returned revision can safely be loaded.
+        fProject.Refresh;
+        aContext.Response.ContentType := 'application/json; charset=utf-8';
+        aContext.Response.Headers['Cache-Control'] := 'no-store';
+        WriteString(aContext, EditorManifest.Create(fProject));
+        aContext.Response.Close;
+      end;
+    end else
+      SendError(aContext, 405, 'Method Not Allowed', 'Unknown editor operation.');
+    exit;
+  end;
   if s.StartsWith('/__updatecheck') and fProject.edit then begin
     StartUpdateCheck(aContext);
     exit;
@@ -260,6 +279,10 @@ begin
   try
     fProject.Logger.Debug('Serving file: '+aFile.FullFN+'; Last build date: '+aFile.BuildDate);
     fProject.BuildIfNeeded(aFile);
+    if not fProject.Files.ContainsKey(aFile.RelativeFN.Replace('\','/')) then begin
+      SendError(aContext, 404, 'Not Found', 'Not Found');
+      exit;
+    end;
 
     SendFile(aContext, System.IO.Path.Combine(fProject.ProjectPath, fProject.Output, aFile.TargetFN));
     exit;
@@ -366,47 +389,46 @@ begin
   var lSince: Int64;
   var lData: ProjectFile;
   Int64.TryParse(aContext.Request.QueryString['since'], out lSince);
-  locking fProject do begin
-    if not fProject.Files.TryGetValue(lPath, out lData) then begin
-      try
-      SendError(aContext, 404, 'Not Found', 'Not Found');
-      except end;
-      exit;
-    end;
-    if lData.LoadDate.Ticks > lSince then begin
-      try
-      SendError(aContext, 200, 'OK', 'UPDATED');
-      except end;
-      exit;
-    end;
-  end;
-  locking fWaitingRequests do begin
-    var lWork:  LinkedList<WaitingRequest>;
-    if not fWaitingRequests.TryGetValue(lPath, out lWork) then begin
-      lWork := new LinkedList<WaitingRequest>;
-      fWaitingRequests.Add(lPath, lWork);
-    end;
-    lWork.AddLast(new WaitingRequest(Item := aContext));
-  end;
-  await Task.Delay(60000);
-  locking fWaitingRequests do begin
-    var lWork: LinkedList<WaitingRequest>;
-    if not fWaitingRequests.TryGetValue(lPath, out lWork) then exit;
-    var lItem := lWork.FirstOrDefault(a->a.Item = aContext);
-    if lItem = nil then exit;
-    lWork.Remove(lItem);
-  end;
+  var lRequest := new WaitingRequest;
   try
-    aContext.Response.StatusCode := 200;
-    aContext.Response.StatusDescription := 'OK';
-    aContext.Response.ContentType := 'text/plain';
+    locking fProject do begin
+      if not fProject.Files.TryGetValue(lPath, out lData) then begin
+        SendError(aContext, 404, 'Not Found', 'Not Found');
+        exit;
+      end;
+      fProject.InvalidateIncludedFiles(lData);
+      aContext.Response.ContentType := 'text/plain';
+      aContext.Response.Headers['Cache-Control'] := 'no-store';
+      if lData.UpdateDate.Ticks > lSince then begin
+        WriteString(aContext, 'UPDATED');
+        aContext.Response.Close;
+        exit;
+      end;
+      locking fWaitingRequests do begin
+        var lWork: LinkedList<WaitingRequest>;
+        if not fWaitingRequests.TryGetValue(lPath, out lWork) then begin
+          lWork := new LinkedList<WaitingRequest>;
+          fWaitingRequests.Add(lPath, lWork);
+        end;
+        lWork.AddLast(lRequest);
+      end;
+    end;
 
-    WriteString(aContext, 'NOT UPDATED');
-  except
-  end;
-  try
-    aContext.Response.Close();
-  except
+    // Internet Pack sends its buffered response when Run returns.
+    // Wait outside the project lock so edits and page requests can proceed.
+    var lUpdated := lRequest.Completed.Wait(60000);
+    locking fWaitingRequests do begin
+      var lWork: LinkedList<WaitingRequest>;
+      if fWaitingRequests.TryGetValue(lPath, out lWork) then begin
+        lWork.Remove(lRequest);
+        if lWork.Count = 0 then
+          fWaitingRequests.Remove(lPath);
+      end;
+    end;
+    WriteString(aContext, if lUpdated then 'UPDATED' else 'NOT UPDATED');
+    aContext.Response.Close;
+  finally
+    lRequest.Completed.Dispose;
   end;
 end;
 
@@ -417,21 +439,13 @@ begin
     if fProject.Files.TryGetValue(s, out pf) then
       fProject.BackgroundGenerate(pf);
   end;
-  var lWork: LinkedList<WaitingRequest>;
   locking fWaitingRequests do begin
-    if not fWaitingRequests.TryGetValue(s, out lWork) then exit;
+    var lWork: LinkedList<WaitingRequest>;
+    if not fWaitingRequests.TryGetValue(s, out lWork) then
+      exit;
     fWaitingRequests.Remove(s);
-  end;
-  for each el in lWork do begin
-    try
-      el.Item.Response.StatusCode := 200;
-      el.Item.Response.StatusDescription := 'OK';
-      el.Item.Response.ContentType := 'text/plain';
-
-      WriteString(el.Item, 'UPDATED');
-    except
-    end;
-    try el.Item.Response.OutputStream.Close; except end;
+    for each lRequest in lWork do
+      lRequest.Completed.Set;
   end;
 end;
 
@@ -463,6 +477,7 @@ begin
         var pf: ProjectFile;
         if not fProject.Files.TryGetValue(el, out pf) then continue;
         try
+          fProject.InvalidateIncludedFiles(pf);
           var date := System.IO.File.GetLastWriteTimeUtc(pf.FullFN);
           if pf.LoadDate < date then
             FileUpdated(el);
